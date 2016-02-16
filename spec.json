@@ -1,0 +1,7 @@
+{
+    "status":"up",
+    "metrics":[
+        {"title":"CPU","type":"pie","value":23},
+        {"title":"OPS／每秒订单数","type":"line","value":10}
+    ]
+}
