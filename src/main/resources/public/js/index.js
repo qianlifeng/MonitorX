@@ -7,7 +7,11 @@ define(["jquery", "vue"], function ($, Vue) {
             data: {
                 nodes: []
             },
-            methods: {}
+            methods: {
+                navigate: function (code) {
+                    window.location.href = "/n/?node=" + code;
+                }
+            }
         });
 
         sync();
@@ -20,5 +24,5 @@ define(["jquery", "vue"], function ($, Vue) {
     }
 
     init();
-    setInterval(sync, 3000);
+    setInterval(sync, 1000);
 });

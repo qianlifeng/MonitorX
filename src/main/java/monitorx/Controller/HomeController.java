@@ -18,8 +18,13 @@ public class HomeController {
         return "index";
     }
 
-    @RequestMapping("/d/")
-    public String detail() {
+    @RequestMapping("/n/")
+    public String node() {
         return "node";
+    }
+
+    @RequestMapping("/n/new/")
+    public String newNode() {
+        return "nodeNew";
     }
 }

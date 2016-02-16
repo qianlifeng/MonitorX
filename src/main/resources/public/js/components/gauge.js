@@ -1,5 +1,4 @@
 define(["jquery", "vue", "echart"], function ($, Vue, echarts) {
-
     var gaugeOption = {
         series: [
             {
@@ -8,17 +7,15 @@ define(["jquery", "vue", "echart"], function ($, Vue, echarts) {
                 detail: {formatter: '{value}'},
                 data: [{value: 0, name: ''}]
             }
-        ],
-        animation: false
+        ]
     };
 
-
     function init() {
-        Vue.component('line', {
-            template: "<div><div class='chart' style='width:600px;height:300px;'></div></div>",
+        Vue.component('gauge', {
+            template: "<div style='width:100%;height:270px;'></div>",
             props: ['value'],
             ready: function () {
-                this.chart = echarts.init($(".chart", $(this.$el))[0]);
+                this.chart = echarts.init(this.$el);
                 gaugeOption.series[0].data[0].value = this.value;
                 this.chart.setOption(gaugeOption);
             },

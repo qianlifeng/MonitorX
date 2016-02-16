@@ -2,28 +2,22 @@
 
 <@layout.masterTemplate title="Home" initScript="js/index">
 <div class="index">
-    <h1>Server List</h1>
-    <table class="table table-bordered">
-        <tr>
-            <th>
-                Name
-            </th>
-            <th>
-                Status
-            </th>
-            <th>
-                Last Update
-            </th>
-        </tr>
-        <tr v-for="node in nodes" v-bind:class="{'success': node.status.status == 'up','danger': node.status.status == 'down'}">
-            <td>
-                <a href="/d/?node={{node.code}}" v-text="node.title"></a>
-            </td>
-            <td v-text="node.status.status">
-            </td>
-            <td v-text="node.status.formattedLastUpdateDate">
-            </td>
-        </tr>
-    </table>
+    <h1>Nodes</h1>
+
+    <div class="row">
+        <div class="col-sm-12 col-lg-6 col-md-6" v-for="node in nodes">
+            <div class="status-widget clickable" v-on:click="navigate(node.code)" v-bind:class="{ 'status-up': node.status.status == 'up', 'status-down': node.status.status == 'down' }">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <span class="title" v-text="node.title"></span>
+                    </div>
+                </div>
+                <div class="lastupdate">
+                    <i class="fa fa-clock-o"></i> <span v-text="node.status.formattedLastUpdateDate"></span>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+        </div>
+    </div>
 </div>
 </@layout.masterTemplate>

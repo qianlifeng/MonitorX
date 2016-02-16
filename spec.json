@@ -1,7 +1,8 @@
 {
     "status":"up",
     "metrics":[
-        {"title":"CPU","type":"pie","value":23},
-        {"title":"OPS／每秒订单数","type":"line","value":10}
+        {"title":"CPU","type":"line","value":23},
+        {"title":"OPS／每秒订单数","type":"gauge","value":20},
+        {"title":"MEM","type":"gauge","value":40}
     ]
 }

@@ -1,12 +1,12 @@
 <#import "layout.ftl" as layout />
 
 <#assign headerContent>
-<link rel="stylesheet" href="/css/node.css">
+<link rel="stylesheet" href="/css/nodeNew.css">
 </#assign>
 
-<@layout.masterTemplate title="Detail" header=headerContent initScript="js/node">
+<@layout.masterTemplate title="Detail" header=headerContent initScript="js/nodeNew">
 <div class="detail">
-    <div class="status-widget" v-bind:class="{ 'status-up': node.status.status == 'up', 'status-down': node.status.status == 'down' }">
+    <div class="status-weight" v-bind:class="{ 'status-up': node.status.status == 'up', 'status-down': node.status.status == 'down' }">
         <div class="row">
             <div class="col-sm-6">
                 <span class="title" v-text="node.title"></span>
