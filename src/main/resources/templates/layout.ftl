@@ -21,6 +21,7 @@
                 bootstrap: "lib/bootstrap/js/bootstrap.min",
                 vue: "lib/vuejs/vue",
                 echart: "lib/echart/echarts.min",
+                odometer: "lib/odometer/odometer.min"
             },
             deps: [
                 "bootstrap"
@@ -36,7 +37,7 @@
 ${header}
 </head>
 <body>
-<nav class="navbar navbar-inverse navbar-fixed-top">
+<nav class="navbar navbar-default navbar-fixed-top">
     <div class="container">
         <div class="navbar-header">
             <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
@@ -47,15 +48,6 @@ ${header}
             </button>
             <a class="navbar-brand" href="/">MonitorX</a>
         </div>
-        <div id="navbar" class="collapse navbar-collapse">
-            <ul class="nav navbar-nav">
-                <li class="dropdown">
-                    <a href="#" role="button" aria-haspopup="true" aria-expanded="false">
-                        Config
-                    </a>
-                </li>
-            </ul>
-        </div><!--/.nav-collapse -->
     </div>
 </nav>
 <div class="container">

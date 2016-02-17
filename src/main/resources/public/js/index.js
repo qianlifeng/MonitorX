@@ -10,6 +10,10 @@ define(["jquery", "vue"], function ($, Vue) {
             methods: {
                 navigate: function (code) {
                     window.location.href = "/n/?node=" + code;
+                },
+                isNodeUp: function (node) {
+                    if (node.status == null) return false;
+                    return node.status.status == "up";
                 }
             }
         });

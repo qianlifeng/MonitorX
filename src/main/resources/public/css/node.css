@@ -1,3 +1,11 @@
 .detail .status-widget {
     margin-bottom: 20px;
 }
+
+.number {
+    font-weight: bold;
+    font-size: 90px;
+    font-family: 黑体 !important;
+    text-align: center;
+    padding-top: 60px;
+}

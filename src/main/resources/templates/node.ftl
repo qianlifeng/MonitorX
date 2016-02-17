@@ -2,11 +2,12 @@
 
 <#assign headerContent>
 <link rel="stylesheet" href="/css/node.css">
+<link rel="stylesheet" href="/lib/odometer/odometer-theme-default.css">
 </#assign>
 
 <@layout.masterTemplate title="Detail" header=headerContent initScript="js/node">
 <div class="detail">
-    <div class="status-widget" v-bind:class="{ 'status-up': node.status.status == 'up', 'status-down': node.status.status == 'down' }">
+    <div class="status-widget" v-bind:class="{ 'status-up': isNodeUp(node),'status-down': !isNodeUp(node) }">
         <div class="row">
             <div class="col-sm-6">
                 <span class="title" v-text="node.title"></span>
@@ -18,7 +19,7 @@
         <div class="clearfix"></div>
     </div>
 
-    <div class="row">
+    <div class="row" v-cloak>
         <div class="col-sm-12 col-lg-6 col-md-6" v-for="metric in node.status.metrics">
             <div class="panel panel-default">
                 <div class="panel-heading">

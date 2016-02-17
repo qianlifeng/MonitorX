@@ -6,7 +6,7 @@
 
     <div class="row">
         <div class="col-sm-12 col-lg-6 col-md-6" v-for="node in nodes">
-            <div class="status-widget clickable" v-on:click="navigate(node.code)" v-bind:class="{ 'status-up': node.status.status == 'up', 'status-down': node.status.status == 'down' }">
+            <div class="status-widget clickable" v-on:click="navigate(node.code)" v-bind:class="{ 'status-up': isNodeUp(node),'status-down': !isNodeUp(node) }">
                 <div class="row">
                     <div class="col-sm-6">
                         <span class="title" v-text="node.title"></span>

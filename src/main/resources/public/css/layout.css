@@ -3,6 +3,19 @@ body {
     background-color: #f3f3f4 !important;
 }
 
+[v-cloak] {
+    display: none;
+}
+
+.content-container {
+    margin-top: 20px;
+}
+
+.metric-widget {
+    width: 100%;
+    height: 270px;
+}
+
 .panel-body {
     min-height: 300px;
     position: relative;

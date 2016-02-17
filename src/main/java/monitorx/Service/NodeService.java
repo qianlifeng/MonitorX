@@ -25,16 +25,16 @@ public class NodeService {
         if (nodes == null || nodes.size() == 0) {
             //Mock
             Node oms = new Node();
-            oms.setTitle("OMS");
-            oms.setCode("OMS");
-            oms.setUrl("http://localhost:8000/spec.json");
+            oms.setTitle("回写");
+            oms.setCode("callback");
+            oms.setSyncType("push");
             nodes.add(oms);
 
-            Node wms = new Node();
-            wms.setTitle("WMS");
-            wms.setCode("WMS");
-            wms.setUrl("http://localhost:8000/spec_down.json");
-            nodes.add(wms);
+            Node netease = new Node();
+            netease.setTitle("网易接单");
+            netease.setCode("oms-netease");
+            netease.setSyncType("push");
+            nodes.add(netease);
         }
         return nodes;
     }

@@ -8,11 +8,23 @@ public class Node {
     String title;
     String url;
     /**
+     * pull/push
+     */
+    String syncType;
+    /**
      * Seconds
      */
     int refreshInterval = 3 * 1000;
 
     NodeStatus status;
+
+    public String getSyncType() {
+        return syncType;
+    }
+
+    public void setSyncType(String syncType) {
+        this.syncType = syncType;
+    }
 
     public String getCode() {
         return code;
