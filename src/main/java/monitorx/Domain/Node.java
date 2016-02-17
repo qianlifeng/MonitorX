@@ -1,4 +1,4 @@
-package monitorx.Domain;
+package monitorx.domain;
 
 /**
  * Node that need to be monitored
@@ -11,6 +11,7 @@ public class Node {
      * pull/push
      */
     String syncType;
+
     /**
      * Seconds
      */

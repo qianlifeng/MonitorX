@@ -1,4 +1,4 @@
-package monitorx.Domain;
+package monitorx.domain;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;

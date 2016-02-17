@@ -1,10 +1,10 @@
-package monitorx.Controller.API;
+package monitorx.controller.API;
 
 import com.alibaba.fastjson.JSON;
-import monitorx.Domain.Node;
-import monitorx.Domain.NodeStatus;
-import monitorx.Domain.NodeStatusUpload;
-import monitorx.Service.NodeService;
+import monitorx.domain.Node;
+import monitorx.domain.NodeStatus;
+import monitorx.domain.NodeStatusUpload;
+import monitorx.service.NodeService;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;

@@ -25,7 +25,7 @@ define(["jquery", "vue", "js/components/gauge", "js/components/line", "js/compon
     }
 
     function sync(partial) {
-        $.get("/node/" + getUrlParameter("node") + "/", function (res) {
+        $.get("/api/node/" + getUrlParameter("node") + "/", function (res) {
             if (partial) {
                 if (vm.node.status == null) {
                     vm.node.status = {

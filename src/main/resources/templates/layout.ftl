@@ -21,14 +21,15 @@
                 bootstrap: "lib/bootstrap/js/bootstrap.min",
                 vue: "lib/vuejs/vue",
                 echart: "lib/echart/echarts.min",
-                odometer: "lib/odometer/odometer.min"
+                odometer: "lib/odometer/odometer.min",
+                layout: "js/layout"
             },
             deps: [
-                "bootstrap"
+                "layout"
             ],
             shim: {
                 bootstrap: {
-                    deps: ["jquery", "js/layout"]
+                    deps: ["jquery"]
                 }
             }
         };
@@ -48,12 +49,21 @@ ${header}
             </button>
             <a class="navbar-brand" href="/">MonitorX</a>
         </div>
+        <ul class="nav navbar-nav navbar-right">
+            <li class="add-new-node">
+                <a href="/n/new/" class="dropdown-toggle" role="button" data-toggle="tooltip" data-placement="bottom" title="Add node"> <span class="fa fa-plus"></span></a>
+            </li>
+        </ul>
     </div>
 </nav>
 <div class="container">
     <#nested />
 </div>
-
+<footer class="footer">
+    <div class="container">
+        <p class="text-muted">♥ Do have faith in what you're doing.</p>
+    </div>
+</footer>
 ${footer}
 </body>
 </html>

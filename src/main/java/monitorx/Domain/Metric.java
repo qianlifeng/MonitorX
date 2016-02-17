@@ -1,4 +1,4 @@
-package monitorx.Domain;
+package monitorx.domain;
 
 public class Metric {
     String title;

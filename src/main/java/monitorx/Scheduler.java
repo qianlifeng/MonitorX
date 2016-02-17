@@ -1,7 +1,7 @@
 package monitorx;
 
-import monitorx.Domain.Node;
-import monitorx.Service.NodeService;
+import monitorx.domain.Node;
+import monitorx.service.NodeService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

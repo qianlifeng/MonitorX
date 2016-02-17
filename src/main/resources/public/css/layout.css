@@ -3,6 +3,22 @@ body {
     background-color: #f3f3f4 !important;
 }
 
+.footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 60px;
+    background-color: #eee;
+}
+
+.container .text-muted {
+    margin: 20px 0;
+}
+
+.text-muted {
+    color: #777;
+}
+
 [v-cloak] {
     display: none;
 }
@@ -49,3 +65,10 @@ body {
 .clickable {
     cursor: pointer;
 }
+
+@media (max-width: 767px) {
+    .add-new-node {
+        display: none !important;
+    }
+}
+
