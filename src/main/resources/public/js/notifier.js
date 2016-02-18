@@ -1,7 +1,13 @@
-define(["jquery", "vue", "js/components/notifier/wechat/wechat"], function ($, Vue) {
+define(["jquery", "vue", "js/components/notifier/wechat/wechat", "js/components/notifier/email/email"], function ($, Vue) {
     var vm;
 
     function init() {
+
+        Vue.filter('mask', function (value) {
+            if (value.length <= 5) return "***";
+            return value.substring(0, value.length - 5) + "*****";
+        });
+
         vm = new Vue({
             el: ".notifier",
             data: {

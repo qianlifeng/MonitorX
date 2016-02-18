@@ -16,7 +16,10 @@ define(["jquery", "vue",
             },
             methods: {
                 addForewarning: function (metric) {
-                    alert("add forewarning:" + metric.title);
+                    window.location.href = "/forewarning/new/";
+                },
+                addNodeForewarning: function () {
+                    window.location.href = "/forewarning/new/";
                 },
                 isNodeUp: function () {
                     if (this.node.status == null) return false;

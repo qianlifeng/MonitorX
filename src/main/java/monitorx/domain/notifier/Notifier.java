@@ -1,19 +1,8 @@
 package monitorx.domain.notifier;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.stereotype.Component;
-
-@Component
 public class Notifier {
-
-    @Autowired
-    ApplicationContext applicationContext;
-
     String id;
-
     String title;
-
     /**
      * @see NotifierTypeEnum
      */
@@ -54,6 +43,6 @@ public class Notifier {
     }
 
     public void send(String title, String content) {
-        ((ISender) applicationContext.getBean("sender-" + type)).send(title, content);
+        config.send(title, content);
     }
 }

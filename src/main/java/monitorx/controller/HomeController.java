@@ -35,4 +35,9 @@ public class HomeController {
     public String newNotifier() {
         return "notifierNew";
     }
+
+    @RequestMapping("/forewarning/new/")
+    public String newFirewarning() {
+        return "forewarningNew";
+    }
 }

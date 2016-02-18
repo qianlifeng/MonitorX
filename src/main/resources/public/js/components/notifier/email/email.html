@@ -1,7 +1,7 @@
-<div class="status-widget status-yellow">
+<div class="status-widget status-green">
     <div class="row">
         <div class="col-sm-9">
-            <i class="fa fa-weixin fa-3x"></i><span class="notifier-title" v-text="notifier.title"></span>
+            <i class="fa fa-envelope-o fa-3x"></i><span class="notifier-title" v-text="notifier.title"></span>
         </div>
         <div class="col-sm-3">
             <i class="fa fa-trash-o clickable pull-right" v-on:click="removeNotifier()" data-toggle="tooltip" data-placement="top" title="Remove notifier"></i>
@@ -10,7 +10,7 @@
     <div class="row">
         <div class="col-sm-12">
             <div class="key pull-right">
-                <i class="fa fa-key"></i> <span class="" v-text="notifier.config.secret | mask"></span>
+                <i class="fa fa-paper-plane"></i> <span class="" v-text="notifier.config.toEmail"></span>
             </div>
         </div>
     </div>

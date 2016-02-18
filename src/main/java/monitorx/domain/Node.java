@@ -1,8 +1,11 @@
 package monitorx.domain;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import monitorx.domain.forewarning.Forewarning;
 import monitorx.domain.syncType.ISyncTypeConfig;
 import monitorx.domain.syncType.SyncTypeEnum;
+
+import java.util.List;
 
 /**
  * Node that need to be monitored
@@ -19,6 +22,8 @@ public class Node {
     ISyncTypeConfig syncTypeConfig;
 
     NodeStatus status;
+
+    List<Forewarning> forewarnings;
 
     public String getSyncType() {
         return syncType;
@@ -67,6 +72,14 @@ public class Node {
 
     public void setSyncTypeConfig(ISyncTypeConfig syncTypeConfig) {
         this.syncTypeConfig = syncTypeConfig;
+    }
+
+    public List<Forewarning> getForewarnings() {
+        return forewarnings;
+    }
+
+    public void setForewarnings(List<Forewarning> forewarnings) {
+        this.forewarnings = forewarnings;
     }
 
     public boolean equals(Object other) {

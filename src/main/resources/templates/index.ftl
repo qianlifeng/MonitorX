@@ -7,7 +7,7 @@
             <h1 class="title">Nodes</h1>
         </div>
         <div class="col-sm-3 add-new">
-            <a href="/n/new/" class="dropdown-toggle pull-right" role="button" data-toggle="tooltip" data-placement="bottom" title="Add node"><span class="fa fa-plus"></span></a>
+            <a href="/n/new/" class="dropdown-toggle pull-right" role="button" data-toggle="tooltip" data-placement="top" title="Add node"><span class="fa fa-plus"></span></a>
         </div>
     </div>
 

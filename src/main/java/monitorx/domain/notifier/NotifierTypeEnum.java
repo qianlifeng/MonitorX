@@ -1,7 +1,8 @@
 package monitorx.domain.notifier;
 
 public enum NotifierTypeEnum {
-    WECHAT("wechat", "wexin");
+    WECHAT("wechat", "wexin"),
+    EMAIL("email", "email");
 
     String code;
     String description;
@@ -13,6 +14,7 @@ public enum NotifierTypeEnum {
 
     public static NotifierTypeEnum getByCode(String code) {
         if ("wechat".equals(code)) return WECHAT;
+        if ("email".equals(code)) return EMAIL;
 
         return null;
     }

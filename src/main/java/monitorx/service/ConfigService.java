@@ -29,7 +29,7 @@ public class ConfigService {
         File file = new File(CONFIG_NAME);
         if (file.exists()) {
             try {
-                String configJSON = FileUtils.readFileToString(file);
+                String configJSON = FileUtils.readFileToString(file, "UTF-8");
                 config = JSON.parseObject(configJSON, Config.class);
                 rebuildNotifier(config, configJSON);
             } catch (IOException e) {
@@ -62,7 +62,7 @@ public class ConfigService {
         if (config != null) {
             String configString = JSON.toJSONString(config, true);
             try {
-                FileUtils.writeStringToFile(new File(CONFIG_NAME), configString);
+                FileUtils.writeStringToFile(new File(CONFIG_NAME), configString, "UTF-8");
             } catch (IOException e) {
                 e.printStackTrace();
             }

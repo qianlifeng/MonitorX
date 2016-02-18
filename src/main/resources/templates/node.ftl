@@ -13,7 +13,8 @@
                 <span class="title" v-text="node.title"></span>
             </div>
             <div class="col-sm-3">
-                <i class="fa fa-trash-o clickable pull-right" v-on:click="removeNode()" data-toggle="tooltip" data-placement="left" title="Remove node"></i>
+                <i class="fa fa-trash-o clickable pull-right" v-on:click="removeNode()" data-toggle="tooltip" data-placement="top" title="Remove node"></i>
+                <i class="fa fa-plus clickable pull-right" style="margin-right:10px;" data-toggle="tooltip" data-placement="top" title="Add forewarning" v-on:click="addNodeForewarning()"></i>
             </div>
         </div>
         <div class="lastupdate">

@@ -11,7 +11,7 @@
             <h1 class="title">Notifiers</h1>
         </div>
         <div class="col-sm-3 add-new">
-            <a href="/notifier/new/" class="dropdown-toggle pull-right" role="button" data-toggle="tooltip" data-placement="bottom" title="Add notifier"><span class="fa fa-plus"></span></a>
+            <a href="/notifier/new/" class="dropdown-toggle pull-right" role="button" data-toggle="tooltip" data-placement="top" title="Add notifier"><span class="fa fa-plus"></span></a>
         </div>
     </div>
 

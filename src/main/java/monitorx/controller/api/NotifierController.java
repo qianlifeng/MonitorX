@@ -41,7 +41,7 @@ public class NotifierController {
     @RequestMapping(value = "/testsend/", method = RequestMethod.POST)
     public APIResponse testSend(HttpServletRequest request) throws IOException {
         String title = request.getParameter("title");
-        String msg = request.getParameter("msg");
+        String msg = request.getParameter("body");
 
         Notifier notifier = buildNotifier(request);
         notifier.send(title, msg);
