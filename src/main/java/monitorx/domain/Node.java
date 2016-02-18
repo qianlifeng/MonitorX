@@ -1,26 +1,32 @@
 package monitorx.domain;
 
+import com.alibaba.fastjson.annotation.JSONField;
+import monitorx.domain.syncType.ISyncTypeConfig;
+import monitorx.domain.syncType.SyncTypeEnum;
+
 /**
  * Node that need to be monitored
  */
 public class Node {
     String code;
     String title;
-    String url;
+
     /**
-     * pull/push
+     * @see SyncTypeEnum
      */
     String syncType;
 
-    /**
-     * Seconds
-     */
-    int refreshInterval = 3 * 1000;
+    ISyncTypeConfig syncTypeConfig;
 
     NodeStatus status;
 
     public String getSyncType() {
         return syncType;
+    }
+
+    @JSONField(serialize = false)
+    public SyncTypeEnum getSyncTypeEnum() {
+        return SyncTypeEnum.getByCode(syncType);
     }
 
     public void setSyncType(String syncType) {
@@ -35,28 +41,12 @@ public class Node {
         this.code = code;
     }
 
-    public int getRefreshInterval() {
-        return refreshInterval;
-    }
-
-    public void setRefreshInterval(int refreshInterval) {
-        this.refreshInterval = refreshInterval;
-    }
-
     public String getTitle() {
         return title;
     }
 
     public void setTitle(String title) {
         this.title = title;
-    }
-
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
     }
 
     public NodeStatus getStatus() {
@@ -68,7 +58,15 @@ public class Node {
     }
 
     public String toString() {
-        return title;
+        return code;
+    }
+
+    public ISyncTypeConfig getSyncTypeConfig() {
+        return syncTypeConfig;
+    }
+
+    public void setSyncTypeConfig(ISyncTypeConfig syncTypeConfig) {
+        this.syncTypeConfig = syncTypeConfig;
     }
 
     public boolean equals(Object other) {
@@ -76,6 +74,6 @@ public class Node {
         if (other == this) return true;
         if (!(other instanceof Node)) return false;
         Node otherNode = (Node) other;
-        return this.title.equals(otherNode.getTitle());
+        return this.code.equals(otherNode.getCode());
     }
 }

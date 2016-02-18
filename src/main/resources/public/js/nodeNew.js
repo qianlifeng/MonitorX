@@ -1,4 +1,4 @@
-define(["jquery", "vue", "js/components/gauge", "js/components/line"], function ($, Vue, gauge, line) {
+define(["jquery", "vue", "js/components/syncTypes/pull/pull", "js/components/syncTypes/push/push"], function ($, Vue, pull, push) {
     var vm;
 
     function init() {
@@ -14,6 +14,9 @@ define(["jquery", "vue", "js/components/gauge", "js/components/line"], function 
             methods: {
                 addNode: function () {
                     $.post("/api/node/", this.node, function (res) {
+                        if (res.success) {
+                            window.location.href = "/";
+                        }
                     });
                 }
             }

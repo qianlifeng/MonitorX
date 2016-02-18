@@ -1,4 +1,7 @@
-define(["jquery", "vue", "js/components/gauge", "js/components/line", "js/components/number"], function ($, Vue, gauge, line, number) {
+define(["jquery", "vue",
+    "js/components/widgets/gauge",
+    "js/components/widgets/line",
+    "js/components/widgets/number"], function ($, Vue, gauge, line, number) {
     var vm;
 
     function init() {
@@ -15,9 +18,20 @@ define(["jquery", "vue", "js/components/gauge", "js/components/line", "js/compon
                 addForewarning: function (metric) {
                     alert("add forewarning:" + metric.title);
                 },
-                isNodeUp: function (node) {
-                    if (node.status == null) return false;
-                    return node.status.status == "up";
+                isNodeUp: function () {
+                    if (this.node.status == null) return false;
+                    return this.node.status.status == "up";
+                },
+                removeNode: function () {
+                    if (confirm("Do you want to remove this node?")) {
+                        $.ajax({
+                            url: "/api/node/" + this.node.code + "/",
+                            type: 'DELETE',
+                            success: function (res) {
+                                window.location.href = "/";
+                            }
+                        });
+                    }
                 }
             }
         });
@@ -26,6 +40,7 @@ define(["jquery", "vue", "js/components/gauge", "js/components/line", "js/compon
 
     function sync(partial) {
         $.get("/api/node/" + getUrlParameter("node") + "/", function (res) {
+            var node = res.data;
             if (partial) {
                 if (vm.node.status == null) {
                     vm.node.status = {
@@ -33,18 +48,18 @@ define(["jquery", "vue", "js/components/gauge", "js/components/line", "js/compon
                     };
                 }
 
-                if (res.status != null) {
+                if (node.status != null) {
                     //only update metric values
-                    vm.node.status.status = res.status.status;
-                    vm.node.status.formattedLastUpdateDate = res.status.formattedLastUpdateDate;
-                    vm.node.status.lastUpdateDate = res.status.lastUpdateDate;
+                    vm.node.status.status = node.status.status;
+                    vm.node.status.formattedLastUpdateDate = node.status.formattedLastUpdateDate;
+                    vm.node.status.lastUpdateDate = node.status.lastUpdateDate;
                     for (var index in vm.node.status.metrics) {
-                        vm.node.status.metrics[index].value = res.status.metrics[index].value;
+                        vm.node.status.metrics[index].value = node.status.metrics[index].value;
                     }
                 }
             }
             else {
-                vm.node = res;
+                vm.node = node;
             }
         });
     }

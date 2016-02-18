@@ -2,7 +2,14 @@
 
 <@layout.masterTemplate title="Home" initScript="js/index">
 <div class="index">
-    <h1>Nodes</h1>
+    <div class="row">
+        <div class="col-sm-9">
+            <h1 class="title">Nodes</h1>
+        </div>
+        <div class="col-sm-3 add-new">
+            <a href="/n/new/" class="dropdown-toggle pull-right" role="button" data-toggle="tooltip" data-placement="bottom" title="Add node"><span class="fa fa-plus"></span></a>
+        </div>
+    </div>
 
     <div class="row">
         <div class="col-sm-12 col-lg-6 col-md-6" v-for="node in nodes">

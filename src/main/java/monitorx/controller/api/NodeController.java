@@ -1,4 +1,4 @@
-package monitorx.controller.API;
+package monitorx.controller.api;
 
 import monitorx.domain.Node;
 import monitorx.service.NodeService;
@@ -8,8 +8,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("/api/node")
 public class NodeController {
@@ -18,17 +16,24 @@ public class NodeController {
     NodeService nodeService;
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
-    public List<Node> getNodeList() {
-        return nodeService.getNodes();
+    public APIResponse getNodeList() {
+        return APIResponse.buildSuccessResponse(nodeService.getNodes());
     }
 
     @RequestMapping(value = "/", method = RequestMethod.POST)
-    public void addNode(Node node) {
+    public APIResponse addNode(Node node) {
         nodeService.addNode(node);
+        return APIResponse.buildSuccessResponse();
     }
 
     @RequestMapping(value = "/{nodeCode}/", method = RequestMethod.GET)
-    public Node getNodeList(@PathVariable("nodeCode") String nodeCode) {
-        return nodeService.getNode(nodeCode);
+    public APIResponse getNode(@PathVariable("nodeCode") String nodeCode) {
+        return APIResponse.buildSuccessResponse(nodeService.getNode(nodeCode));
+    }
+
+    @RequestMapping(value = "/{nodeCode}/", method = RequestMethod.DELETE)
+    public APIResponse removeNode(@PathVariable("nodeCode") String nodeCode) {
+        nodeService.removeNode(nodeCode);
+        return APIResponse.buildSuccessResponse();
     }
 }

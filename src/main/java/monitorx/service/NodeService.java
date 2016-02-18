@@ -1,17 +1,11 @@
 package monitorx.service;
 
-import com.alibaba.fastjson.JSON;
 import monitorx.domain.Node;
-import monitorx.domain.NodeStatus;
-import org.apache.http.client.fluent.Request;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.util.Date;
 import java.util.List;
 
 @Service
@@ -41,19 +35,11 @@ public class NodeService {
         return null;
     }
 
-    public void syncStatus(Node node) {
-        logger.info("Sync Node Status: " + node.getTitle());
-        try {
-            String response = Request.Get(node.getUrl()).execute().returnContent().asString(StandardCharsets.UTF_8);
-            NodeStatus nodeStatus = JSON.parseObject(response, NodeStatus.class);
-            nodeStatus.setLastUpdateDate(new Date());
-            node.setStatus(nodeStatus);
-        } catch (IOException e) {
-            NodeStatus nodeStatus = new NodeStatus();
-            nodeStatus.setStatus("down");
-            nodeStatus.setLastUpdateDate(new Date());
-            node.setStatus(nodeStatus);
-            logger.error("Sync Node failed:" + node.getTitle(), e);
+    public void removeNode(String nodeCode) {
+        Node node = getNode(nodeCode);
+        if (node != null) {
+            getNodes().remove(node);
+            configService.save();
         }
     }
 }

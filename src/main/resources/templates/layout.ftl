@@ -22,10 +22,11 @@
                 vue: "lib/vuejs/vue",
                 echart: "lib/echart/echarts.min",
                 odometer: "lib/odometer/odometer.min",
-                layout: "js/layout"
+                layout: "js/layout",
+                text: "lib/requirejs/text"
             },
             deps: [
-                "layout"
+                "layout", "text"
             ],
             shim: {
                 bootstrap: {
@@ -49,21 +50,21 @@ ${header}
             </button>
             <a class="navbar-brand" href="/">MonitorX</a>
         </div>
-        <ul class="nav navbar-nav navbar-right">
-            <li class="add-new-node">
-                <a href="/n/new/" class="dropdown-toggle" role="button" data-toggle="tooltip" data-placement="bottom" title="Add node"> <span class="fa fa-plus"></span></a>
-            </li>
-        </ul>
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                <li><a href="/notifier/">Notifier</a></li>
+            </ul>
+        </div>
     </div>
 </nav>
 <div class="container">
     <#nested />
 </div>
-<footer class="footer">
-    <div class="container">
-        <p class="text-muted">♥ Do have faith in what you're doing.</p>
-    </div>
-</footer>
+<#--<footer class="footer">-->
+<#--<div class="container">-->
+<#--<p class="text-muted">♥ Do have faith in what you're doing.</p>-->
+<#--</div>-->
+<#--</footer>-->
 ${footer}
 </body>
 </html>

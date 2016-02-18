@@ -4,112 +4,24 @@
 	},
 	"nodes":[
 		{
-			"code":"a",
-			"refreshInterval":3000,
-			"syncType":"push",
-			"title":"d"
-		},
-		{
-			"code":"adsf",
-			"refreshInterval":3000,
-			"syncType":"push",
-			"title":"adf"
-		},
-		{
-			"code":"1",
-			"refreshInterval":3000,
-			"syncType":"push",
-			"title":"1"
-		},
-		{
-			"code":"2",
-			"refreshInterval":3000,
-			"syncType":"push",
-			"title":"1"
-		},
-		{
-			"code":"3",
-			"refreshInterval":3000,
-			"syncType":"push",
-			"title":"1"
-		},
-		{
-			"code":"4",
-			"refreshInterval":3000,
-			"syncType":"push",
-			"title":"1"
-		},
-		{
-			"code":"5",
-			"refreshInterval":3000,
-			"syncType":"push",
-			"title":"1"
-		},
-		{
-			"code":"7",
-			"refreshInterval":3000,
-			"syncType":"push",
-			"title":"7"
-		},
-		{
-			"code":"8",
-			"refreshInterval":3000,
-			"syncType":"push",
-			"title":"7"
-		},
-		{
-			"code":"77",
-			"refreshInterval":3000,
-			"syncType":"push",
-			"title":"7"
-		},
-		{
 			"code":"776",
-			"refreshInterval":3000,
 			"syncType":"push",
 			"title":"7"
 		},
 		{
 			"code":"7765",
-			"refreshInterval":3000,
 			"syncType":"push",
 			"title":"7"
-		},
+		}
+	],
+	"notifiers":[
 		{
-			"code":"77654",
-			"refreshInterval":3000,
-			"syncType":"push",
-			"title":"7"
-		},
-		{
-			"code":"776543",
-			"refreshInterval":3000,
-			"syncType":"push",
-			"title":"7"
-		},
-		{
-			"code":"7765432",
-			"refreshInterval":3000,
-			"syncType":"push",
-			"title":"7"
-		},
-		{
-			"code":"77654321",
-			"refreshInterval":3000,
-			"syncType":"push",
-			"title":"7"
-		},
-		{
-			"code":"776543212",
-			"refreshInterval":3000,
-			"syncType":"push",
-			"title":"7"
-		},
-		{
-			"code":"7765432123",
-			"refreshInterval":3000,
-			"syncType":"push",
-			"title":"7"
+			"config":{
+				"secret":"adf"
+			},
+			"id":"b8be0df7-a6f1-4165-ae08-e0b9df8be2ce",
+			"title":"adfa",
+			"type":"wechat"
 		}
 	]
 }

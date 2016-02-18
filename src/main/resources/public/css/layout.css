@@ -62,13 +62,39 @@ body {
     color: #ffffff;
 }
 
+.status-green {
+    background-color: #23c6c8;
+    color: #ffffff;
+}
+
+.status-yellow {
+    background-color: #f8ac59;
+    color: #ffffff;
+}
+
 .clickable {
     cursor: pointer;
 }
 
+.add-new {
+    padding-top: 30px;
+}
+
+.add-new .fa {
+    font-size: 1.5em;
+}
+
+.add-new a,
+.add-new a:visited {
+    color: #777;
+}
+
+.add-new a :hover {
+    color: #777;
+}
+
 @media (max-width: 767px) {
-    .add-new-node {
+    .add-new {
         display: none !important;
     }
 }
-

@@ -6,11 +6,14 @@
 </#assign>
 
 <@layout.masterTemplate title="Detail" header=headerContent initScript="js/node">
-<div class="detail">
-    <div class="status-widget" v-bind:class="{ 'status-up': isNodeUp(node),'status-down': !isNodeUp(node) }">
+<div class="detail" v-cloak>
+    <div class="status-widget" v-bind:class="{ 'status-up': isNodeUp(),'status-down': !isNodeUp() }">
         <div class="row">
-            <div class="col-sm-6">
+            <div class="col-sm-9">
                 <span class="title" v-text="node.title"></span>
+            </div>
+            <div class="col-sm-3">
+                <i class="fa fa-trash-o clickable pull-right" v-on:click="removeNode()" data-toggle="tooltip" data-placement="left" title="Remove node"></i>
             </div>
         </div>
         <div class="lastupdate">
@@ -19,7 +22,7 @@
         <div class="clearfix"></div>
     </div>
 
-    <div class="row" v-cloak>
+    <div class="row">
         <div class="col-sm-12 col-lg-6 col-md-6" v-for="metric in node.status.metrics">
             <div class="panel panel-default">
                 <div class="panel-heading">

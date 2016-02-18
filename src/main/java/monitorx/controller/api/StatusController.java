@@ -1,4 +1,4 @@
-package monitorx.controller.API;
+package monitorx.controller.api;
 
 import com.alibaba.fastjson.JSON;
 import monitorx.domain.Node;
@@ -26,11 +26,9 @@ public class StatusController {
 
     /**
      * App upload status to MonitorX
-     *
-     * @return {"success": true}
      */
     @RequestMapping(value = "/upload/", method = RequestMethod.POST)
-    public String uploadStatus(HttpServletRequest request) throws IOException {
+    public APIResponse uploadStatus(HttpServletRequest request) throws IOException {
         InputStream inputStream = request.getInputStream();
         StringWriter writer = new StringWriter();
         IOUtils.copy(inputStream, writer, "utf-8");
@@ -40,7 +38,7 @@ public class StatusController {
         try {
             nodeStatusUpload = JSON.parseObject(requestBody, NodeStatusUpload.class);
         } catch (Exception e) {
-            return "{\"success\":false,\"message\":\"Invalid json format\"}";
+            return APIResponse.buildErrorResponse("Invalid json format");
         }
 
         Node node = nodeService.getNode(nodeStatusUpload.getNodeCode());
@@ -49,9 +47,9 @@ public class StatusController {
             nodeStatus.setLastUpdateDate(new Date());
             node.setStatus(nodeStatus);
         } else {
-            return "{\"success\":false,\"message\":\"Could not find node\"}";
+            return APIResponse.buildErrorResponse("Could not find node");
         }
 
-        return "{\"success\":true}";
+        return APIResponse.buildSuccessResponse();
     }
 }

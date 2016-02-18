@@ -23,7 +23,7 @@ define(["jquery", "vue"], function ($, Vue) {
 
     function sync() {
         $.get("/api/node/", function (res) {
-            vm.nodes = res;
+            vm.nodes = res.data;
         });
     }
 

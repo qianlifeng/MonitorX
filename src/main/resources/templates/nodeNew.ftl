@@ -1,13 +1,14 @@
 <#import "layout.ftl" as layout />
 
 <#assign headerContent>
+<link rel="stylesheet" href="/css/nodeNew.css">
 </#assign>
 
-<@layout.masterTemplate title="Detail" header=headerContent initScript="js/nodeNew">
+<@layout.masterTemplate title="Add Node" header=headerContent initScript="js/nodeNew">
 <div class="content-container">
     <div class="panel panel-default">
         <div class="panel-heading">
-            <h3 class="panel-title">Add node</h3>
+            <h3 class="panel-title">Add Node</h3>
         </div>
         <div class="panel-body">
             <form class="form-horizontal">
@@ -35,6 +36,7 @@
                         </select>
                     </div>
                 </div>
+                <component :is="'sync-' + node.syncType"></component>
                 <div class="form-group">
                     <div class="col-sm-offset-2 col-sm-10">
                         <button type="button" v-on:click="addNode" class="btn btn-success">Add</button>
