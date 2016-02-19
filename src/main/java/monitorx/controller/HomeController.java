@@ -21,12 +21,12 @@ public class HomeController {
         return "notifier";
     }
 
-    @RequestMapping("/n/")
+    @RequestMapping("/node/")
     public String node() {
         return "node";
     }
 
-    @RequestMapping("/n/new/")
+    @RequestMapping("/node/new/")
     public String newNode() {
         return "nodeNew";
     }
@@ -38,6 +38,11 @@ public class HomeController {
 
     @RequestMapping("/forewarning/new/")
     public String newFirewarning() {
+        return "forewarningNew";
+    }
+
+    @RequestMapping("/forewarning/edit/")
+    public String editFirewarning() {
         return "forewarningNew";
     }
 }

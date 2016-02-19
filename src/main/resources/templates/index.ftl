@@ -7,13 +7,13 @@
             <h1 class="title">Nodes</h1>
         </div>
         <div class="col-sm-3 add-new">
-            <a href="/n/new/" class="dropdown-toggle pull-right" role="button" data-toggle="tooltip" data-placement="top" title="Add node"><span class="fa fa-plus"></span></a>
+            <a href="/node/new/" class="dropdown-toggle pull-right" role="button" data-toggle="tooltip" data-placement="top" title="Add node"><span class="fa fa-plus"></span></a>
         </div>
     </div>
 
-    <div class="row">
+    <div class="row" v-cloak>
         <div class="col-sm-12 col-lg-6 col-md-6" v-for="node in nodes">
-            <div class="status-widget clickable" v-on:click="navigate(node.code)" v-bind:class="{ 'status-up': isNodeUp(node),'status-down': !isNodeUp(node) }">
+            <div class="status-widget clickable" v-on:click="navigate(node.code)" v-bind:class="{ 'status-up': node.status.status == 'up','status-down': node.status.status != 'up' }">
                 <div class="row">
                     <div class="col-sm-6">
                         <span class="title" v-text="node.title"></span>

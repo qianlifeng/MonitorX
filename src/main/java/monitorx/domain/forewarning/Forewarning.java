@@ -1,9 +1,14 @@
 package monitorx.domain.forewarning;
 
-import monitorx.domain.notifier.Notifier;
+import java.util.List;
 
 public class Forewarning {
-    Notifier notifier;
+
+    String id;
+
+    String title;
+
+    List<String> notifiers;
 
     /**
      * Javascript snippet that created by user
@@ -15,28 +20,38 @@ public class Forewarning {
      * If a forewarning is applied to metric, this field will indicate which metric it target to
      * If target is empty, which means this forewarning target to the node itself
      */
-    String target;
+    String metric;
 
     /**
      * If a forewarning specifies firerule, MonitorX will only send a forewarning if satisfied firerule
      * Otherwise, MonitorX will send the forewarning immediately
      */
-    IFireRule fireRule;
+    String fireRule;
 
-    public IFireRule getFireRule() {
+    IFireRuleConfig fireRuleConfig;
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public List<String> getNotifiers() {
+        return notifiers;
+    }
+
+    public void setNotifiers(List<String> notifiers) {
+        this.notifiers = notifiers;
+    }
+
+    public String getFireRule() {
         return fireRule;
     }
 
-    public void setFireRule(IFireRule fireRule) {
+    public void setFireRule(String fireRule) {
         this.fireRule = fireRule;
-    }
-
-    public Notifier getNotifier() {
-        return notifier;
-    }
-
-    public void setNotifier(Notifier notifier) {
-        this.notifier = notifier;
     }
 
     public String getSnippet() {
@@ -47,11 +62,27 @@ public class Forewarning {
         this.snippet = snippet;
     }
 
-    public String getTarget() {
-        return target;
+    public String getMetric() {
+        return metric;
     }
 
-    public void setTarget(String target) {
-        this.target = target;
+    public void setMetric(String target) {
+        this.metric = target;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public IFireRuleConfig getFireRuleConfig() {
+        return fireRuleConfig;
+    }
+
+    public void setFireRuleConfig(IFireRuleConfig fireRuleConfig) {
+        this.fireRuleConfig = fireRuleConfig;
     }
 }

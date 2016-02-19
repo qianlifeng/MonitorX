@@ -7,14 +7,16 @@
 
 <@layout.masterTemplate title="Detail" header=headerContent initScript="js/node">
 <div class="detail" v-cloak>
-    <div class="status-widget" v-bind:class="{ 'status-up': isNodeUp(),'status-down': !isNodeUp() }">
+    <div class="status-widget" v-bind:class="{ 'status-up': node.status.status == 'up','status-down': node.status.status != 'up' }">
         <div class="row">
-            <div class="col-sm-9">
+            <div class="col-sm-6">
                 <span class="title" v-text="node.title"></span>
             </div>
-            <div class="col-sm-3">
+            <div class="col-sm-6">
                 <i class="fa fa-trash-o clickable pull-right" v-on:click="removeNode()" data-toggle="tooltip" data-placement="top" title="Remove node"></i>
-                <i class="fa fa-plus clickable pull-right" style="margin-right:10px;" data-toggle="tooltip" data-placement="top" title="Add forewarning" v-on:click="addNodeForewarning()"></i>
+                <i class="fa fa-plus clickable pull-right forewarning-icon" data-toggle="tooltip" data-placement="top" title="Add forewarning" v-on:click="addNodeForewarning()"></i>
+                <i class="fa forewarning-icon clickable pull-right" v-on:click="editNodeForewarning()" data-toggle="tooltip" data-placement="top" title="When {{nodeNotifier.forewarningTitle}}, notify {{nodeNotifier.title}}" v-bind:class="{'fa-wechat':nodeNotifier.type == 'wechat','fa-envelope-o':nodeNotifier.type=='email'}" v-for="nodeNotifier in getNodeNotifers()"></i>
+                <i></i>
             </div>
         </div>
         <div class="lastupdate">
@@ -33,7 +35,8 @@
                         </div>
                         <div class="col-sm-8">
                             <div class="pull-right">
-                                <i class="fa fa-plus clickable" title="Add forewarning" v-on:click="addForewarning(metric)"></i>
+                                <i class="fa forewarning-icon clickable" v-on:click="editMetricForewarning(metric)" data-toggle="tooltip" data-placement="top" title="When {{notifier.forewarningTitle}}, notify {{notifier.title}}" v-bind:class="{'fa-wechat':notifier.type == 'wechat','fa-envelope-o':notifier.type=='email'}" v-for="notifier in getMetricNotifers(metric)"></i>
+                                <i class="fa fa-plus clickable" title="Add metric forewarning" data-toggle="tooltip" data-placement="top" v-on:click="addForewarning(metric)"></i>
                             </div>
                         </div>
                     </div>

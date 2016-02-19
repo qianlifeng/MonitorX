@@ -5,6 +5,7 @@ import monitorx.domain.forewarning.Forewarning;
 import monitorx.domain.syncType.ISyncTypeConfig;
 import monitorx.domain.syncType.SyncTypeEnum;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -21,9 +22,10 @@ public class Node {
 
     ISyncTypeConfig syncTypeConfig;
 
+    @JSONField(serialize = false)
     NodeStatus status;
 
-    List<Forewarning> forewarnings;
+    List<Forewarning> forewarnings = new ArrayList<Forewarning>();
 
     public String getSyncType() {
         return syncType;

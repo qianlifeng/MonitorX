@@ -9,7 +9,7 @@ define(["jquery", "vue"], function ($, Vue) {
             },
             methods: {
                 navigate: function (code) {
-                    window.location.href = "/n/?node=" + code;
+                    window.location.href = "/node/?node=" + code;
                 },
                 isNodeUp: function (node) {
                     if (node.status == null) return false;
@@ -21,9 +21,23 @@ define(["jquery", "vue"], function ($, Vue) {
         sync();
     }
 
+    function rebuildNullStatus() {
+        for (var i in vm.nodes) {
+            var node = vm.nodes[i];
+            if (node.status == null) {
+                node.status = {
+                    status: "down",
+                    formattedLastUpdateDate: "",
+                    metrics: []
+                };
+            }
+        }
+    }
+
     function sync() {
         $.get("/api/node/", function (res) {
             vm.nodes = res.data;
+            rebuildNullStatus();
         });
     }
 
