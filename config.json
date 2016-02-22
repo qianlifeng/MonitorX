@@ -1,80 +1,49 @@
 {
-	"app":{
-		"title":"MonitorX"
-	},
-	"nodes":[
-		{
-			"code":"776",
-			"forewarnings":[
-				{
-					"fireRule":"firerule-immediately",
-					"id":"6c0a0904-9d7f-4fc2-b2b4-2c997a7ccbf2",
-					"metric":"",
-					"notifiers":[
-						"58017264-a992-4903-a9bb-f384a71d480b",
-						"eef01a6e-2512-4f51-a8a4-b3ef2ed6edeb"
-					],
-					"snippet":"qqq",
-					"title":"qqq"
-				},
-				{
-					"fireRule":"firerule-continuallyDown",
-					"id":"cc13eb7b-9967-4af1-9e71-01cf7ee8972f",
-					"metric":"",
-					"notifiers":[
-						"eef01a6e-2512-4f51-a8a4-b3ef2ed6edeb"
-					],
-					"snippet":"",
-					"title":"down"
-				},
-				{
-					"fireRule":"firerule-continuallyDown",
-					"id":"275113e4-3124-49b7-b6e5-0105656e64de",
-					"metric":"CPU",
-					"notifiers":[
-						"58017264-a992-4903-a9bb-f384a71d480b",
-						"eef01a6e-2512-4f51-a8a4-b3ef2ed6edeb"
-					],
-					"snippet":"",
-					"title":">2q34"
-				},
-				{
-					"fireRule":"firerule-immediately",
-					"id":"dfef2161-4089-4f6b-a77f-91857e7a5e59",
-					"metric":"MEM",
-					"notifiers":[
-						"eef01a6e-2512-4f51-a8a4-b3ef2ed6edeb"
-					],
-					"snippet":"asdfasdfdsa",
-					"title":"test"
-				}
-			],
-			"syncType":"push",
-			"title":"7"
-		},
-		{
-			"code":"7765",
-			"forewarnings":[],
-			"syncType":"push",
-			"title":"7"
-		}
-	],
-	"notifiers":[
-		{
-			"config":{
-				"secret":"xxx"
-			},
-			"id":"58017264-a992-4903-a9bb-f384a71d480b",
-			"title":"小钱的微信",
-			"type":"wechat"
-		},
-		{
-			"config":{
-				"toEmail":"qianlf2008@163.com"
-			},
-			"id":"eef01a6e-2512-4f51-a8a4-b3ef2ed6edeb",
-			"title":"小李的邮箱",
-			"type":"email"
-		}
-	]
+  "app": {
+    "title": "MonitorX"
+  },
+  "nodes": [
+    {
+      "code": "testserver",
+      "forewarnings": [
+        {
+          "fireRule": "firerule-continuallyDown",
+          "id": "6c0a0904-9d7f-4fc2-b2b4-2c997a7ccbf2",
+          "metric": "",
+          "notifiers": [
+            "58017264-a992-4903-a9bb-f384a71d480b",
+            "eef01a6e-2512-4f51-a8a4-b3ef2ed6edeb"
+          ],
+          "snippet": "return isUp != true;",
+          "title": "服务Down了"
+        }
+      ],
+      "syncType": "push",
+      "title": "测试服务器"
+    },
+    {
+      "code": "testserver2",
+      "forewarnings": [],
+      "syncType": "push",
+      "title": "测试服务器2"
+    }
+  ],
+  "notifiers": [
+    {
+      "config": {
+        "secret": "xxx"
+      },
+      "id": "58017264-a992-4903-a9bb-f384a71d480b",
+      "title": "小钱的微信",
+      "type": "wechat"
+    },
+    {
+      "config": {
+        "toEmail": "qianlf2008@163.com"
+      },
+      "id": "eef01a6e-2512-4f51-a8a4-b3ef2ed6edeb",
+      "title": "小李的邮箱",
+      "type": "email"
+    }
+  ]
 }

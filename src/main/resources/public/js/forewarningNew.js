@@ -35,6 +35,9 @@ define(["jquery", "vue"], function ($, Vue) {
                             if (res.success) {
                                 window.location.href = "/node/?node=" + node;
                             }
+                            else {
+                                alert(res.message);
+                            }
                         });
                 },
                 removeForewarning: function () {

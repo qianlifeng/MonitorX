@@ -1,5 +1,7 @@
 package monitorx.domain.forewarning;
 
+import com.alibaba.fastjson.annotation.JSONField;
+
 import java.util.List;
 
 public class Forewarning {
@@ -30,6 +32,9 @@ public class Forewarning {
 
     IFireRuleConfig fireRuleConfig;
 
+    @JSONField(serialize = false)
+    FireRuleContext fireRuleContext = new FireRuleContext();
+
     public String getTitle() {
         return title;
     }
@@ -52,6 +57,14 @@ public class Forewarning {
 
     public void setFireRule(String fireRule) {
         this.fireRule = fireRule;
+    }
+
+    public FireRuleContext getFireRuleContext() {
+        return fireRuleContext;
+    }
+
+    public void setFireRuleContext(FireRuleContext fireRuleContext) {
+        this.fireRuleContext = fireRuleContext;
     }
 
     public String getSnippet() {

@@ -5,14 +5,17 @@ import monitorx.domain.forewarning.Forewarning;
 import monitorx.domain.forewarning.IFireRule;
 import monitorx.domain.notifier.Notifier;
 import monitorx.service.ConfigService;
+import monitorx.service.JavascriptEngine;
 import monitorx.service.NodeService;
 import monitorx.service.NotifierService;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.script.ScriptException;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -35,6 +38,9 @@ public class ForewarningController {
     @Autowired
     ConfigService configService;
 
+    @Autowired
+    JavascriptEngine javascriptEngine;
+
     @RequestMapping(value = "/", method = RequestMethod.POST)
     public APIResponse addForeWarning(HttpServletRequest request) throws IOException {
 
@@ -43,6 +49,12 @@ public class ForewarningController {
         forewarning.setTitle(request.getParameter("title"));
         forewarning.setMetric(request.getParameter("metric"));
         forewarning.setSnippet(request.getParameter("snippet"));
+
+        try {
+            javascriptEngine.executeScript(forewarning.getSnippet());
+        } catch (ScriptException e) {
+            return APIResponse.buildErrorResponse(ExceptionUtils.getRootCause(e).getMessage());
+        }
 
         List<String> notifiers = new ArrayList<String>();
         forewarning.setNotifiers(notifiers);

@@ -46,6 +46,9 @@ public class StatusController {
             NodeStatus nodeStatus = nodeStatusUpload.getNodeStatus();
             nodeStatus.setLastUpdateDate(new Date());
             node.setStatus(nodeStatus);
+
+            nodeService.addCheckPoints(node);
+            nodeService.checkForewarningAndNotify(node);
         } else {
             return APIResponse.buildErrorResponse("Could not find node");
         }

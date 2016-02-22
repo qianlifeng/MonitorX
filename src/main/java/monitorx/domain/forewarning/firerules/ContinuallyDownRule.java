@@ -8,8 +8,19 @@ import org.springframework.stereotype.Component;
  */
 @Component("firerule-continuallyDown")
 public class ContinuallyDownRule extends BaseFireRule {
+
+    private static int continuallyCount = 3;
+
     public boolean isSatisfied(FireRuleContext context) {
-        //todo:
-        return true;
+        if (context.getCheckPoints().size() >= continuallyCount) {
+            boolean statisfied = true;
+            for (int i = 0; i < continuallyCount; i++) {
+                statisfied &= context.getCheckPoints().get(context.getCheckPoints().size() - 1 - i).getSnippetResult();
+            }
+
+            return statisfied;
+        }
+
+        return false;
     }
 }

@@ -28,8 +28,10 @@ public class PushNodeStatusSchedule {
                 long seconds = (new Date().getTime() - node.getStatus().getLastUpdateDate().getTime()) / 1000;
                 if (seconds > 30) {
                     node.getStatus().setStatus("down");
-                    node.getStatus().setLastUpdateDate(new Date());
                     logger.warn("Node is down:" + node.getCode());
+
+                    nodeService.addCheckPoints(node);
+                    nodeService.checkForewarningAndNotify(node);
                 }
             }
         }

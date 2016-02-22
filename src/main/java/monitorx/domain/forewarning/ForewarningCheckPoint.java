@@ -10,7 +10,7 @@ public class ForewarningCheckPoint {
      */
     boolean snippetResult;
 
-    public boolean isSnippetResult() {
+    public boolean getSnippetResult() {
         return snippetResult;
     }
 
