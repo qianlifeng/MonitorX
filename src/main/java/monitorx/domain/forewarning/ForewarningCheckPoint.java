@@ -12,7 +12,7 @@ public class ForewarningCheckPoint {
 
     boolean hasSendNotify = false;
 
-    public boolean isHasSendNotify() {
+    public boolean hasSendNotify() {
         return hasSendNotify;
     }
 
