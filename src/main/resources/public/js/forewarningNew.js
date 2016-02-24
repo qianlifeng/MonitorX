@@ -18,7 +18,8 @@ define(["jquery", "vue"], function ($, Vue) {
                 snippet: "",
                 firerule: "",
                 notifiers: [],
-                availableNotifiers: []
+                availableNotifiers: [],
+                msg: ""
             },
             methods: {
                 addForewarning: function () {
@@ -29,7 +30,8 @@ define(["jquery", "vue"], function ($, Vue) {
                             "metric": this.metric,
                             "snippet": this.snippet,
                             "firerule": this.firerule,
-                            "notifiers": this.notifiers
+                            "notifiers": this.notifiers,
+                            "msg": this.msg
                         },
                         function (res) {
                             if (res.success) {
@@ -42,18 +44,19 @@ define(["jquery", "vue"], function ($, Vue) {
                 },
                 removeForewarning: function () {
                     if (confirm("Do you want to remove this forewarning?")) {
-                        $.post("/api/forewarning/",
+                        $.post("/api/forewarning/delete/",
                             {
                                 "title": this.title,
                                 "node": this.node,
                                 "metric": this.metric,
                                 "snippet": this.snippet,
                                 "firerule": this.firerule,
-                                "notifiers": this.notifiers
+                                "notifiers": this.notifiers,
+                                "msg": this.msg
                             },
                             function (res) {
                                 if (res.success) {
-                                    window.location.href = "/notifier/";
+                                    window.location.href = "/node/?node=" + node;
                                 }
                             });
                     }

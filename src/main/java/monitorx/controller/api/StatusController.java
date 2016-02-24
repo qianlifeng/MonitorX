@@ -48,7 +48,6 @@ public class StatusController {
             node.setStatus(nodeStatus);
 
             nodeService.addCheckPoints(node);
-            nodeService.checkForewarningAndNotify(node);
         } else {
             return APIResponse.buildErrorResponse("Could not find node");
         }

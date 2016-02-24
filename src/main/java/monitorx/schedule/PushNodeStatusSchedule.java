@@ -31,7 +31,6 @@ public class PushNodeStatusSchedule {
                     logger.warn("Node is down:" + node.getCode());
 
                     nodeService.addCheckPoints(node);
-                    nodeService.checkForewarningAndNotify(node);
                 }
             }
         }

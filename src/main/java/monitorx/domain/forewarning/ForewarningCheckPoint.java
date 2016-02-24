@@ -10,6 +10,17 @@ public class ForewarningCheckPoint {
      */
     boolean snippetResult;
 
+    boolean hasSendNotify = false;
+
+    public boolean isHasSendNotify() {
+        return hasSendNotify;
+    }
+
+    public void setHasSendNotify(boolean hasSendNotify) {
+        this.hasSendNotify = hasSendNotify;
+    }
+
+
     public boolean getSnippetResult() {
         return snippetResult;
     }

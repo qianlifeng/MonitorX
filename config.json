@@ -1,49 +1,68 @@
 {
-  "app": {
-    "title": "MonitorX"
-  },
-  "nodes": [
-    {
-      "code": "testserver",
-      "forewarnings": [
-        {
-          "fireRule": "firerule-continuallyDown",
-          "id": "6c0a0904-9d7f-4fc2-b2b4-2c997a7ccbf2",
-          "metric": "",
-          "notifiers": [
-            "58017264-a992-4903-a9bb-f384a71d480b",
-            "eef01a6e-2512-4f51-a8a4-b3ef2ed6edeb"
-          ],
-          "snippet": "return isUp != true;",
-          "title": "服务Down了"
-        }
-      ],
-      "syncType": "push",
-      "title": "测试服务器"
-    },
-    {
-      "code": "testserver2",
-      "forewarnings": [],
-      "syncType": "push",
-      "title": "测试服务器2"
-    }
-  ],
-  "notifiers": [
-    {
-      "config": {
-        "secret": "xxx"
-      },
-      "id": "58017264-a992-4903-a9bb-f384a71d480b",
-      "title": "小钱的微信",
-      "type": "wechat"
-    },
-    {
-      "config": {
-        "toEmail": "qianlf2008@163.com"
-      },
-      "id": "eef01a6e-2512-4f51-a8a4-b3ef2ed6edeb",
-      "title": "小李的邮箱",
-      "type": "email"
-    }
-  ]
+	"app": {
+		"title": "MonitorX"
+	},
+	"nodes": [
+		{
+			"code": "testserver",
+			"forewarnings": [
+				{
+					"fireRule": "firerule-immediately",
+					"id": "1964895b-88a6-4681-9023-819fc7a014b5",
+					"metric": "CPU",
+					"msg": "测试10",
+					"notifiers": [
+						"58017264-a992-4903-a9bb-f384a71d480b"
+					],
+					"snippet": "return contextJSON.programCPU < 10;",
+					"title": "cpu < 10"
+				},
+				{
+					"fireRule": "firerule-immediately",
+					"id": "b47f93e0-9f20-451e-b1f8-041b4db8ddfd",
+					"metric": "CPU",
+					"msg": "test",
+					"notifiers": [
+						"9fc4b40f-2701-49ba-9a64-4efb77333fce"
+					],
+					"snippet": "return contextJSON.programCPU < 5;",
+					"title": "sadfdsf"
+				}
+			],
+			"syncType": "push",
+			"title": "测试服务器"
+		},
+		{
+			"code": "testserver2",
+			"forewarnings": [],
+			"syncType": "push",
+			"title": "测试服务器2"
+		}
+	],
+	"notifiers": [
+		{
+			"config": {
+				"toEmail": "qianlf2008@163.com"
+			},
+			"id": "eef01a6e-2512-4f51-a8a4-b3ef2ed6edeb",
+			"title": "小李的邮箱",
+			"type": "email"
+		},
+		{
+			"config": {
+				"callbackUrl": "http://test.fcgylapp.cn:9191/message/send/"
+			},
+			"id": "3941c251-f98e-4edb-b178-737cc34b2c51",
+			"title": "蜂巢IT微信",
+			"type": "callback"
+		},
+		{
+			"config": {
+				"secret": "SCU176Tb31d1ebdbf2e07f7e97e7dad0ad7b27855efdb1e75ee9"
+			},
+			"id": "9fc4b40f-2701-49ba-9a64-4efb77333fce",
+			"title": "scottqian wechat",
+			"type": "wechat"
+		}
+	]
 }

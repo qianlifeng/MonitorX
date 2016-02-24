@@ -17,11 +17,11 @@
             paths: {
                 lib: "lib",
                 js: "js",
-                jquery: "lib/jquery/jQuery-2.1.4.min",
-                bootstrap: "lib/bootstrap/js/bootstrap.min",
-                vue: "lib/vuejs/vue",
+                jquery: ["http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min", "lib/jquery/jQuery-2.1.4.min"],
+                bootstrap: ["http://apps.bdimg.com/libs/bootstrap/3.3.4/js/bootstrap.min", "lib/bootstrap/js/bootstrap.min"],
+                vue: ["http://apps.bdimg.com/libs/vue/1.0.14/vue", "lib/vuejs/vue"],
                 echart: "lib/echart/echarts.min",
-                odometer: "lib/odometer/odometer.min",
+                odometer: ["http://apps.bdimg.com/libs/odometer.js/0.4.6/odometer", "lib/odometer/odometer.min"],
                 layout: "js/layout",
                 text: "lib/requirejs/text"
             },

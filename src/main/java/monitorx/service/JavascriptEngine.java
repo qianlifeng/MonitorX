@@ -15,9 +15,9 @@ public class JavascriptEngine {
         ScriptEngine engine = factory.getEngineByName("JavaScript");
         try {
             engine.eval(scriptContext);
-            engine.eval("function getValue(){ " + script + "}");
+            engine.eval("function getValue__internal(){ " + script + "}");
             Invocable inv = (Invocable) engine;
-            return inv.invokeFunction("getValue");
+            return inv.invokeFunction("getValue__internal");
         } catch (NoSuchMethodException e) {
             e.printStackTrace();
         }

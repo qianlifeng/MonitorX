@@ -1,4 +1,7 @@
-define(["jquery", "vue", "js/components/notifier/wechat/wechat", "js/components/notifier/email/email"], function ($, Vue) {
+define(["jquery", "vue",
+    "js/components/notifier/wechat/wechat",
+    "js/components/notifier/email/email",
+    "js/components/notifier/callback/callback"], function ($, Vue) {
     var vm;
 
     function init() {

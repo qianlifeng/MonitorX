@@ -32,6 +32,8 @@ public class Forewarning {
 
     IFireRuleConfig fireRuleConfig;
 
+    String msg;
+
     @JSONField(serialize = false)
     FireRuleContext fireRuleContext = new FireRuleContext();
 
@@ -97,5 +99,13 @@ public class Forewarning {
 
     public void setFireRuleConfig(IFireRuleConfig fireRuleConfig) {
         this.fireRuleConfig = fireRuleConfig;
+    }
+
+    public String getMsg() {
+        return msg;
+    }
+
+    public void setMsg(String msg) {
+        this.msg = msg;
     }
 }

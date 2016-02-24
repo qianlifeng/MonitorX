@@ -11,7 +11,11 @@ public class ContinuallyDownRule extends BaseFireRule {
 
     private static int continuallyCount = 3;
 
-    public boolean isSatisfied(FireRuleContext context) {
+    public boolean shouldFireNotify(FireRuleContext context) {
+        if (isLastNotifyTooShort(context)) {
+            return false;
+        }
+
         if (context.getCheckPoints().size() >= continuallyCount) {
             boolean statisfied = true;
             for (int i = 0; i < continuallyCount; i++) {

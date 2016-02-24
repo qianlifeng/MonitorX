@@ -5,6 +5,7 @@ import monitorx.domain.Node;
 import monitorx.domain.forewarning.Forewarning;
 import monitorx.domain.forewarning.ForewarningCheckPoint;
 import monitorx.domain.forewarning.IFireRule;
+import monitorx.domain.notifier.Notifier;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
@@ -76,22 +77,30 @@ public class NodeService {
 
             forewarning.getFireRuleContext().addCheckPoint(checkPoint);
         }
+
+        checkForewarningAndNotify(node);
     }
 
     public String getNodeMetricContext(Node node, String metricTitle) {
         if (StringUtils.isEmpty(metricTitle)) {
             //get node context
-            return "var isUp = " + node.getStatus().getStatus().equals("up") + ";";
+            String isUp = "false";
+            if (node.getStatus() != null) {
+                isUp = String.valueOf(node.getStatus().getStatus().equals("up"));
+            }
+            return "var isUp = " + isUp + ";";
         }
 
-        for (Metric metric : node.getStatus().getMetrics()) {
-            if (metric.getTitle().equals(metricTitle)) {
-                String context = "var value = " + metric.getValue() + ";";
-                if (StringUtils.isNotEmpty(metric.getContext())) {
-                    context += metric.getContext();
-                }
+        if (node.getStatus() != null) {
+            for (Metric metric : node.getStatus().getMetrics()) {
+                if (metric.getTitle().equals(metricTitle)) {
+                    String context = "var value = " + metric.getValue() + ";";
+                    if (StringUtils.isNotEmpty(metric.getContext())) {
+                        context += "var contextJSON=" + metric.getContext() + ";";
+                    }
 
-                return context;
+                    return context;
+                }
             }
         }
 
@@ -100,10 +109,16 @@ public class NodeService {
 
     public void checkForewarningAndNotify(Node node) {
         for (Forewarning forewarning : node.getForewarnings()) {
-            boolean isFireNotify = ((IFireRule) applicationContext.getBean(forewarning.getFireRule())).isSatisfied(forewarning.getFireRuleContext());
+            boolean isFireNotify = ((IFireRule) applicationContext.getBean(forewarning.getFireRule())).shouldFireNotify(forewarning.getFireRuleContext());
             if (isFireNotify) {
-                for (String notifier : forewarning.getNotifiers()) {
-                    notifierService.getNotifier(notifier).send(forewarning.getTitle(), "node:" + node.getTitle() + ", metric=" + forewarning.getMetric());
+                for (String notifierId : forewarning.getNotifiers()) {
+                    Notifier notifier = notifierService.getNotifier(notifierId);
+                    if (notifier != null) {
+                        List<ForewarningCheckPoint> checkPoints = forewarning.getFireRuleContext().getCheckPoints();
+                        ForewarningCheckPoint lastCheckPoint = checkPoints.get(checkPoints.size() - 1);
+                        lastCheckPoint.setHasSendNotify(true);
+                        notifier.send(forewarning.getTitle(), forewarning.getMsg());
+                    }
                 }
             }
         }

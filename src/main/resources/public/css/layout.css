@@ -19,7 +19,21 @@ body {
     color: #777;
 }
 
-[v-cloak] {
+.v-cloak-loading {
+    display: none;
+    text-align: center;
+}
+
+.v-cloak-loading img {
+    margin-top: 20px;
+    width: 46px;
+}
+
+[v-cloak] .v-cloak-loading {
+    display: block !important;
+}
+
+[v-cloak] .v-cloak-content {
     display: none;
 }
 
@@ -64,6 +78,11 @@ body {
 
 .status-green {
     background-color: #23c6c8;
+    color: #ffffff;
+}
+
+.status-blue {
+    background-color: #1c84c6;
     color: #ffffff;
 }
 

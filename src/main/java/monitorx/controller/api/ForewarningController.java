@@ -43,15 +43,19 @@ public class ForewarningController {
 
     @RequestMapping(value = "/", method = RequestMethod.POST)
     public APIResponse addForeWarning(HttpServletRequest request) throws IOException {
+        String nodeCode = request.getParameter("node");
+        Node node = nodeService.getNode(nodeCode);
 
         Forewarning forewarning = new Forewarning();
         forewarning.setId(UUID.randomUUID().toString());
         forewarning.setTitle(request.getParameter("title"));
         forewarning.setMetric(request.getParameter("metric"));
         forewarning.setSnippet(request.getParameter("snippet"));
+        forewarning.setMsg(request.getParameter("msg"));
 
         try {
-            javascriptEngine.executeScript(forewarning.getSnippet());
+            String context = nodeService.getNodeMetricContext(node, forewarning.getMetric());
+            javascriptEngine.executeScript(context, forewarning.getSnippet());
         } catch (ScriptException e) {
             return APIResponse.buildErrorResponse(ExceptionUtils.getRootCause(e).getMessage());
         }
@@ -74,9 +78,28 @@ public class ForewarningController {
         }
         forewarning.setFireRule(request.getParameter("firerule"));
 
+        node.getForewarnings().add(forewarning);
+
+        configService.save();
+
+        return APIResponse.buildSuccessResponse();
+    }
+
+    @RequestMapping(value = "/delete/", method = RequestMethod.POST)
+    public APIResponse deleteForeWarning(HttpServletRequest request) throws IOException {
         String nodeCode = request.getParameter("node");
         Node node = nodeService.getNode(nodeCode);
-        node.getForewarnings().add(forewarning);
+        String metric = request.getParameter("metric");
+
+        Forewarning deletedForewarning = null;
+        for (Forewarning forewarning : node.getForewarnings()) {
+            if (forewarning.getMetric().equals(metric)) {
+                deletedForewarning = forewarning;
+            }
+        }
+        if (deletedForewarning != null) {
+            node.getForewarnings().remove(deletedForewarning);
+        }
 
         configService.save();
 

@@ -1,0 +1,17 @@
+<div class="status-widget status-blue">
+    <div class="row">
+        <div class="col-sm-9">
+            <i class="fa fa-external-link fa-3x"></i><span class="notifier-title" v-text="notifier.title"></span>
+        </div>
+        <div class="col-sm-3">
+            <i class="fa fa-trash-o clickable pull-right" v-on:click="removeNotifier()" data-toggle="tooltip" data-placement="top" title="Remove notifier"></i>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="key pull-right">
+                <i class="fa fa-link"></i> <span class="" v-text="notifier.config.callbackUrl"></span>
+            </div>
+        </div>
+    </div>
+</div>

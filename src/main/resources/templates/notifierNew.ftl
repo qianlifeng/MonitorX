@@ -26,6 +26,7 @@
                         <select class="form-control" v-model="notifier.type">
                             <option value="wechat">Wechat</option>
                             <option value="email">Email</option>
+                            <option value="callback">Callback</option>
                         </select>
                     </div>
                 </div>

@@ -12,17 +12,22 @@
     </div>
 
     <div class="row" v-cloak>
-        <div class="col-sm-12 col-lg-6 col-md-6" v-for="node in nodes">
-            <div class="status-widget clickable" v-on:click="navigate(node.code)" v-bind:class="{ 'status-up': node.status.status == 'up','status-down': node.status.status != 'up' }">
-                <div class="row">
-                    <div class="col-sm-6">
-                        <span class="title" v-text="node.title"></span>
+        <div class="v-cloak-loading">
+            <img src="/image/loading.gif">
+        </div>
+        <div class="v-cloak-content">
+            <div class="col-sm-12 col-lg-6 col-md-6" v-for="node in nodes">
+                <div class="status-widget clickable" v-on:click="navigate(node.code)" v-bind:class="{ 'status-up': node.status.status == 'up','status-down': node.status.status != 'up' }">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <span class="title" v-text="node.title"></span>
+                        </div>
                     </div>
+                    <div class="lastupdate">
+                        <i class="fa fa-clock-o"></i> <span v-text="node.status.formattedLastUpdateDate"></span>
+                    </div>
+                    <div class="clearfix"></div>
                 </div>
-                <div class="lastupdate">
-                    <i class="fa fa-clock-o"></i> <span v-text="node.status.formattedLastUpdateDate"></span>
-                </div>
-                <div class="clearfix"></div>
             </div>
         </div>
     </div>

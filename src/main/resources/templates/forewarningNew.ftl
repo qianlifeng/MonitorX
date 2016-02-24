@@ -37,7 +37,7 @@
                     <label class="col-sm-2 control-label">Snippet Context</label>
 
                     <div class="col-sm-10">
-                        <p class="form-control-static">var i = 0;</p>
+                        <p class="form-control-static">${context}</p>
                     </div>
                 </div>
                 <div class="form-group">
@@ -64,6 +64,13 @@
                             <option selected value="firerule-immediately">Immediately</option>
                             <option value="firerule-continuallyDown">Continually Down</option>
                         </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Notify message</label>
+
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" v-model="msg">
                     </div>
                 </div>
                 <div class="form-group">

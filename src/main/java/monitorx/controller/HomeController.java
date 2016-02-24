@@ -1,9 +1,13 @@
 package monitorx.controller;
 
+import monitorx.domain.Node;
 import monitorx.service.NodeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import javax.servlet.http.HttpServletRequest;
 
 @Controller
 public class HomeController {
@@ -37,12 +41,23 @@ public class HomeController {
     }
 
     @RequestMapping("/forewarning/new/")
-    public String newFirewarning() {
+    public String newFirewarning(HttpServletRequest request, Model model) {
+        String node = request.getParameter("node");
+        String metric = request.getParameter("metric");
+        model.addAttribute("context", getForewarningContext(node, metric));
         return "forewarningNew";
     }
 
     @RequestMapping("/forewarning/edit/")
-    public String editFirewarning() {
+    public String editFirewarning(HttpServletRequest request, Model model) {
+        String node = request.getParameter("node");
+        String metric = request.getParameter("metric");
+        model.addAttribute("context", getForewarningContext(node, metric));
         return "forewarningNew";
+    }
+
+    private String getForewarningContext(String nodeCode, String metric) {
+        Node node = nodeService.getNode(nodeCode);
+        return nodeService.getNodeMetricContext(node, metric);
     }
 }
