@@ -10,7 +10,7 @@
 					"fireRule": "firerule-immediately",
 					"id": "1964895b-88a6-4681-9023-819fc7a014b5",
 					"metric": "CPU",
-					"msg": "测试10",
+					"msg": "test",
 					"notifiers": [
 						"58017264-a992-4903-a9bb-f384a71d480b"
 					],
@@ -30,13 +30,19 @@
 				}
 			],
 			"syncType": "push",
-			"title": "测试服务器"
+			"title": "test1"
 		},
 		{
 			"code": "testserver2",
 			"forewarnings": [],
 			"syncType": "push",
-			"title": "测试服务器2"
+			"title": "test2"
+		},
+		{
+			"code": "oms-netease",
+			"forewarnings": [],
+			"syncType": "push",
+			"title": "test3"
 		}
 	],
 	"notifiers": [
@@ -50,15 +56,15 @@
 		},
 		{
 			"config": {
-				"callbackUrl": "http://test.fcgylapp.cn:9191/message/send/"
+				"callbackUrl": "xxxx"
 			},
 			"id": "3941c251-f98e-4edb-b178-737cc34b2c51",
-			"title": "蜂巢IT微信",
+			"title": "微信",
 			"type": "callback"
 		},
 		{
 			"config": {
-				"secret": "SCU176Tb31d1ebdbf2e07f7e97e7dad0ad7b27855efdb1e75ee9"
+				"secret": "xxxx"
 			},
 			"id": "9fc4b40f-2701-49ba-9a64-4efb77333fce",
 			"title": "scottqian wechat",

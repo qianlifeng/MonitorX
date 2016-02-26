@@ -1,6 +1,7 @@
 package monitorx.domain.forewarning;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.util.List;
 
@@ -34,7 +35,7 @@ public class Forewarning {
 
     String msg;
 
-    @JSONField(serialize = false)
+    @JsonIgnore
     FireRuleContext fireRuleContext = new FireRuleContext();
 
     public String getTitle() {

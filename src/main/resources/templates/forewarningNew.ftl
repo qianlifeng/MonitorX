@@ -48,6 +48,14 @@
                     </div>
                 </div>
                 <div class="form-group">
+                    <div class="col-sm-1 col-sm-offset-2">
+                        <button type="button" v-on:click="evaluate()" class="btn btn-default">Evaluate</button>
+                    </div>
+                    <div class="col-sm-9">
+                        <p class="form-control-static" v-html="evaluateResult"></p>
+                    </div>
+                </div>
+                <div class="form-group">
                     <label class="col-sm-2 control-label">Notifiers</label>
 
                     <div class="col-sm-10">

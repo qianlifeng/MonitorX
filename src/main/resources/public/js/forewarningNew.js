@@ -19,7 +19,8 @@ define(["jquery", "vue"], function ($, Vue) {
                 firerule: "",
                 notifiers: [],
                 availableNotifiers: [],
-                msg: ""
+                msg: "",
+                evaluateResult: ""
             },
             methods: {
                 addForewarning: function () {
@@ -60,6 +61,19 @@ define(["jquery", "vue"], function ($, Vue) {
                                 }
                             });
                     }
+                },
+                evaluate: function () {
+                    $.post("/api/forewarning/evaluate/",
+                        {
+                            "node": this.node,
+                            "metric": this.metric,
+                            "snippet": this.snippet
+                        },
+                        function (res) {
+                            if (res.success) {
+                                vm.evaluateResult = res.data;
+                            }
+                        });
                 }
             }
         });

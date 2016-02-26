@@ -1,7 +1,8 @@
 define(["jquery", "vue", "bootstrap",
     "js/components/widgets/gauge",
     "js/components/widgets/line",
-    "js/components/widgets/number"], function ($, Vue, bootstrap, gauge, line, number) {
+    "js/components/widgets/pie",
+    "js/components/widgets/number"], function ($, Vue) {
     var vm;
     var allNotifiers = [];
 
@@ -122,7 +123,14 @@ define(["jquery", "vue", "bootstrap",
                     }
                     else {
                         for (var index in vm.node.status.metrics) {
-                            vm.node.status.metrics[index].value = node.status.metrics[index].value;
+                            var metricTitle = vm.node.status.metrics[index].title;
+
+                            for (var j in node.status.metrics) {
+                                var waitingUpdateMetric = node.status.metrics[j];
+                                if (waitingUpdateMetric.title == metricTitle) {
+                                    vm.node.status.metrics[index].value = waitingUpdateMetric.value;
+                                }
+                            }
                         }
                     }
                 }

@@ -8,6 +8,7 @@ import monitorx.service.ConfigService;
 import monitorx.service.JavascriptEngine;
 import monitorx.service.NodeService;
 import monitorx.service.NotifierService;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -104,5 +105,21 @@ public class ForewarningController {
         configService.save();
 
         return APIResponse.buildSuccessResponse();
+    }
+
+    @RequestMapping(value = "/evaluate/", method = RequestMethod.POST)
+    public APIResponse evaluate(HttpServletRequest request) throws IOException {
+        String nodeCode = request.getParameter("node");
+        Node node = nodeService.getNode(nodeCode);
+        String metric = request.getParameter("metric");
+        String snippet = request.getParameter("snippet");
+        if (StringUtils.isEmpty(snippet)) return APIResponse.buildSuccessResponse("Please input snippet");
+
+        try {
+            String context = nodeService.getNodeMetricContext(node, metric);
+            return APIResponse.buildSuccessResponse(javascriptEngine.executeScript(context, snippet).toString());
+        } catch (ScriptException e) {
+            return APIResponse.buildSuccessResponse(ExceptionUtils.getRootCause(e).getMessage());
+        }
     }
 }
