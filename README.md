@@ -11,3 +11,19 @@ Make Monitor Easy!
   value =
 * pie
   value = [{"name":"titl1","value":12},{"name":"titl2","value":15}]
+
+# metric example
+``` json
+{
+    "status":"up",
+    "metrics":[
+        {"title":"CPU","type":"line","value":23},
+        {"title":"OPS","type":"gauge","value":20},
+        {"title":"MEM","type":"number","value":40},
+        {"title":"Pie","type":"pie","value":[
+            {"value":22,"name":"title1"},
+            {"value":5,"name":"ertyyu"}
+        ]}
+    ]
+}
+```

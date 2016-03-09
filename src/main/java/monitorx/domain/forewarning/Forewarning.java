@@ -36,6 +36,7 @@ public class Forewarning {
     String msg;
 
     @JsonIgnore
+    @JSONField(serialize = false)
     FireRuleContext fireRuleContext = new FireRuleContext();
 
     public String getTitle() {

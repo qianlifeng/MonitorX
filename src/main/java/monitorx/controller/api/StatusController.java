@@ -7,6 +7,7 @@ import monitorx.domain.NodeStatusUpload;
 import monitorx.service.NodeService;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -53,5 +54,19 @@ public class StatusController {
         }
 
         return APIResponse.buildSuccessResponse();
+    }
+
+    @RequestMapping(value = "/{node}/", method = RequestMethod.GET)
+    public String queryStatus(@PathVariable("node") String nodeCode) throws IOException {
+        String status = "down";
+
+        Node node = nodeService.getNode(nodeCode);
+        if (node == null) return "Invalid node";
+
+        NodeStatus nodeStatus = node.getStatus();
+        if (nodeStatus != null) {
+            status = nodeStatus.getStatus();
+        }
+        return status;
     }
 }

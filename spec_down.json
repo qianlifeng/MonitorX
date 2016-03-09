@@ -1,7 +1,0 @@
-{
-    "status":"down",
-    "metrics":[
-        {"title":"CPU","type":"line","value":23},
-        {"title":"OPS","type":"gauge","value":23}
-    ]
-}
