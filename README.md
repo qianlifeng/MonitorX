@@ -3,7 +3,7 @@ An Elegant Monitor.
 
 # Screenshot
 
-![https://github.com/qianlifeng/MonitorX/blob/master/doc/screenshot/nodex.png](https://github.com/qianlifeng/MonitorX/blob/master/doc/screenshot/nodex.png)
+![https://github.com/qianlifeng/MonitorX/blob/master/doc/screenshot/nodes.png](https://github.com/qianlifeng/MonitorX/blob/master/doc/screenshot/nodes.png)
 
 # Download
 
