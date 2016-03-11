@@ -23,28 +23,6 @@ If you use windows, execute
 java -jar MonitorX.jar
 ```
 
-# Supported metric type
-* number
-  value = int number
-* gauge
-  value = int number
-* line
-  value =
-* pie
-  value = [{"name":"titl1","value":12},{"name":"titl2","value":15}]
+# Lean more about MonitorX
 
-# metric example
-``` json
-{
-    "status":"up",
-    "metrics":[
-        {"title":"CPU","type":"line","value":23},
-        {"title":"OPS","type":"gauge","value":20},
-        {"title":"MEM","type":"number","value":40},
-        {"title":"Pie","type":"pie","value":[
-            {"value":22,"name":"title1"},
-            {"value":5,"name":"ertyyu"}
-        ]}
-    ]
-}
-```
+If you want to know more about MonitorX, please refer the [Wiki Page](https://github.com/qianlifeng/MonitorX/wiki)
