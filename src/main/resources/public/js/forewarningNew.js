@@ -20,7 +20,9 @@ define(["jquery", "vue"], function ($, Vue) {
                 notifiers: [],
                 availableNotifiers: [],
                 msg: "",
-                evaluateResult: ""
+                realMsg: "",
+                evaluateResult: "",
+                expression: "{{expression}}"
             },
             methods: {
                 addForewarning: function () {
@@ -74,6 +76,19 @@ define(["jquery", "vue"], function ($, Vue) {
                                 vm.evaluateResult = res.data;
                             }
                         });
+                },
+                previewMsg: function () {
+                    $.post("/api/forewarning/previewMsg/",
+                        {
+                            "node": this.node,
+                            "metric": this.metric,
+                            "msg": this.msg
+                        },
+                        function (res) {
+                            if (res.success) {
+                                vm.realMsg = res.data;
+                            }
+                        });
                 }
             }
         });
@@ -82,6 +97,14 @@ define(["jquery", "vue"], function ($, Vue) {
         $.get("/api/notifier/", function (res) {
             vm.availableNotifiers = res.data;
         });
+
+        if (edit === "true") {
+            loadEditingForewarning(node, metric);
+        }
+    }
+
+    function loadEditingForewarning(node, metric) {
+
     }
 
     function getUrlParameter(sParam) {

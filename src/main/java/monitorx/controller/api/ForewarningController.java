@@ -1,5 +1,6 @@
 package monitorx.controller.api;
 
+import monitorx.domain.Metric;
 import monitorx.domain.Node;
 import monitorx.domain.forewarning.Forewarning;
 import monitorx.domain.forewarning.IFireRule;
@@ -86,6 +87,19 @@ public class ForewarningController {
         return APIResponse.buildSuccessResponse();
     }
 
+    @RequestMapping(value = "/", method = RequestMethod.GET)
+    public APIResponse getForewarning(HttpServletRequest request) throws IOException {
+        String nodeCode = request.getParameter("node");
+        String metricTitle = request.getParameter("metric");
+        Node node = nodeService.getNode(nodeCode);
+        if (node == null) return APIResponse.buildErrorResponse("Node doesn't exist");
+        if (node.getStatus() == null) return APIResponse.buildErrorResponse("Node has no status");
+
+        nodeService.findForewarning(id);
+
+        return APIResponse.buildSuccessResponse();
+    }
+
     @RequestMapping(value = "/delete/", method = RequestMethod.POST)
     public APIResponse deleteForeWarning(HttpServletRequest request) throws IOException {
         String nodeCode = request.getParameter("node");
@@ -119,7 +133,28 @@ public class ForewarningController {
             String context = nodeService.getNodeMetricContext(node, metric);
             return APIResponse.buildSuccessResponse(javascriptEngine.executeScript(context, snippet).toString());
         } catch (ScriptException e) {
-            return APIResponse.buildSuccessResponse(ExceptionUtils.getRootCause(e).getMessage());
+            return APIResponse.buildSuccessResponse(ExceptionUtils.getRootCauseMessage(e));
+        } catch (Exception e) {
+            return APIResponse.buildSuccessResponse(ExceptionUtils.getRootCauseMessage(e));
         }
     }
+
+    @RequestMapping(value = "/previewMsg/", method = RequestMethod.POST)
+    public APIResponse previewMsg(HttpServletRequest request) throws IOException {
+        String nodeCode = request.getParameter("node");
+        Node node = nodeService.getNode(nodeCode);
+        String metric = request.getParameter("metric");
+        String msg = request.getParameter("msg");
+        if (StringUtils.isEmpty(msg)) return APIResponse.buildSuccessResponse("Please input msg");
+
+        try {
+            String realMsg = nodeService.getTranslatedMsg(node, metric, msg);
+            return APIResponse.buildSuccessResponse(realMsg);
+        } catch (ScriptException e) {
+            return APIResponse.buildSuccessResponse(ExceptionUtils.getRootCauseMessage(e));
+        } catch (Exception e) {
+            return APIResponse.buildSuccessResponse(ExceptionUtils.getRootCauseMessage(e));
+        }
+    }
+
 }

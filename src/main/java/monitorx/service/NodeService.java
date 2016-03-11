@@ -1,5 +1,6 @@
 package monitorx.service;
 
+import monitorx.controller.api.APIResponse;
 import monitorx.domain.Metric;
 import monitorx.domain.Node;
 import monitorx.domain.forewarning.Forewarning;
@@ -17,6 +18,8 @@ import org.springframework.stereotype.Service;
 import javax.script.ScriptException;
 import java.util.Date;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 public class NodeService {
@@ -60,6 +63,12 @@ public class NodeService {
             getNodes().remove(node);
             configService.save();
         }
+    }
+
+    public Forewarning findForewarning(String nodeCode, String forewarningId) {
+        Node node = getNode(nodeCode);
+        if (node == null) return APIResponse.buildErrorResponse("Node doesn't exist");
+        if (node.getStatus() == null) return APIResponse.buildErrorResponse("Node has no status");
     }
 
     public void addCheckPoints(Node node) {
@@ -107,6 +116,20 @@ public class NodeService {
         return StringUtils.EMPTY;
     }
 
+    public String getTranslatedMsg(Node node, String metricTitle, String originMsg) throws ScriptException {
+        String context = getNodeMetricContext(node, metricTitle);
+
+        Matcher m = Pattern.compile("\\{\\{(.*?)\\}\\}").matcher(originMsg);
+        String msg = originMsg;
+        while (m.find()) {
+            String expression = m.group(1);
+            String value = javascriptEngine.executeScript(context, "return " + expression).toString();
+            msg = msg.replace("{{" + expression + "}}", value);
+        }
+
+        return msg;
+    }
+
     public void checkForewarningAndNotify(Node node) {
         for (Forewarning forewarning : node.getForewarnings()) {
             boolean isFireNotify = ((IFireRule) applicationContext.getBean(forewarning.getFireRule())).shouldFireNotify(forewarning.getFireRuleContext());
@@ -117,7 +140,13 @@ public class NodeService {
                         List<ForewarningCheckPoint> checkPoints = forewarning.getFireRuleContext().getCheckPoints();
                         ForewarningCheckPoint lastCheckPoint = checkPoints.get(checkPoints.size() - 1);
                         lastCheckPoint.setHasSendNotify(true);
-                        notifier.send(forewarning.getTitle(), forewarning.getMsg());
+
+                        String msg = forewarning.getMsg();
+                        try {
+                            msg = getTranslatedMsg(node, forewarning.getMetric(), forewarning.getMsg());
+                        } catch (Exception e) {
+                        }
+                        notifier.send(forewarning.getTitle(), msg);
                     }
                 }
             }

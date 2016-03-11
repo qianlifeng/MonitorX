@@ -71,6 +71,7 @@
                         <select class="form-control" v-model="firerule">
                             <option selected value="firerule-immediately">Immediately</option>
                             <option value="firerule-continuallyDown">Continually Down</option>
+                            <option value="firerule-oncePerDay">Once per day</option>
                         </select>
                     </div>
                 </div>
@@ -78,7 +79,15 @@
                     <label class="col-sm-2 control-label">Notify message</label>
 
                     <div class="col-sm-10">
-                        <input type="text" class="form-control" v-model="msg">
+                        <textarea class="form-control" rows="5" v-model="msg" placeholder="Notify message support snippet context, please use {{expression}} to eval the real value"></textarea>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-1 col-sm-offset-2">
+                        <button type="button" v-on:click="previewMsg()" class="btn btn-default">Preview</button>
+                    </div>
+                    <div class="col-sm-9">
+                        <p class="form-control-static" v-html="realMsg">ss</p>
                     </div>
                 </div>
                 <div class="form-group">

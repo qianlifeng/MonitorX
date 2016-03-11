@@ -1,74 +1,85 @@
 {
-	"app": {
-		"title": "MonitorX"
+	"app":{
+		"title":"MonitorX"
 	},
-	"nodes": [
+	"nodes":[
 		{
-			"code": "testserver",
-			"forewarnings": [
+			"code":"testserver",
+			"forewarnings":[
 				{
-					"fireRule": "firerule-immediately",
-					"id": "1964895b-88a6-4681-9023-819fc7a014b5",
-					"metric": "CPU",
-					"msg": "test",
-					"notifiers": [
+					"fireRule":"firerule-immediately",
+					"id":"1964895b-88a6-4681-9023-819fc7a014b5",
+					"metric":"CPU",
+					"msg":"test",
+					"notifiers":[
 						"58017264-a992-4903-a9bb-f384a71d480b"
 					],
-					"snippet": "return contextJSON.programCPU < 10;",
-					"title": "cpu < 10"
+					"snippet":"return contextJSON.programCPU < 10;",
+					"title":"cpu < 10"
 				},
 				{
-					"fireRule": "firerule-immediately",
-					"id": "b47f93e0-9f20-451e-b1f8-041b4db8ddfd",
-					"metric": "CPU",
-					"msg": "test",
-					"notifiers": [
+					"fireRule":"firerule-immediately",
+					"id":"b47f93e0-9f20-451e-b1f8-041b4db8ddfd",
+					"metric":"CPU",
+					"msg":"test",
+					"notifiers":[
 						"9fc4b40f-2701-49ba-9a64-4efb77333fce"
 					],
-					"snippet": "return contextJSON.programCPU < 5;",
-					"title": "sadfdsf"
+					"snippet":"return contextJSON.programCPU < 5;",
+					"title":"sadfdsf"
+				},
+				{
+					"fireRule":"firerule-oncePerDay",
+					"id":"3544a52c-2744-4443-88e1-43e95f4da578",
+					"metric":"",
+					"msg":"测试1",
+					"notifiers":[
+						"9fc4b40f-2701-49ba-9a64-4efb77333fce"
+					],
+					"snippet":"return true;",
+					"title":"test"
 				}
 			],
-			"syncType": "push",
-			"title": "test1"
+			"syncType":"push",
+			"title":"test1"
 		},
 		{
-			"code": "testserver2",
-			"forewarnings": [],
-			"syncType": "push",
-			"title": "test2"
+			"code":"testserver2",
+			"forewarnings":[],
+			"syncType":"push",
+			"title":"test2"
 		},
 		{
-			"code": "oms-netease",
-			"forewarnings": [],
-			"syncType": "push",
-			"title": "test3"
+			"code":"oms-netease",
+			"forewarnings":[],
+			"syncType":"push",
+			"title":"test3"
 		}
 	],
-	"notifiers": [
+	"notifiers":[
 		{
-			"config": {
-				"toEmail": "qianlf2008@163.com"
+			"config":{
+				"toEmail":"qianlf2008@163.com"
 			},
-			"id": "eef01a6e-2512-4f51-a8a4-b3ef2ed6edeb",
-			"title": "小李的邮箱",
-			"type": "email"
+			"id":"eef01a6e-2512-4f51-a8a4-b3ef2ed6edeb",
+			"title":"小李的邮箱",
+			"type":"email"
 		},
 		{
-			"config": {
-				"callbackUrl": "xxxx"
+			"config":{
+				"callbackUrl":"xxxx"
 			},
-			"id": "3941c251-f98e-4edb-b178-737cc34b2c51",
-			"title": "微信",
-			"type": "callback"
+			"id":"3941c251-f98e-4edb-b178-737cc34b2c51",
+			"title":"微信",
+			"type":"callback"
 		},
 		{
-			"config": {
-				"secret": "xxxx"
+			"config":{
+				"secret":"SCU176Tb31d1ebdbf2e07f7e97e7dad0ad7b27855efdb1e75ee9"
 			},
-			"id": "9fc4b40f-2701-49ba-9a64-4efb77333fce",
-			"title": "scottqian wechat",
-			"type": "wechat"
+			"id":"9fc4b40f-2701-49ba-9a64-4efb77333fce",
+			"title":"scottqian wechat",
+			"type":"wechat"
 		}
 	]
 }
