@@ -1,5 +1,5 @@
 # MonitorX
-Elegant Montior.
+An Elegant Monitor.
 
 # Screenshot
 
