@@ -1,4 +1,4 @@
-# MonitorX
+# MonitorX [![Build Status](https://travis-ci.org/qianlifeng/MonitorX.svg?branch=dev)](https://travis-ci.org/qianlifeng/MonitorX)
 An Elegant Monitor.
 
 # Screenshot
