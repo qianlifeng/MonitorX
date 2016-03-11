@@ -1,6 +1,9 @@
 # MonitorX
-Make Monitor Easy!
+Elegant Montior.
 
+# Screenshot
+
+![https://github.com/qianlifeng/MonitorX/blob/master/doc/screenshot/index.png](https://github.com/qianlifeng/MonitorX/blob/master/doc/screenshot/index.png)
 
 # Supported metric type
 * number
