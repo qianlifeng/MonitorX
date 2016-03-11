@@ -41,19 +41,19 @@
 				}
 			],
 			"syncType":"push",
-			"title":"test1"
+			"title":"server 1"
 		},
 		{
 			"code":"testserver2",
 			"forewarnings":[],
 			"syncType":"push",
-			"title":"test2"
+			"title":"server 2"
 		},
 		{
-			"code":"oms-netease",
+			"code":"testserver2",
 			"forewarnings":[],
 			"syncType":"push",
-			"title":"test3"
+			"title":"application 3"
 		}
 	],
 	"notifiers":[
