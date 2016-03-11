@@ -7,13 +7,20 @@ Elegant Montior.
 
 # Download
 
-Please download from Release page.
+Please download from [Release page](https://github.com/qianlifeng/MonitorX/releases).
 
 # How to run
 
-You need JDK7 before run MonitorX. If you already have JDK installed. Just execute
+**You need JDK7 before run MonitorX**.   
+
+If you use linux, execute  
 ```
 ./MonitorX.jar
+```  
+
+If you use windows, execute  
+```
+java -jar MonitorX.jar
 ```
 
 # Supported metric type
