@@ -3,7 +3,18 @@ Elegant Montior.
 
 # Screenshot
 
-![https://github.com/qianlifeng/MonitorX/blob/master/doc/screenshot/index.png](https://github.com/qianlifeng/MonitorX/blob/master/doc/screenshot/index.png)
+![https://github.com/qianlifeng/MonitorX/blob/master/doc/screenshot/node.png](https://github.com/qianlifeng/MonitorX/blob/master/doc/screenshot/node.png)
+
+# Download
+
+Please download from Release page.
+
+# How to run
+
+You need JDK7 before run MonitorX. If you already have JDK installed. Just execute
+```
+./MonitorX.jar
+```
 
 # Supported metric type
 * number
