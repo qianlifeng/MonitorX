@@ -16,28 +16,6 @@
 					],
 					"snippet":"return contextJSON.programCPU < 10;",
 					"title":"cpu < 10"
-				},
-				{
-					"fireRule":"firerule-immediately",
-					"id":"b47f93e0-9f20-451e-b1f8-041b4db8ddfd",
-					"metric":"CPU",
-					"msg":"test",
-					"notifiers":[
-						"9fc4b40f-2701-49ba-9a64-4efb77333fce"
-					],
-					"snippet":"return contextJSON.programCPU < 5;",
-					"title":"sadfdsf"
-				},
-				{
-					"fireRule":"firerule-oncePerDay",
-					"id":"3544a52c-2744-4443-88e1-43e95f4da578",
-					"metric":"",
-					"msg":"测试1",
-					"notifiers":[
-						"9fc4b40f-2701-49ba-9a64-4efb77333fce"
-					],
-					"snippet":"return true;",
-					"title":"test"
 				}
 			],
 			"syncType":"push",
