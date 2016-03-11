@@ -45,6 +45,7 @@ define(["jquery", "vue", "bootstrap",
                                 var notifier = getNotifier(notifierId);
                                 if (notifier != null) {
                                     notifier.forewarningTitle = forewarning.title;
+                                    notifier.forewarningId = forewarning.id;
                                     notifiers.push(notifier);
                                 }
                             }
@@ -63,6 +64,7 @@ define(["jquery", "vue", "bootstrap",
                                 var notifier = getNotifier(notifierId);
                                 if (notifier != null) {
                                     notifier.forewarningTitle = forewarning.title;
+                                    notifier.forewarningId = forewarning.id;
                                     notifiers.push(notifier);
                                 }
                             }
@@ -79,14 +81,14 @@ define(["jquery", "vue", "bootstrap",
 
                     return metrics;
                 },
-                editMetricForewarning: function (metric) {
-                    window.location.href = "/forewarning/edit/?edit=true&node=" + this.node.code + "&metric=" + metric.title;
+                editMetricForewarning: function (metric, forewarningId) {
+                    window.location.href = "/forewarning/edit/?edit=true&node=" + this.node.code + "&forewarningId=" + forewarningId + "&metric=" + metric;
                 },
                 addNodeForewarning: function () {
                     window.location.href = "/forewarning/new/?node=" + this.node.code;
                 },
-                editNodeForewarning: function () {
-                    window.location.href = "/forewarning/edit/?edit=true&node=" + this.node.code;
+                editNodeForewarning: function (forewarningId) {
+                    window.location.href = "/forewarning/edit/?edit=true&node=" + this.node.code + "&forewarningId=" + forewarningId;
                 },
                 removeNode: function () {
                     if (confirm("Do you want to remove this node?")) {

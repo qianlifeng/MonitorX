@@ -5,6 +5,7 @@ define(["jquery", "vue"], function ($, Vue) {
         var node = getUrlParameter("node");
         var edit = getUrlParameter("edit");
         var metric = getUrlParameter("metric");
+        var forewarningId = getUrlParameter("forewarningId");
         if (typeof metric === "undefined" || metric == null) metric = "";
         if (typeof edit === "undefined" || edit == null) edit = "false";
 
@@ -26,24 +27,47 @@ define(["jquery", "vue"], function ($, Vue) {
             },
             methods: {
                 addForewarning: function () {
-                    $.post("/api/forewarning/",
-                        {
-                            "title": this.title,
-                            "node": this.node,
-                            "metric": this.metric,
-                            "snippet": this.snippet,
-                            "firerule": this.firerule,
-                            "notifiers": this.notifiers,
-                            "msg": this.msg
-                        },
-                        function (res) {
-                            if (res.success) {
-                                window.location.href = "/node/?node=" + node;
-                            }
-                            else {
-                                alert(res.message);
-                            }
-                        });
+                    if (this.edit) {
+                        $.post("/api/forewarning/edit/",
+                            {
+                                "title": this.title,
+                                "node": this.node,
+                                "metric": this.metric,
+                                "snippet": this.snippet,
+                                "firerule": this.firerule,
+                                "notifiers": this.notifiers,
+                                "msg": this.msg,
+                                "forewarningId": forewarningId
+                            },
+                            function (res) {
+                                if (res.success) {
+                                    window.location.href = "/node/?node=" + node;
+                                }
+                                else {
+                                    alert(res.message);
+                                }
+                            });
+                    }
+                    else {
+                        $.post("/api/forewarning/",
+                            {
+                                "title": this.title,
+                                "node": this.node,
+                                "metric": this.metric,
+                                "snippet": this.snippet,
+                                "firerule": this.firerule,
+                                "notifiers": this.notifiers,
+                                "msg": this.msg
+                            },
+                            function (res) {
+                                if (res.success) {
+                                    window.location.href = "/node/?node=" + node;
+                                }
+                                else {
+                                    alert(res.message);
+                                }
+                            });
+                    }
                 },
                 removeForewarning: function () {
                     if (confirm("Do you want to remove this forewarning?")) {
@@ -93,18 +117,24 @@ define(["jquery", "vue"], function ($, Vue) {
             }
         });
 
-
         $.get("/api/notifier/", function (res) {
             vm.availableNotifiers = res.data;
         });
 
-        if (edit === "true") {
-            loadEditingForewarning(node, metric);
+        if (vm.edit) {
+            loadEditingForewarning(node, forewarningId);
         }
     }
 
-    function loadEditingForewarning(node, metric) {
-
+    function loadEditingForewarning(node, forewarningId) {
+        $.get("/api/forewarning/?node=" + node + "&forewarning=" + forewarningId, function (res) {
+            var existingForwarning = res.data;
+            vm.snippet = existingForwarning.snippet;
+            vm.msg = existingForwarning.msg;
+            vm.notifiers = existingForwarning.notifiers;
+            vm.firerule = existingForwarning.fireRule;
+            vm.title = existingForwarning.title;
+        });
     }
 
     function getUrlParameter(sParam) {

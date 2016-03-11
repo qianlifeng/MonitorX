@@ -9,11 +9,6 @@ public class ImmediatelySendRule extends BaseFireRule {
         if (isLastNotifyTooShort(context)) {
             return false;
         }
-
-        if (context.getCheckPoints().size() > 0) {
-            return context.getCheckPoints().get(context.getCheckPoints().size() - 1).getSnippetResult();
-        }
-
-        return false;
+        return isLastCheckPointReturnTrue(context);
     }
 }

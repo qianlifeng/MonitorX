@@ -1,7 +1,6 @@
 <#import "layout.ftl" as layout />
 
 <#assign headerContent>
-<link rel="stylesheet" href="/css/forewarningNew.css">
 </#assign>
 
 <@layout.masterTemplate title="Add Forewarning" header=headerContent initScript="js/forewarningNew">
@@ -23,14 +22,14 @@
                     <label class="col-sm-2 control-label">Node</label>
 
                     <div class="col-sm-10">
-                        <p class="form-control-static">{{node}}</p>
+                        <p class="form-control-static" v-html="node"></p>
                     </div>
                 </div>
                 <div class="form-group" v-if="metric != ''">
                     <label class="col-sm-2 control-label">Metric</label>
 
                     <div class="col-sm-10">
-                        <p class="form-control-static">{{metric}}</p>
+                        <p class="form-control-static" v-html="metric"></p>
                     </div>
                 </div>
                 <div class="form-group">
@@ -92,7 +91,7 @@
                 </div>
                 <div class="form-group">
                     <div class="col-sm-offset-2 col-sm-10">
-                        <button type="button" v-on:click="addForewarning" class="btn btn-success">Add</button>
+                        <button type="button" v-on:click="addForewarning" class="btn btn-success" v-html="!edit?'Add':'Edit'"></button>
                         <button type="button" v-on:click="removeForewarning" class="btn btn-danger" v-if="edit">Remove</button>
                     </div>
                 </div>

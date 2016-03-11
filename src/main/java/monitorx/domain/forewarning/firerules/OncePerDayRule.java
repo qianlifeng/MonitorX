@@ -12,13 +12,16 @@ import java.util.List;
 public class OncePerDayRule extends BaseFireRule {
 
     public boolean shouldFireNotify(FireRuleContext context) {
-        return !checkIfTodayFired(context.getCheckPoints());
+        if (isLastCheckPointReturnTrue(context) && !isFiredToday(context.getCheckPoints())) {
+            return true;
+        }
+        return false;
     }
 
-    private boolean checkIfTodayFired(List<ForewarningCheckPoint> checkPoints) {
+    private boolean isFiredToday(List<ForewarningCheckPoint> checkPoints) {
         for (ForewarningCheckPoint point : checkPoints) {
             if (DateUtils.isSameDay(new Date(), point.getDatetime())) {
-                if (point.hasSendNotify()) {
+                if (point.getHasSendNotify()) {
                     return true;
                 }
             }

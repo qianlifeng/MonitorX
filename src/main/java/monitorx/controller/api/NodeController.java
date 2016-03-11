@@ -1,6 +1,7 @@
 package monitorx.controller.api;
 
 import monitorx.domain.Node;
+import monitorx.domain.forewarning.Forewarning;
 import monitorx.service.NodeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,6 +30,12 @@ public class NodeController {
     @RequestMapping(value = "/{nodeCode}/", method = RequestMethod.GET)
     public APIResponse getNode(@PathVariable("nodeCode") String nodeCode) {
         return APIResponse.buildSuccessResponse(nodeService.getNode(nodeCode));
+    }
+
+    @RequestMapping(value = "/{nodeCode}/{forewarning}/checkpoint/", method = RequestMethod.GET)
+    public APIResponse getNodeCheckPoints(@PathVariable("nodeCode") String nodeCode, @PathVariable("forewarning") String forewarning) {
+        Forewarning fw = nodeService.findForewarningByTitle(nodeCode, forewarning);
+        return APIResponse.buildSuccessResponse(fw.getFireRuleContext().getCheckPoints());
     }
 
     @RequestMapping(value = "/{nodeCode}/", method = RequestMethod.DELETE)

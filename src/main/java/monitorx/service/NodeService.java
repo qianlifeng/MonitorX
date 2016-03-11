@@ -1,6 +1,5 @@
 package monitorx.service;
 
-import monitorx.controller.api.APIResponse;
 import monitorx.domain.Metric;
 import monitorx.domain.Node;
 import monitorx.domain.forewarning.Forewarning;
@@ -67,8 +66,20 @@ public class NodeService {
 
     public Forewarning findForewarning(String nodeCode, String forewarningId) {
         Node node = getNode(nodeCode);
-        if (node == null) return APIResponse.buildErrorResponse("Node doesn't exist");
-        if (node.getStatus() == null) return APIResponse.buildErrorResponse("Node has no status");
+        for (Forewarning forewarning : node.getForewarnings()) {
+            if (forewarning.getId().equals(forewarningId)) return forewarning;
+        }
+
+        return null;
+    }
+
+    public Forewarning findForewarningByTitle(String nodeCode, String forewarningTitle) {
+        Node node = getNode(nodeCode);
+        for (Forewarning forewarning : node.getForewarnings()) {
+            if (forewarning.getTitle().equals(forewarningTitle)) return forewarning;
+        }
+
+        return null;
     }
 
     public void addCheckPoints(Node node) {

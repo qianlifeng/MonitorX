@@ -1,6 +1,5 @@
 package monitorx.controller.api;
 
-import monitorx.domain.Metric;
 import monitorx.domain.Node;
 import monitorx.domain.forewarning.Forewarning;
 import monitorx.domain.forewarning.IFireRule;
@@ -27,7 +26,6 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api/forewarning")
 public class ForewarningController {
-
     @Autowired
     NotifierService notifierService;
 
@@ -57,9 +55,12 @@ public class ForewarningController {
 
         try {
             String context = nodeService.getNodeMetricContext(node, forewarning.getMetric());
-            javascriptEngine.executeScript(context, forewarning.getSnippet());
+            Object returnValue = javascriptEngine.executeScript(context, forewarning.getSnippet());
+            if (returnValue == null) return APIResponse.buildErrorResponse("Snippet doesn't return any value");
         } catch (ScriptException e) {
-            return APIResponse.buildErrorResponse(ExceptionUtils.getRootCause(e).getMessage());
+            return APIResponse.buildErrorResponse(ExceptionUtils.getRootCauseMessage(e));
+        } catch (Exception e) {
+            return APIResponse.buildErrorResponse(ExceptionUtils.getRootCauseMessage(e));
         }
 
         List<String> notifiers = new ArrayList<String>();
@@ -87,17 +88,54 @@ public class ForewarningController {
         return APIResponse.buildSuccessResponse();
     }
 
+    @RequestMapping(value = "/edit/", method = RequestMethod.POST)
+    public APIResponse editForeWarning(HttpServletRequest request) throws IOException {
+        String forewarningId = request.getParameter("forewarningId");
+        String nodeCode = request.getParameter("node");
+        Node node = nodeService.getNode(nodeCode);
+
+        Forewarning existingForewarning = nodeService.findForewarning(nodeCode, forewarningId);
+        existingForewarning.setTitle(request.getParameter("title"));
+        existingForewarning.setSnippet(request.getParameter("snippet"));
+        existingForewarning.setMsg(request.getParameter("msg"));
+
+        try {
+            String context = nodeService.getNodeMetricContext(node, existingForewarning.getMetric());
+            Object returnValue = javascriptEngine.executeScript(context, existingForewarning.getSnippet());
+            if (returnValue == null) return APIResponse.buildErrorResponse("Snippet doesn't return any value");
+        } catch (ScriptException e) {
+            return APIResponse.buildErrorResponse(ExceptionUtils.getRootCauseMessage(e));
+        } catch (Exception e) {
+            return APIResponse.buildErrorResponse(ExceptionUtils.getRootCauseMessage(e));
+        }
+
+        List<String> notifiers = new ArrayList<String>();
+        existingForewarning.setNotifiers(notifiers);
+        String[] notifierList = request.getParameterMap().get("notifiers[]");
+        if (notifierList != null) {
+            for (String notifierId : notifierList) {
+                Notifier notifier = notifierService.getNotifier(notifierId);
+                if (notifier != null) {
+                    notifiers.add(notifier.getId());
+                }
+            }
+        }
+
+        IFireRule firerule = ((IFireRule) applicationContext.getBean(request.getParameter("firerule")));
+        if (firerule == null) {
+            APIResponse.buildErrorResponse("fire rule doesn't exist");
+        }
+        existingForewarning.setFireRule(request.getParameter("firerule"));
+
+        configService.save();
+        return APIResponse.buildSuccessResponse();
+    }
+
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public APIResponse getForewarning(HttpServletRequest request) throws IOException {
         String nodeCode = request.getParameter("node");
-        String metricTitle = request.getParameter("metric");
-        Node node = nodeService.getNode(nodeCode);
-        if (node == null) return APIResponse.buildErrorResponse("Node doesn't exist");
-        if (node.getStatus() == null) return APIResponse.buildErrorResponse("Node has no status");
-
-        nodeService.findForewarning(id);
-
-        return APIResponse.buildSuccessResponse();
+        String forewarningId = request.getParameter("forewarning");
+        return APIResponse.buildSuccessResponse(nodeService.findForewarning(nodeCode, forewarningId));
     }
 
     @RequestMapping(value = "/delete/", method = RequestMethod.POST)
@@ -131,7 +169,9 @@ public class ForewarningController {
 
         try {
             String context = nodeService.getNodeMetricContext(node, metric);
-            return APIResponse.buildSuccessResponse(javascriptEngine.executeScript(context, snippet).toString());
+            Object returnValue = javascriptEngine.executeScript(context, snippet);
+            if (returnValue == null) return APIResponse.buildSuccessResponse("Snippet doesn't return any value");
+            return APIResponse.buildSuccessResponse(returnValue.toString());
         } catch (ScriptException e) {
             return APIResponse.buildSuccessResponse(ExceptionUtils.getRootCauseMessage(e));
         } catch (Exception e) {

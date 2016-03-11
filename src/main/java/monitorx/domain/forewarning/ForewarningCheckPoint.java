@@ -1,10 +1,13 @@
 package monitorx.domain.forewarning;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.util.Date;
 
 public class ForewarningCheckPoint {
-    Date datetime;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+    Date datetime;
     /**
      * The result that snippet return
      */
@@ -12,14 +15,13 @@ public class ForewarningCheckPoint {
 
     boolean hasSendNotify = false;
 
-    public boolean hasSendNotify() {
+    public boolean getHasSendNotify() {
         return hasSendNotify;
     }
 
     public void setHasSendNotify(boolean hasSendNotify) {
         this.hasSendNotify = hasSendNotify;
     }
-
 
     public boolean getSnippetResult() {
         return snippetResult;
