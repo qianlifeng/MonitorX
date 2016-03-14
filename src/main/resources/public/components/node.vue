@@ -1,14 +1,14 @@
 <template>
-  <div class="app">
-    test
-  </div>
+    <div class="app">
+        test
+    </div>
 </template>
 
 <style>
-.css{
-}
+    .css {
+    }
 </style>
 
 <script>
-
+    var s = "";
 </script>
