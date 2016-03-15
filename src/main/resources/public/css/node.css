@@ -13,3 +13,9 @@
 .forewarning-icon {
     margin-right: 10px;
 }
+
+@media (max-width: 767px) {
+    .operations {
+        display: none !important;
+    }
+}

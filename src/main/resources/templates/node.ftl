@@ -16,7 +16,7 @@
                 <div class="col-sm-6">
                     <span class="title" v-text="node.title"></span>
                 </div>
-                <div class="col-sm-6">
+                <div class="col-sm-6 operations">
                     <i class="fa fa-trash-o clickable pull-right" v-on:click="removeNode()" data-toggle="tooltip" data-placement="top" title="Remove node"></i>
                     <i class="fa fa-plus clickable pull-right forewarning-icon" data-toggle="tooltip" data-placement="top" title="Add forewarning" v-on:click="addNodeForewarning()"></i>
                     <i class="fa forewarning-icon clickable pull-right" v-on:click="editNodeForewarning(nodeNotifier.forewarningId)" data-toggle="tooltip" data-placement="top" title="When {{nodeNotifier.forewarningTitle}}, notify {{nodeNotifier.title}}" v-bind:class="{'fa-link':nodeNotifier.type == 'callback','fa-wechat':nodeNotifier.type == 'wechat','fa-envelope-o':nodeNotifier.type=='email'}" v-for="nodeNotifier in getNodeNotifers()"></i>
@@ -36,7 +36,7 @@
                             <div class="col-sm-4">
                                 <h3 class="panel-title" v-html="metric.title"></h3>
                             </div>
-                            <div class="col-sm-8">
+                            <div class="col-sm-8 operations">
                                 <div class="pull-right">
                                     <i class="fa forewarning-icon clickable" v-on:click="editMetricForewarning(metric.title,notifier.forewarningId)" data-toggle="tooltip" data-placement="top" title="When {{notifier.forewarningTitle}}, notify {{notifier.title}}" v-bind:class="{'fa-link':notifier.type == 'callback','fa-wechat':notifier.type == 'wechat','fa-envelope-o':notifier.type=='email'}" v-for="notifier in getMetricNotifers(metric)"></i>
                                     <i class="fa fa-plus clickable" title="Add metric forewarning" data-toggle="tooltip" data-placement="top" v-on:click="addForewarning(metric)"></i>
