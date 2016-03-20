@@ -9,6 +9,6 @@ public class ImmediatelySendRule extends BaseFireRule {
         if (isLastNotifyTooShort(context)) {
             return false;
         }
-        return isLastCheckPointReturnTrue(context);
+        return true;
     }
 }

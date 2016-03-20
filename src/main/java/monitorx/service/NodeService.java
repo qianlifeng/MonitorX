@@ -131,9 +131,37 @@ public class NodeService {
             ForewarningCheckPoint lastCheckPoint = checkPoints.get(checkPoints.size() - 1);
             ForewarningCheckPoint LastTwoCheckPoint = checkPoints.get(checkPoints.size() - 2);
             if (!lastCheckPoint.getSnippetResult() && LastTwoCheckPoint.getSnippetResult()) {
+                //above codes just satisfied the basic recovered rules (node is up now)
+                //and we still need to find whether we have sent the notify msg between last up (snippetResult = false) checkpoint and current checkpoint
+                //it only make senses that we send recover msg after we sent a status down msg
+                if (hasSentNotifyMsgBeforeRecovery(checkPoints)) {
+                    return true;
+                } else {
+                    logger.info("node is up, but we didn't sent notify msg after last up check, so we shouldn't fire recovery msg");
+                }
+            }
+        }
+        return false;
+    }
+
+    private boolean hasSentNotifyMsgBeforeRecovery(List<ForewarningCheckPoint> checkPoints) {
+        int lastCheckpointIndex = checkPoints.size() - 1;
+        int lastTwoCheckpointIndex = checkPoints.size() - 2;
+        int lastUpCheckpointIndex = lastCheckpointIndex;
+
+        for (int i = lastTwoCheckpointIndex; i >= 0; i--) {
+            if (!checkPoints.get(i).getSnippetResult()) {
+                lastUpCheckpointIndex = i;
+                break;
+            }
+        }
+
+        for (int i = lastUpCheckpointIndex; i <= lastCheckpointIndex; i++) {
+            if (checkPoints.get(i).getHasSendNotify()) {
                 return true;
             }
         }
+
         return false;
     }
 
@@ -179,21 +207,24 @@ public class NodeService {
 
     public void checkForewarningAndNotify(Node node) {
         for (Forewarning forewarning : node.getForewarnings()) {
-            boolean shouldNotify = ((IFireRule) applicationContext.getBean(forewarning.getFireRule())).shouldFireNotify(forewarning.getFireRuleContext());
-            if (shouldNotify) {
-                String msg = forewarning.getMsg();
-                try {
-                    msg = getTranslatedMsg(node, forewarning.getMetric(), forewarning.getMsg());
-                } catch (Exception e) {
-                    //no-op
-                }
-                for (String notifierId : forewarning.getNotifiers()) {
-                    Notifier notifier = notifierService.getNotifier(notifierId);
-                    if (notifier != null) {
-                        List<ForewarningCheckPoint> checkPoints = forewarning.getFireRuleContext().getCheckPoints();
-                        ForewarningCheckPoint lastCheckPoint = checkPoints.get(checkPoints.size() - 1);
-                        lastCheckPoint.setHasSendNotify(true);
-                        notifier.send(msg, StringUtils.EMPTY);
+            List<ForewarningCheckPoint> checkPoints = forewarning.getFireRuleContext().getCheckPoints();
+            ForewarningCheckPoint lastCheckPoint = checkPoints.get(checkPoints.size() - 1);
+            if (lastCheckPoint.getSnippetResult()) {
+                //only after last checkpoint return true, we need to check if we should fire the notify
+                boolean shouldNotify = ((IFireRule) applicationContext.getBean(forewarning.getFireRule())).shouldFireNotify(forewarning.getFireRuleContext());
+                if (shouldNotify) {
+                    String msg = forewarning.getMsg();
+                    try {
+                        msg = getTranslatedMsg(node, forewarning.getMetric(), forewarning.getMsg());
+                    } catch (Exception e) {
+                        //no-op
+                    }
+                    for (String notifierId : forewarning.getNotifiers()) {
+                        Notifier notifier = notifierService.getNotifier(notifierId);
+                        if (notifier != null) {
+                            notifier.send(msg, StringUtils.EMPTY);
+                            lastCheckPoint.setHasSendNotify(true);
+                        }
                     }
                 }
             }

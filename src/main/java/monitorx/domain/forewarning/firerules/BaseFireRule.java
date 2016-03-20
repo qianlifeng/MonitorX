@@ -23,14 +23,6 @@ public abstract class BaseFireRule implements IFireRule {
         return false;
     }
 
-    protected boolean isLastCheckPointReturnTrue(FireRuleContext context) {
-        if (context.getCheckPoints().size() > 0) {
-            return context.getCheckPoints().get(context.getCheckPoints().size() - 1).getSnippetResult();
-        }
-
-        return false;
-    }
-
     private ForewarningCheckPoint findLastNotifiedCheckPoint(FireRuleContext context) {
         for (int i = context.getCheckPoints().size() - 1; i >= 0; i--) {
             ForewarningCheckPoint point = context.getCheckPoints().get(i);
