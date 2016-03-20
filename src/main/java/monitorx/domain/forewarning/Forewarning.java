@@ -35,6 +35,11 @@ public class Forewarning {
 
     String msg;
 
+    /**
+     * msg if node/metric recovered from offline status
+     */
+    String recoveredMsg;
+
     @JsonIgnore
     @JSONField(serialize = false)
     FireRuleContext fireRuleContext = new FireRuleContext();
@@ -109,5 +114,13 @@ public class Forewarning {
 
     public void setMsg(String msg) {
         this.msg = msg;
+    }
+
+    public String getRecoveredMsg() {
+        return recoveredMsg;
+    }
+
+    public void setRecoveredMsg(String recoveredMsg) {
+        this.recoveredMsg = recoveredMsg;
     }
 }

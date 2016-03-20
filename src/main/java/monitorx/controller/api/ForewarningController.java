@@ -52,6 +52,7 @@ public class ForewarningController {
         forewarning.setMetric(request.getParameter("metric"));
         forewarning.setSnippet(request.getParameter("snippet"));
         forewarning.setMsg(request.getParameter("msg"));
+        forewarning.setRecoveredMsg(request.getParameter("recoveredMsg"));
 
         try {
             String context = nodeService.getNodeMetricContext(node, forewarning.getMetric());
@@ -98,6 +99,7 @@ public class ForewarningController {
         existingForewarning.setTitle(request.getParameter("title"));
         existingForewarning.setSnippet(request.getParameter("snippet"));
         existingForewarning.setMsg(request.getParameter("msg"));
+        existingForewarning.setRecoveredMsg(request.getParameter("recoveredMsg"));
 
         try {
             String context = nodeService.getNodeMetricContext(node, existingForewarning.getMetric());

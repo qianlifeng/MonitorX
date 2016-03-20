@@ -45,7 +45,7 @@ public class HomeController {
         String node = request.getParameter("node");
         String metric = request.getParameter("metric");
         model.addAttribute("context", getForewarningContext(node, metric));
-        return "forewarningNew";
+        return "forewarning";
     }
 
     @RequestMapping("/forewarning/edit/")
@@ -53,7 +53,7 @@ public class HomeController {
         String node = request.getParameter("node");
         String metric = request.getParameter("metric");
         model.addAttribute("context", getForewarningContext(node, metric));
-        return "forewarningNew";
+        return "forewarning";
     }
 
     private String getForewarningContext(String nodeCode, String metric) {

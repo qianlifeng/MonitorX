@@ -8,14 +8,15 @@
 			"forewarnings":[
 				{
 					"fireRule":"firerule-immediately",
-					"id":"1964895b-88a6-4681-9023-819fc7a014b5",
-					"metric":"CPU",
-					"msg":"test",
+					"id":"add9a746-f548-4785-9529-d31ab6bf25ce",
+					"metric":"",
+					"msg":"挂啦",
 					"notifiers":[
-						"58017264-a992-4903-a9bb-f384a71d480b"
+						"9fc4b40f-2701-49ba-9a64-4efb77333fce"
 					],
-					"snippet":"return contextJSON.programCPU < 10;",
-					"title":"cpu < 10"
+					"recoveredMsg":"recover:{{isUp}}",
+					"snippet":"return isUp == false;",
+					"title":"down"
 				}
 			],
 			"syncType":"push",

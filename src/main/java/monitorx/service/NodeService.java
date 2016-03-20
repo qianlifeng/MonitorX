@@ -99,6 +99,42 @@ public class NodeService {
         }
 
         checkForewarningAndNotify(node);
+        checkIfNodeRecoveredAndNotify(node);
+    }
+
+    private void checkIfNodeRecoveredAndNotify(Node node) {
+        for (Forewarning forewarning : node.getForewarnings()) {
+            if (isRecovered(forewarning) && StringUtils.isNotEmpty(forewarning.getRecoveredMsg())) {
+                logger.info("sending recovered msg for node:" + node.getCode());
+                String msg = forewarning.getRecoveredMsg();
+                try {
+                    msg = getTranslatedMsg(node, forewarning.getMetric(), forewarning.getRecoveredMsg());
+                } catch (Exception e) {
+                    //no-op
+                }
+                for (String notifierId : forewarning.getNotifiers()) {
+                    Notifier notifier = notifierService.getNotifier(notifierId);
+                    if (notifier != null) {
+                        notifier.send(msg, StringUtils.EMPTY);
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * check if a node is recovered from offline status
+     */
+    private boolean isRecovered(Forewarning forewarning) {
+        List<ForewarningCheckPoint> checkPoints = forewarning.getFireRuleContext().getCheckPoints();
+        if (checkPoints != null && checkPoints.size() > 1) {
+            ForewarningCheckPoint lastCheckPoint = checkPoints.get(checkPoints.size() - 1);
+            ForewarningCheckPoint LastTwoCheckPoint = checkPoints.get(checkPoints.size() - 2);
+            if (!lastCheckPoint.getSnippetResult() && LastTwoCheckPoint.getSnippetResult()) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public String getNodeMetricContext(Node node, String metricTitle) {
@@ -143,21 +179,21 @@ public class NodeService {
 
     public void checkForewarningAndNotify(Node node) {
         for (Forewarning forewarning : node.getForewarnings()) {
-            boolean isFireNotify = ((IFireRule) applicationContext.getBean(forewarning.getFireRule())).shouldFireNotify(forewarning.getFireRuleContext());
-            if (isFireNotify) {
+            boolean shouldNotify = ((IFireRule) applicationContext.getBean(forewarning.getFireRule())).shouldFireNotify(forewarning.getFireRuleContext());
+            if (shouldNotify) {
+                String msg = forewarning.getMsg();
+                try {
+                    msg = getTranslatedMsg(node, forewarning.getMetric(), forewarning.getMsg());
+                } catch (Exception e) {
+                    //no-op
+                }
                 for (String notifierId : forewarning.getNotifiers()) {
                     Notifier notifier = notifierService.getNotifier(notifierId);
                     if (notifier != null) {
                         List<ForewarningCheckPoint> checkPoints = forewarning.getFireRuleContext().getCheckPoints();
                         ForewarningCheckPoint lastCheckPoint = checkPoints.get(checkPoints.size() - 1);
                         lastCheckPoint.setHasSendNotify(true);
-
-                        String msg = forewarning.getMsg();
-                        try {
-                            msg = getTranslatedMsg(node, forewarning.getMetric(), forewarning.getMsg());
-                        } catch (Exception e) {
-                        }
-                        notifier.send(forewarning.getTitle(), msg);
+                        notifier.send(msg, StringUtils.EMPTY);
                     }
                 }
             }

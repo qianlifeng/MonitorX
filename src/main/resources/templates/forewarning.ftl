@@ -3,7 +3,7 @@
 <#assign headerContent>
 </#assign>
 
-<@layout.masterTemplate title="Add Forewarning" header=headerContent initScript="js/forewarningNew">
+<@layout.masterTemplate title="Add Forewarning" header=headerContent initScript="js/forewarning">
 <div class="content-container">
     <div class="panel panel-default">
         <div class="panel-heading">
@@ -86,7 +86,22 @@
                         <button type="button" v-on:click="previewMsg()" class="btn btn-default">Preview</button>
                     </div>
                     <div class="col-sm-9">
-                        <p class="form-control-static" v-html="realMsg">ss</p>
+                        <p class="form-control-static" v-html="realMsg"></p>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Recovery message</label>
+
+                    <div class="col-sm-10">
+                        <textarea class="form-control" rows="5" v-model="recoveredMsg" placeholder="Leave this empty if you don't want recovery notification"></textarea>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-1 col-sm-offset-2">
+                        <button type="button" v-on:click="previewRecoveredMsg()" class="btn btn-default">Preview</button>
+                    </div>
+                    <div class="col-sm-9">
+                        <p class="form-control-static" v-html="realRecoveredMsg"></p>
                     </div>
                 </div>
                 <div class="form-group">

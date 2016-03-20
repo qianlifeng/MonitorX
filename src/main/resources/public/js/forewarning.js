@@ -22,6 +22,8 @@ define(["jquery", "vue"], function ($, Vue) {
                 availableNotifiers: [],
                 msg: "",
                 realMsg: "",
+                recoveredMsg: "",
+                realRecoveredMsg: "",
                 evaluateResult: "",
                 expression: "{{expression}}"
             },
@@ -37,6 +39,7 @@ define(["jquery", "vue"], function ($, Vue) {
                                 "firerule": this.firerule,
                                 "notifiers": this.notifiers,
                                 "msg": this.msg,
+                                "recoveredMsg": this.recoveredMsg,
                                 "forewarningId": forewarningId
                             },
                             function (res) {
@@ -57,7 +60,8 @@ define(["jquery", "vue"], function ($, Vue) {
                                 "snippet": this.snippet,
                                 "firerule": this.firerule,
                                 "notifiers": this.notifiers,
-                                "msg": this.msg
+                                "msg": this.msg,
+                                "recoveredMsg": this.recoveredMsg
                             },
                             function (res) {
                                 if (res.success) {
@@ -113,6 +117,19 @@ define(["jquery", "vue"], function ($, Vue) {
                                 vm.realMsg = res.data;
                             }
                         });
+                },
+                previewRecoveredMsg: function () {
+                    $.post("/api/forewarning/previewMsg/",
+                        {
+                            "node": this.node,
+                            "metric": this.metric,
+                            "msg": this.recoveredMsg
+                        },
+                        function (res) {
+                            if (res.success) {
+                                vm.realRecoveredMsg = res.data;
+                            }
+                        });
                 }
             }
         });
@@ -131,6 +148,7 @@ define(["jquery", "vue"], function ($, Vue) {
             var existingForwarning = res.data;
             vm.snippet = existingForwarning.snippet;
             vm.msg = existingForwarning.msg;
+            vm.recoveredMsg = existingForwarning.recoveredMsg;
             vm.notifiers = existingForwarning.notifiers;
             vm.firerule = existingForwarning.fireRule;
             vm.title = existingForwarning.title;

@@ -1,5 +1,6 @@
 package monitorx.domain.notifier;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.Consts;
 import org.apache.http.client.fluent.Form;
 import org.apache.http.client.fluent.Request;
@@ -29,13 +30,15 @@ public class WechatNotifierConfig implements INotifierConfig {
     }
 
     public void send(String title, String msg) {
-        logger.info("sending msg:" + title);
+        logger.info("sending wechat msg:" + title);
         String url = "http://sc.ftqq.com/" + secret + ".send";
         try {
-            Request.Post(url)
-                    .bodyForm(Form.form()
-                            .add("text", title)
-                            .add("desp", msg+"\n"+ DateUtils.formatDate(new Date(), "yyyy-MM-dd HH:mm:ss")).build(), Consts.UTF_8).execute();
+            Form form = Form.form().add("text", title);
+            if (StringUtils.isNotEmpty(msg)) {
+                //add timestamp to avoid wechat prevent same msg in a short time
+                form.add("desp", msg + "\n\n" + DateUtils.formatDate(new Date(), "yyyy-MM-dd HH:mm:ss") + " from MonitorX");
+            }
+            Request.Post(url).bodyForm(form.build(), Consts.UTF_8).execute();
         } catch (IOException e) {
             logger.error("Send wechat msg failed", e);
         }

@@ -21,7 +21,7 @@ public class PushNodeStatusSchedule {
 
     Logger logger = LoggerFactory.getLogger(getClass());
 
-    @Scheduled(fixedRate = 1000 * 20)
+    @Scheduled(fixedRate = 1000 * 10)
     public void checkPushStatus() {
         for (Node node : nodeService.getNodes()) {
             if (node.getSyncType().equals("push") && node.getStatus() != null && node.getStatus().getLastUpdateDate() != null) {
