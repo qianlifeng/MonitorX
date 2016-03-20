@@ -1,8 +1,6 @@
 # MonitorX [![Build Status](https://travis-ci.org/qianlifeng/MonitorX.svg?branch=dev)](https://travis-ci.org/qianlifeng/MonitorX)
 An Elegant Monitor.
 
-# Screenshot
-
 ![https://github.com/qianlifeng/MonitorX/blob/master/doc/screenshot/nodes.png](https://github.com/qianlifeng/MonitorX/blob/master/doc/screenshot/nodes.png)
 
 # Download
