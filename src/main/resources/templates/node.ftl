@@ -33,10 +33,10 @@
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <div class="row">
-                            <div class="col-sm-4">
+                            <div class="col-sm-7">
                                 <h3 class="panel-title" v-html="metric.title"></h3>
                             </div>
-                            <div class="col-sm-8 operations">
+                            <div class="col-sm-5 operations">
                                 <div class="pull-right">
                                     <i class="fa forewarning-icon clickable" v-on:click="editMetricForewarning(metric.title,notifier.forewarningId)" data-toggle="tooltip" data-placement="top" title="When {{notifier.forewarningTitle}}, notify {{notifier.title}}" v-bind:class="{'fa-link':notifier.type == 'callback','fa-wechat':notifier.type == 'wechat','fa-envelope-o':notifier.type=='email'}" v-for="notifier in getMetricNotifers(metric)"></i>
                                     <i class="fa fa-plus clickable" title="Add metric forewarning" data-toggle="tooltip" data-placement="top" v-on:click="addForewarning(metric)"></i>
