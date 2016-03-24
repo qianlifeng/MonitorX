@@ -27,7 +27,7 @@ public class CallbackNotifierConfig implements INotifierConfig {
     public void send(String title, String msg) {
         logger.info("sending callback msg:" + title);
         try {
-            Request.Post(callbackUrl).bodyForm(Form.form().add("msg", msg).build(), Consts.UTF_8).execute();
+            Request.Post(callbackUrl).bodyForm(Form.form().add("msg", title).build(), Consts.UTF_8).execute();
         } catch (IOException e) {
             logger.error("Send callback msg failed", e);
         }
