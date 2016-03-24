@@ -2,6 +2,7 @@ define(["jquery", "vue", "bootstrap",
     "js/components/widgets/gauge",
     "js/components/widgets/line",
     "js/components/widgets/pie",
+    "js/components/widgets/text",
     "js/components/widgets/number"], function ($, Vue) {
     var vm;
     var allNotifiers = [];
