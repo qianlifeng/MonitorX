@@ -1,14 +1,19 @@
 define(["jquery", "vue", "echart"], function ($, Vue, echarts) {
     var lineOption = {
-        legend: {
-            top: 'bottom',
-            data: ['意向']
+        grid: {
+            x: 10,
+            y: 10,
+            x2: 10,
+            y2: 10
+        },
+        tooltip: {
+            trigger: 'axis'
         },
         xAxis: [
             {
                 type: 'category',
                 boundaryGap: false,
-                data: ["1", "2", "3"]
+                data: []
             }
         ],
         yAxis: [
@@ -26,7 +31,7 @@ define(["jquery", "vue", "echart"], function ($, Vue, echarts) {
                 areaStyle: {
                     normal: {}
                 },
-                data: [1, 2, 3]
+                data: []
             }
         ]
     };
@@ -34,13 +39,21 @@ define(["jquery", "vue", "echart"], function ($, Vue, echarts) {
     function init() {
         Vue.component('line', {
             template: "<div class='metric-widget'></div>",
-            props: ['value'],
+            props: ['historyValue'],
             ready: function () {
                 this.chart = echarts.init(this.$el);
                 this.chart.setOption(lineOption);
             },
             watch: {
-                "value": function (val, oldVal) {
+                "historyValue": function (val, oldVal) {
+                    lineOption.xAxis[0].data = [];
+                    lineOption.series[0].data = [];
+                    for (var i in val) {
+                        var line = JSON.parse(val[i]);
+                        lineOption.xAxis[0].data.push(line.x);
+                        lineOption.series[0].data.push(line.y);
+                    }
+
                     this.chart.setOption(lineOption, true);
                 }
             }

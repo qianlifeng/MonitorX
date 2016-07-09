@@ -6,6 +6,8 @@ import monitorx.domain.NodeStatus;
 import monitorx.domain.NodeStatusUpload;
 import monitorx.service.NodeService;
 import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,6 +23,8 @@ import java.util.Date;
 @RestController
 @RequestMapping("/api/status")
 public class StatusController {
+
+    Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
     NodeService nodeService;
@@ -39,14 +43,17 @@ public class StatusController {
         try {
             nodeStatusUpload = JSON.parseObject(requestBody, NodeStatusUpload.class);
         } catch (Exception e) {
+            logger.error("Invalid json format:" + requestBody);
             return APIResponse.buildErrorResponse("Invalid json format");
         }
 
+        logger.info("Upload status from ip:" + getIpAddr(request) + ", request body:" + requestBody);
         Node node = nodeService.getNode(nodeStatusUpload.getNodeCode());
         if (node != null) {
             NodeStatus nodeStatus = nodeStatusUpload.getNodeStatus();
             nodeStatus.setLastUpdateDate(new Date());
             node.setStatus(nodeStatus);
+            node.getStatusHistory().add(nodeStatus);
 
             nodeService.addCheckPoints(node);
         } else {
@@ -54,6 +61,20 @@ public class StatusController {
         }
 
         return APIResponse.buildSuccessResponse();
+    }
+
+    public static String getIpAddr(HttpServletRequest request) {
+        String ip = request.getHeader("x-forwarded-for");
+        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+            ip = request.getHeader("Proxy-Client-IP");
+        }
+        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+            ip = request.getHeader("WL-Proxy-Client-IP");
+        }
+        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+            ip = request.getRemoteAddr();
+        }
+        return ip;
     }
 
     @RequestMapping(value = "/{node}/", method = RequestMethod.GET)

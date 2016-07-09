@@ -33,6 +33,10 @@ define(["jquery", "vue", "bootstrap",
                 }, 1000);
             },
             methods: {
+                getMetricWidthClass: function (metric) {
+                    var ratio = metric.width || 0.5;
+                    return "col-md-" + ratio * 12 + " col-lg-" + ratio * 12;
+                },
                 addForewarning: function (metric) {
                     window.location.href = "/forewarning/new/?node=" + this.node.code + "&metric=" + metric.title;
                 },
@@ -132,6 +136,7 @@ define(["jquery", "vue", "bootstrap",
                                 var waitingUpdateMetric = node.status.metrics[j];
                                 if (waitingUpdateMetric.title == metricTitle) {
                                     vm.node.status.metrics[index].value = waitingUpdateMetric.value;
+                                    vm.node.status.metrics[index].historyValue = waitingUpdateMetric.historyValue;
                                 }
                             }
                         }

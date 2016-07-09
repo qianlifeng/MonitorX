@@ -1,5 +1,8 @@
 package monitorx.controller.api;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import monitorx.domain.Metric;
 import monitorx.domain.Node;
 import monitorx.domain.forewarning.Forewarning;
 import monitorx.service.NodeService;
@@ -29,8 +32,22 @@ public class NodeController {
 
     @RequestMapping(value = "/{nodeCode}/", method = RequestMethod.GET)
     public APIResponse getNode(@PathVariable("nodeCode") String nodeCode) {
-        return APIResponse.buildSuccessResponse(nodeService.getNode(nodeCode));
+        Node node = nodeService.getNode(nodeCode);
+        if (node.getStatus() != null) {
+            for (Metric metric : node.getStatus().getMetrics()) {
+                if (metric.isLineMetric()) {
+                    JSONObject lineValue = JSON.parseObject(metric.getValue());
+                    int lastMax = 10; //default keep 10 value history
+                    if (lineValue.get("xcount") != null) {
+                        lastMax = lineValue.getInteger("xcount");
+                    }
+                    metric.setHistoryValue(nodeService.getLastMetricValueHistoryByTimeInterval(metric, node.getStatusHistory(), lastMax, 2));
+                }
+            }
+        }
+        return APIResponse.buildSuccessResponse(node);
     }
+
 
     @RequestMapping(value = "/{nodeCode}/{forewarning}/checkpoint/", method = RequestMethod.GET)
     public APIResponse getNodeCheckPoints(@PathVariable("nodeCode") String nodeCode, @PathVariable("forewarning") String forewarning) {

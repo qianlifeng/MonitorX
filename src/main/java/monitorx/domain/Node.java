@@ -1,6 +1,7 @@
 package monitorx.domain;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import monitorx.domain.forewarning.Forewarning;
 import monitorx.domain.syncType.ISyncTypeConfig;
 import monitorx.domain.syncType.SyncTypeEnum;
@@ -25,6 +26,10 @@ public class Node {
     @JSONField(serialize = false)
     NodeStatus status;
 
+    @JSONField(serialize = false)
+    @JsonIgnore
+    List<NodeStatus> statusHistory = new ArrayList<NodeStatus>();
+
     List<Forewarning> forewarnings = new ArrayList<Forewarning>();
 
     public String getSyncType() {
@@ -38,6 +43,14 @@ public class Node {
 
     public void setSyncType(String syncType) {
         this.syncType = syncType;
+    }
+
+    public List<NodeStatus> getStatusHistory() {
+        return statusHistory;
+    }
+
+    public void setStatusHistory(List<NodeStatus> statusHistory) {
+        this.statusHistory = statusHistory;
     }
 
     public String getCode() {

@@ -2,6 +2,7 @@ package monitorx.service;
 
 import monitorx.domain.Metric;
 import monitorx.domain.Node;
+import monitorx.domain.NodeStatus;
 import monitorx.domain.forewarning.Forewarning;
 import monitorx.domain.forewarning.ForewarningCheckPoint;
 import monitorx.domain.forewarning.IFireRule;
@@ -15,8 +16,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 
 import javax.script.ScriptException;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -64,6 +64,77 @@ public class NodeService {
         }
     }
 
+
+    public List<String> getLastMetricValueHistory(Metric metric, List<NodeStatus> statusHistory, int lastCount) {
+        List<String> values = new ArrayList<String>();
+        int stop = statusHistory.size() - lastCount > 0 ? statusHistory.size() - lastCount : 0;
+        for (int i = statusHistory.size() - 1; i >= stop; i--) {
+            NodeStatus nodeStatus = statusHistory.get(i);
+            for (Metric m : nodeStatus.getMetrics()) {
+                if (m.getTitle().equals(metric.getTitle())) {
+                    values.add(m.getValue());
+                }
+            }
+        }
+
+        Collections.reverse(values);
+
+        return values;
+    }
+
+    /**
+     * 从最后开始每隔x分钟找一个点,总共 @param lastCount 个
+     *
+     * @param metric
+     * @param statusHistory
+     * @param lastCount
+     * @param minitues
+     * @return
+     */
+    public List<String> getLastMetricValueHistoryByTimeInterval(Metric metric, List<NodeStatus> statusHistory, int lastCount, int minitues) {
+        boolean shouldBreak = false;
+        List<String> values = new ArrayList<String>();
+
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(statusHistory.get(statusHistory.size() - 1).getLastUpdateDate());
+        cal.add(Calendar.MINUTE, 1);
+        Date stopTime = removeSeconds(cal.getTime());
+
+        for (int i = statusHistory.size() - 1; i >= 0; i--) {
+            NodeStatus nodeStatus = statusHistory.get(i);
+            if (removeSeconds(nodeStatus.getLastUpdateDate()).compareTo(stopTime) < 0) {
+                for (Metric m : nodeStatus.getMetrics()) {
+                    if (m.getTitle().equals(metric.getTitle())) {
+                        values.add(m.getValue());
+
+                        cal.setTime(stopTime);
+                        cal.add(Calendar.MINUTE, -minitues);
+                        stopTime = cal.getTime();
+
+                        if (values.size() >= lastCount) {
+                            shouldBreak = true;
+                            break;
+                        }
+                    }
+                }
+
+                if (shouldBreak) break;
+            }
+        }
+
+        Collections.reverse(values);
+
+        return values;
+    }
+
+    private Date removeSeconds(Date date) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+        return cal.getTime();
+    }
+
     public Forewarning findForewarning(String nodeCode, String forewarningId) {
         Node node = getNode(nodeCode);
         for (Forewarning forewarning : node.getForewarnings()) {
@@ -86,12 +157,16 @@ public class NodeService {
         for (Forewarning forewarning : node.getForewarnings()) {
             ForewarningCheckPoint checkPoint = new ForewarningCheckPoint();
             checkPoint.setDatetime(new Date());
+            String context = getNodeMetricContext(node, forewarning.getMetric());
+            if (StringUtils.isEmpty(context)) {
+                logger.warn("预警metric" + forewarning.getMetric() + "上下文不存在");
+                continue;
+            }
             try {
-                String context = getNodeMetricContext(node, forewarning.getMetric());
                 Boolean result = (Boolean) javascriptEngine.executeScript(context, forewarning.getSnippet());
                 checkPoint.setSnippetResult(result);
             } catch (ScriptException e) {
-                logger.warn("Execute javascript failed while adding checkpoint," + ExceptionUtils.getRootCauseMessage(e));
+                logger.warn("Execute javascript failed while adding checkpoint,node=" + node.getCode() + ", metric=" + forewarning.getMetric() + ",context=" + context + ExceptionUtils.getRootCauseMessage(e));
                 return;
             }
 
@@ -208,6 +283,8 @@ public class NodeService {
     public void checkForewarningAndNotify(Node node) {
         for (Forewarning forewarning : node.getForewarnings()) {
             List<ForewarningCheckPoint> checkPoints = forewarning.getFireRuleContext().getCheckPoints();
+            if (checkPoints.size() == 0) continue;
+
             ForewarningCheckPoint lastCheckPoint = checkPoints.get(checkPoints.size() - 1);
             if (lastCheckPoint.getSnippetResult()) {
                 //only after last checkpoint return true, we need to check if we should fire the notify

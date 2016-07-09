@@ -1,10 +1,32 @@
 package monitorx.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import java.util.List;
+
 public class Metric {
     String title;
     String type;
     String value;
+    List<String> historyValue;
+    Double width = 0.5;
     String context;
+
+    public Double getWidth() {
+        return width;
+    }
+
+    public void setWidth(Double width) {
+        this.width = width;
+    }
+
+    public List<String> getHistoryValue() {
+        return historyValue;
+    }
+
+    public void setHistoryValue(List<String> historyValue) {
+        this.historyValue = historyValue;
+    }
 
     public String getValue() {
         return value;
@@ -38,4 +60,11 @@ public class Metric {
     public void setContext(String context) {
         this.context = context;
     }
+
+    @JsonIgnore
+    public boolean isLineMetric() {
+        return type.equals("line");
+    }
+
+
 }

@@ -29,7 +29,7 @@
             <div class="clearfix"></div>
         </div>
         <div class="row">
-            <div class="col-sm-12 col-lg-6 col-md-6" v-for="metric in node.status.metrics">
+            <div class="col-sm-12 " v-bind:class="getMetricWidthClass(metric)" v-for="metric in node.status.metrics">
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <div class="row">
@@ -45,7 +45,7 @@
                         </div>
                     </div>
                     <div class="panel-body">
-                        <component :is="metric.type" :value="metric.value"></component>
+                        <component :is="metric.type" :value="metric.value" :history-value="metric.historyValue"></component>
                     </div>
                 </div>
             </div>
