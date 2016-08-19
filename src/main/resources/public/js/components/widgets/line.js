@@ -1,10 +1,10 @@
 define(["jquery", "vue", "echart"], function ($, Vue, echarts) {
     var lineOption = {
         grid: {
-            x: 10,
-            y: 10,
-            x2: 10,
-            y2: 10
+            x: 50,
+            y: 50,
+            x2: 50,
+            y2: 50
         },
         tooltip: {
             trigger: 'axis'

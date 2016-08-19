@@ -5,20 +5,7 @@
 	"nodes":[
 		{
 			"code":"callback",
-			"forewarnings":[
-				{
-					"fireRule":"firerule-immediately",
-					"id":"add9a746-f548-4785-9529-d31ab6bf25ce",
-					"metric":"",
-					"msg":"挂啦 {{new Date().getTime()}}",
-					"notifiers":[
-						"9fc4b40f-2701-49ba-9a64-4efb77333fce"
-					],
-					"recoveredMsg":"recover:{{isUp}} {{new Date().getTime()}}",
-					"snippet":"return false;",
-					"title":"down"
-				}
-			],
+			"forewarnings": [],
 			"syncType":"push",
 			"title":"server 1"
 		},

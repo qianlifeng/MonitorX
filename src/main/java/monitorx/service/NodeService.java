@@ -91,7 +91,7 @@ public class NodeService {
      * @param minitues
      * @return
      */
-    public List<String> getLastMetricValueHistoryByTimeInterval(Metric metric, List<NodeStatus> statusHistory, int lastCount, int minitues) {
+    public List<String> getLastMetricValueHistoryByTimeInterval(Metric metric, List<NodeStatus> statusHistory, int lastCount, int seconds) {
         boolean shouldBreak = false;
         List<String> values = new ArrayList<String>();
 
@@ -108,7 +108,7 @@ public class NodeService {
                         values.add(m.getValue());
 
                         cal.setTime(stopTime);
-                        cal.add(Calendar.MINUTE, -minitues);
+                        cal.add(Calendar.SECOND, -seconds);
                         stopTime = cal.getTime();
 
                         if (values.size() >= lastCount) {

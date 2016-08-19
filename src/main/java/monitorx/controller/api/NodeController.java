@@ -33,7 +33,7 @@ public class NodeController {
     @RequestMapping(value = "/{nodeCode}/", method = RequestMethod.GET)
     public APIResponse getNode(@PathVariable("nodeCode") String nodeCode) {
         Node node = nodeService.getNode(nodeCode);
-        if (node.getStatus() != null) {
+        if (node.getStatus() != null && node.getStatus().getMetrics() != null) {
             for (Metric metric : node.getStatus().getMetrics()) {
                 if (metric.isLineMetric()) {
                     JSONObject lineValue = JSON.parseObject(metric.getValue());
@@ -41,7 +41,12 @@ public class NodeController {
                     if (lineValue.get("xcount") != null) {
                         lastMax = lineValue.getInteger("xcount");
                     }
-                    metric.setHistoryValue(nodeService.getLastMetricValueHistoryByTimeInterval(metric, node.getStatusHistory(), lastMax, 2));
+
+                    int interval = 60; //every minutes
+                    if (lineValue.get("xinterval") != null) {
+                        interval = lineValue.getInteger("xinterval");
+                    }
+                    metric.setHistoryValue(nodeService.getLastMetricValueHistoryByTimeInterval(metric, node.getStatusHistory(), lastMax, interval));
                 }
             }
         }
