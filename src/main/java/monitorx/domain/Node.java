@@ -16,6 +16,8 @@ public class Node {
     String code;
     String title;
 
+    Integer checkIntervalSeconds;
+
     /**
      * @see SyncTypeEnum
      */
@@ -95,6 +97,14 @@ public class Node {
 
     public void setForewarnings(List<Forewarning> forewarnings) {
         this.forewarnings = forewarnings;
+    }
+
+    public Integer getCheckIntervalSeconds() {
+        return checkIntervalSeconds;
+    }
+
+    public void setCheckIntervalSeconds(Integer checkIntervalSeconds) {
+        this.checkIntervalSeconds = checkIntervalSeconds;
     }
 
     public boolean equals(Object other) {

@@ -4,22 +4,11 @@
 	},
 	"nodes":[
 		{
+			"checkIntervalSeconds": 60,
 			"code":"callback",
-			"forewarnings": [],
-			"syncType":"push",
-			"title":"server 1"
-		},
-		{
-			"code":"testserver2",
 			"forewarnings":[],
 			"syncType":"push",
-			"title":"server 2"
-		},
-		{
-			"code":"testserver2",
-			"forewarnings":[],
-			"syncType":"push",
-			"title":"application 3"
+			"title": "callback"
 		}
 	],
 	"notifiers":[

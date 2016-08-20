@@ -36,7 +36,7 @@
                         </select>
                     </div>
                 </div>
-                <component :is="'sync-' + node.syncType"></component>
+                <component :is="'sync-' + node.syncType" :node="node"></component>
                 <div class="form-group">
                     <div class="col-sm-offset-2 col-sm-10">
                         <button type="button" v-on:click="addNode" class="btn btn-success">Add</button>

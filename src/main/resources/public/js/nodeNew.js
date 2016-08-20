@@ -8,7 +8,8 @@ define(["jquery", "vue", "js/components/syncTypes/pull/pull", "js/components/syn
                 node: {
                     code: "",
                     title: "",
-                    syncType: "push"
+                    syncType: "push",
+                    checkIntervalSeconds: 30
                 }
             },
             methods: {

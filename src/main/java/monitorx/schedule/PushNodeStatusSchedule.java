@@ -26,7 +26,11 @@ public class PushNodeStatusSchedule {
         for (Node node : nodeService.getNodes()) {
             if (node.getSyncType().equals("push") && node.getStatus() != null && node.getStatus().getLastUpdateDate() != null) {
                 long seconds = (new Date().getTime() - node.getStatus().getLastUpdateDate().getTime()) / 1000;
-                if (seconds > 30) {
+                int interval = 30;
+                if (node.getCheckIntervalSeconds() != null) {
+                    interval = node.getCheckIntervalSeconds();
+                }
+                if (seconds > interval) {
                     node.getStatus().setStatus("down");
                     logger.warn("Node is down:" + node.getCode());
 
