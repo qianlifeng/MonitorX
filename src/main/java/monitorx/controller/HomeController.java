@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletRequest;
 
+import static org.apache.commons.lang3.StringEscapeUtils.escapeHtml4;
+
 @Controller
 public class HomeController {
 
@@ -44,7 +46,7 @@ public class HomeController {
     public String newFirewarning(HttpServletRequest request, Model model) {
         String node = request.getParameter("node");
         String metric = request.getParameter("metric");
-        model.addAttribute("context", getForewarningContext(node, metric));
+        model.addAttribute("context", escapeHtml4(getForewarningContext(node, metric)));
         return "forewarning";
     }
 
@@ -52,7 +54,7 @@ public class HomeController {
     public String editFirewarning(HttpServletRequest request, Model model) {
         String node = request.getParameter("node");
         String metric = request.getParameter("metric");
-        model.addAttribute("context", getForewarningContext(node, metric));
+        model.addAttribute("context", escapeHtml4(getForewarningContext(node, metric)));
         return "forewarning";
     }
 
