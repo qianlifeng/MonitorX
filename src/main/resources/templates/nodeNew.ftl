@@ -4,7 +4,7 @@
 <link rel="stylesheet" href="/css/nodeNew.css">
 </#assign>
 
-<@layout.masterTemplate title="Add Node" header=headerContent initScript="js/nodeNew">
+<@layout.masterTemplate header=headerContent initScript="js/nodeNew">
 <div class="content-container">
     <div class="panel panel-default">
         <div class="panel-heading">

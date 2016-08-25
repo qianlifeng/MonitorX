@@ -3,7 +3,7 @@
 <#assign headerContent>
 </#assign>
 
-<@layout.masterTemplate title="Add Forewarning" header=headerContent initScript="js/forewarning">
+<@layout.masterTemplate header=headerContent initScript="js/forewarning">
 <div class="content-container">
     <div class="panel panel-default">
         <div class="panel-heading">

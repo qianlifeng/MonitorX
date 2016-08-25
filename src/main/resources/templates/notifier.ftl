@@ -4,7 +4,7 @@
 <link rel="stylesheet" href="/css/notifier.css">
 </#assign>
 
-<@layout.masterTemplate title="Notifiers" header=headerContent initScript="js/notifier">
+<@layout.masterTemplate header=headerContent initScript="js/notifier">
 <div class="notifier">
     <div class="row">
         <div class="col-sm-9">
