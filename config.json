@@ -4,11 +4,18 @@
 	},
 	"nodes":[
 		{
-			"checkIntervalSeconds": 60,
+			"checkIntervalSeconds":60,
 			"code":"callback",
 			"forewarnings":[],
 			"syncType":"push",
-			"title": "callback"
+			"title":"callback"
+		},
+		{
+			"checkIntervalSeconds":30,
+			"code":"apollo",
+			"forewarnings":[],
+			"syncType":"push",
+			"title":"Apollo"
 		}
 	],
 	"notifiers":[
