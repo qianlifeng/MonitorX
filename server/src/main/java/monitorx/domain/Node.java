@@ -38,13 +38,13 @@ public class Node {
         return syncType;
     }
 
+    public void setSyncType(String syncType) {
+        this.syncType = syncType;
+    }
+
     @JSONField(serialize = false)
     public SyncTypeEnum getSyncTypeEnum() {
         return SyncTypeEnum.getByCode(syncType);
-    }
-
-    public void setSyncType(String syncType) {
-        this.syncType = syncType;
     }
 
     public List<NodeStatus> getStatusHistory() {

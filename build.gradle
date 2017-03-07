@@ -1,33 +1,21 @@
 buildscript {
-    ext {
-        springBootVersion = '1.5.2.RELEASE'
-    }
     repositories {
         maven { url "http://maven.aliyun.com/nexus/content/groups/public" }
     }
     dependencies {
-        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:1.5.2.RELEASE")
+        classpath("com.moowork.gradle:gradle-node-plugin:1.0.1")
     }
 }
 
-apply plugin: 'java'
-apply plugin: 'eclipse'
-apply plugin: 'org.springframework.boot'
+allprojects {
+    group 'io.qlf.monitorx'
+    version '1.0.0-SNAPSHOT'
 
-jar {
-    baseName = 'MonitorX'
-}
+    apply plugin: 'java'
+    apply plugin: 'idea'
 
-repositories {
-    maven { url "http://maven.aliyun.com/nexus/content/groups/public" }
-}
-
-dependencies {
-    compile('org.apache.httpcomponents:httpclient:4.5')
-    compile('org.apache.httpcomponents:fluent-hc:4.5')
-    compile('org.springframework.boot:spring-boot-starter-freemarker')
-    compile('org.springframework.boot:spring-boot-starter-web')
-    compile("com.alibaba:fastjson:1.2.15")
-    compile("org.apache.commons:commons-lang3:3.3.2")
-    compile("commons-io:commons-io:2.4")
+    repositories {
+        maven { url "http://maven.aliyun.com/nexus/content/groups/public" }
+    }
 }

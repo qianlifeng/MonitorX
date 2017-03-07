@@ -1,0 +1,20 @@
+project(':ui') {
+    apply plugin: 'com.moowork.node'
+
+    task cnpmInstall(type: NpmTask) {
+        group = 'node'
+        args = ['install', '--registry=http://registry.cnpmjs.org']
+    }
+
+    task buildUI(type: NpmTask, dependsOn: cnpmInstall) {
+        group = 'node'
+        args = ['run', 'build']
+    }
+
+    jar.dependsOn buildUI
+
+    task runDev(type: NpmTask, dependsOn: cnpmInstall) {
+        group = 'node'
+        args = ['run', 'dev']
+    }
+}
