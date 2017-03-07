@@ -84,12 +84,6 @@ public class NodeService {
 
     /**
      * 从最后开始每隔x分钟找一个点,总共 @param lastCount 个
-     *
-     * @param metric
-     * @param statusHistory
-     * @param lastCount
-     * @param minitues
-     * @return
      */
     public List<String> getLastMetricValueHistoryByTimeInterval(Metric metric, List<NodeStatus> statusHistory, int lastCount, int seconds) {
         boolean shouldBreak = false;
@@ -253,7 +247,12 @@ public class NodeService {
         if (node.getStatus() != null) {
             for (Metric metric : node.getStatus().getMetrics()) {
                 if (metric.getTitle().equals(metricTitle)) {
-                    String context = "var value = " + metric.getValue() + ";";
+                    String metricValue = metric.getValue();
+                    if (metric.getType().equals("text")) {
+                        metricValue = "\"" + metricValue.replaceAll("\"", "\\\\\"") + "\"";
+                    }
+
+                    String context = "var value = " + metricValue + ";";
                     if (StringUtils.isNotEmpty(metric.getContext())) {
                         context += "var contextJSON=" + metric.getContext() + ";";
                     }

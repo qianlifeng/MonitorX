@@ -23,6 +23,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import static org.apache.commons.lang3.StringEscapeUtils.escapeHtml4;
+
 @RestController
 @RequestMapping("/api/forewarning")
 public class ForewarningController {
@@ -173,7 +175,7 @@ public class ForewarningController {
             String context = nodeService.getNodeMetricContext(node, metric);
             Object returnValue = javascriptEngine.executeScript(context, snippet);
             if (returnValue == null) return APIResponse.buildSuccessResponse("Snippet doesn't return any value");
-            return APIResponse.buildSuccessResponse(returnValue.toString());
+            return APIResponse.buildSuccessResponse(escapeHtml4(returnValue.toString()));
         } catch (ScriptException e) {
             return APIResponse.buildSuccessResponse(ExceptionUtils.getRootCauseMessage(e));
         } catch (Exception e) {

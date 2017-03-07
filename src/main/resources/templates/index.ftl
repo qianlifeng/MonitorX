@@ -1,6 +1,6 @@
 <#import "layout.ftl" as layout />
 
-<@layout.masterTemplate title="Home" initScript="js/index">
+<@layout.masterTemplate initScript="js/index">
 <div class="index">
     <div class="row">
         <div class="col-sm-9">

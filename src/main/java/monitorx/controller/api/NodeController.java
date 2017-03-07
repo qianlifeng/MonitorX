@@ -42,7 +42,7 @@ public class NodeController {
                         lastMax = lineValue.getInteger("xcount");
                     }
 
-                    int interval = 60; //every minutes
+                    int interval = 60; //seconds
                     if (lineValue.get("xinterval") != null) {
                         interval = lineValue.getInteger("xinterval");
                     }

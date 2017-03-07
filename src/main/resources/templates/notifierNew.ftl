@@ -4,7 +4,7 @@
 <link rel="stylesheet" href="/css/notifierNew.css">
 </#assign>
 
-<@layout.masterTemplate title="Add Notifier" header=headerContent initScript="js/notifierNew">
+<@layout.masterTemplate header=headerContent initScript="js/notifierNew">
 <div class="content-container">
     <div class="panel panel-default">
         <div class="panel-heading">

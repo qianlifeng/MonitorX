@@ -5,7 +5,7 @@
 <link rel="stylesheet" href="/lib/odometer/odometer-theme-default.css">
 </#assign>
 
-<@layout.masterTemplate title="Detail" header=headerContent initScript="js/node">
+<@layout.masterTemplate header=headerContent initScript="js/node">
 <div class="detail" v-cloak>
     <div class="v-cloak-loading">
         <img src="/image/loading.gif">
