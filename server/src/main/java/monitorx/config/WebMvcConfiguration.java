@@ -1,23 +1,34 @@
 package monitorx.config;
 
-import monitorx.filter.WebIntercepter;
+import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.filter.CharacterEncodingFilter;
+import org.springframework.web.servlet.DispatcherServlet;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
-/**
- * 添加spring mvc拦截器
- */
 @Configuration
 public class WebMvcConfiguration extends WebMvcConfigurerAdapter {
 
     @Bean
-    public WebIntercepter getWebMVCInterceptor() {
-        return new WebIntercepter();
+    @Order(Ordered.HIGHEST_PRECEDENCE)
+    public CharacterEncodingFilter characterEncodingFilter() {
+        return new CharacterEncodingFilter("UTF-8", true);
     }
 
-    public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(getWebMVCInterceptor()).addPathPatterns("/**");
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("/**").addResourceLocations("classpath:/ui/");
+    }
+
+    @Bean
+    public ServletRegistrationBean apiV1ServletBean(WebApplicationContext wac) {
+        DispatcherServlet servlet = new DispatcherServlet(wac);
+        ServletRegistrationBean bean = new ServletRegistrationBean(servlet, "/api/**");
+        bean.setName("api");
+        return bean;
     }
 }

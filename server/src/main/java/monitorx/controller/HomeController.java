@@ -3,6 +3,9 @@ package monitorx.controller;
 import monitorx.domain.Node;
 import monitorx.service.NodeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,10 +19,12 @@ public class HomeController {
 
     @Autowired
     NodeService nodeService;
+    @Value("classpath:/ui/index.html")
+    private Resource indexHtml;
 
     @RequestMapping("/")
-    public String index() {
-        return "index";
+    public Object index() {
+        return ResponseEntity.ok().body(indexHtml);
     }
 
     @RequestMapping("/notifier/")
