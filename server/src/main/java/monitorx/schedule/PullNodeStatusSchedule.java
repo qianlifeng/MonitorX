@@ -33,7 +33,7 @@ public class PullNodeStatusSchedule implements SchedulingConfigurer {
         for (Node node : nodeService.getNodes()) {
             if (node.getSyncTypeEnum() == SyncTypeEnum.PULL) {
                 PullSyncTypeConfig config = ((PullSyncTypeConfig) node.getSyncTypeConfig());
-                taskRegistrar.addFixedRateTask(new PullNodeStatusTask(node), config.getRefreshInterval());
+                taskRegistrar.addFixedRateTask(new PullNodeStatusTask(node), config.getInterval() * 1000);
             }
         }
     }

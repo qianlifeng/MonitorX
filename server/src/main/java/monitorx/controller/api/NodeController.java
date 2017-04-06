@@ -5,12 +5,16 @@ import com.alibaba.fastjson.JSONObject;
 import monitorx.domain.Metric;
 import monitorx.domain.Node;
 import monitorx.domain.forewarning.Forewarning;
+import monitorx.domain.syncType.ISyncTypeConfig;
 import monitorx.service.NodeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping("/api/node")
@@ -19,13 +23,26 @@ public class NodeController {
     @Autowired
     NodeService nodeService;
 
+    @Autowired
+    ApplicationContext applicationContext;
+
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public APIResponse getNodeList() {
         return APIResponse.buildSuccessResponse(nodeService.getNodes());
     }
 
     @RequestMapping(value = "/", method = RequestMethod.POST)
-    public APIResponse addNode(Node node) {
+    public APIResponse addNode(HttpServletRequest request) {
+        String nodeJSON = request.getParameter("node");
+
+        Node node = JSON.parseObject(nodeJSON, Node.class);
+
+        JSONObject jsonObject = JSON.parseObject(nodeJSON);
+        ISyncTypeConfig config = ((ISyncTypeConfig) applicationContext.getBean("syncTypeConfig-" + node.getSyncType()));
+
+        ISyncTypeConfig nodeConfig = JSON.parseObject(JSON.toJSONString(jsonObject.get("syncTypeConfig")), config.getClass());
+        node.setSyncTypeConfig(nodeConfig);
+
         nodeService.addNode(node);
         return APIResponse.buildSuccessResponse();
     }

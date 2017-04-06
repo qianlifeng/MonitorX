@@ -2,8 +2,8 @@ package monitorx.domain.syncType;
 
 import org.springframework.stereotype.Component;
 
-@Component("syncTypeConfig-pull")
-public class PullSyncTypeConfig implements ISyncTypeConfig {
+@Component("syncTypeConfig-springboot")
+public class SpringBootSyncTypeConfig implements ISyncTypeConfig {
     /**
      * Seconds
      */

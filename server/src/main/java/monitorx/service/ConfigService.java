@@ -3,9 +3,11 @@ package monitorx.service;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import monitorx.domain.Node;
 import monitorx.domain.config.Config;
 import monitorx.domain.notifier.INotifierConfig;
 import monitorx.domain.notifier.Notifier;
+import monitorx.domain.syncType.ISyncTypeConfig;
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -32,6 +34,7 @@ public class ConfigService {
                 String configJSON = FileUtils.readFileToString(file, "UTF-8");
                 config = JSON.parseObject(configJSON, Config.class);
                 rebuildNotifier(config, configJSON);
+                rebuildNodeSyncTypeConfig(config, configJSON);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -53,6 +56,21 @@ public class ConfigService {
                     INotifierConfig configClass = ((INotifierConfig) applicationContext.getBean("notifierConfig-" + notifier.getType()));
                     INotifierConfig notifierConfig = JSON.parseObject(JSON.toJSONString(notifierJSON.get("config")), configClass.getClass());
                     notifier.setConfig(notifierConfig);
+                }
+            }
+        }
+    }
+
+    private void rebuildNodeSyncTypeConfig(Config config, String configJSON) {
+        JSONArray nodes = JSON.parseObject(configJSON).getJSONArray("nodes");
+
+        for (Node node : config.getNodes()) {
+            for (Object obj : nodes) {
+                JSONObject nodeJson = ((JSONObject) obj);
+                if (nodeJson.get("code").equals(node.getCode())) {
+                    ISyncTypeConfig configClass = ((ISyncTypeConfig) applicationContext.getBean("syncTypeConfig-" + node.getSyncType()));
+                    ISyncTypeConfig notifierConfig = JSON.parseObject(JSON.toJSONString(nodeJson.get("syncTypeConfig")), configClass.getClass());
+                    node.setSyncTypeConfig(notifierConfig);
                 }
             }
         }

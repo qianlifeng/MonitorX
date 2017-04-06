@@ -176,11 +176,18 @@ public class ForewarningController {
             Object returnValue = javascriptEngine.executeScript(context, snippet);
             if (returnValue == null) return APIResponse.buildSuccessResponse("Snippet doesn't return any value");
             return APIResponse.buildSuccessResponse(escapeHtml4(returnValue.toString()));
-        } catch (ScriptException e) {
-            return APIResponse.buildSuccessResponse(ExceptionUtils.getRootCauseMessage(e));
         } catch (Exception e) {
             return APIResponse.buildSuccessResponse(ExceptionUtils.getRootCauseMessage(e));
         }
+    }
+
+    @RequestMapping(value = "/context/", method = RequestMethod.GET)
+    public APIResponse getForewarningContext(HttpServletRequest request) throws IOException {
+        String nodeCode = request.getParameter("node");
+        String metric = request.getParameter("metric");
+        Node node = nodeService.getNode(nodeCode);
+        String context = nodeService.getNodeMetricContext(node, metric);
+        return APIResponse.buildSuccessResponse(context);
     }
 
     @RequestMapping(value = "/previewMsg/", method = RequestMethod.POST)
@@ -194,8 +201,6 @@ public class ForewarningController {
         try {
             String realMsg = nodeService.getTranslatedMsg(node, metric, msg);
             return APIResponse.buildSuccessResponse(realMsg);
-        } catch (ScriptException e) {
-            return APIResponse.buildSuccessResponse(ExceptionUtils.getRootCauseMessage(e));
         } catch (Exception e) {
             return APIResponse.buildSuccessResponse(ExceptionUtils.getRootCauseMessage(e));
         }

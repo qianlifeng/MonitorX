@@ -4,43 +4,62 @@
 	},
 	"nodes":[
 		{
-			"checkIntervalSeconds":60,
 			"code":"callback",
-			"forewarnings":[],
+			"forewarnings":[
+				{
+					"fireRule":"firerule-immediately",
+					"id":"bbf3a077-3dfc-4fcc-a52a-610b57a3e890",
+					"metric":"CPU",
+					"msg":"adsf111",
+					"notifiers":[
+						"1ae8f0e9-5a11-4075-8640-ffd4845b1068"
+					],
+					"recoveredMsg":"",
+					"snippet":"return value ==  24;",
+					"title":"test"
+				},
+				{
+					"fireRule":"firerule-immediately",
+					"id":"a8f1c195-5870-49b4-a98a-dd2e2dd11268",
+					"metric":"CPU",
+					"msg":"ssss",
+					"notifiers":[
+						"e57c9963-dc2e-4514-a40f-0d8dca45013e"
+					],
+					"recoveredMsg":"",
+					"snippet":"return value > 1;",
+					"title":"fdsafas"
+				}
+			],
 			"syncType":"push",
 			"title":"callback"
 		},
 		{
-			"checkIntervalSeconds":30,
-			"code":"apollo",
+			"code":"sku",
 			"forewarnings":[],
-			"syncType":"push",
-			"title":"Apollo"
+			"syncType":"springboot",
+			"syncTypeConfig":{
+				"refreshInterval":3000,
+				"url":"http://app.fcgylapp.cn/skuservice"
+			},
+			"title":"Sku Service"
 		}
 	],
 	"notifiers":[
 		{
 			"config":{
-				"toEmail":"qianlf2008@163.com"
+				"toEmail":"scott.qian@fcgyl.cn"
 			},
-			"id":"eef01a6e-2512-4f51-a8a4-b3ef2ed6edeb",
-			"title":"小李的邮箱",
+			"id":"e57c9963-dc2e-4514-a40f-0d8dca45013e",
+			"title":"小李邮箱",
 			"type":"email"
-		},
-		{
-			"config":{
-				"callbackUrl":"xxxx"
-			},
-			"id":"3941c251-f98e-4edb-b178-737cc34b2c51",
-			"title":"微信",
-			"type":"callback"
 		},
 		{
 			"config":{
 				"secret":"SCU176Tb31d1ebdbf2e07f7e97e7dad0ad7b27855efdb1e75ee9"
 			},
-			"id":"9fc4b40f-2701-49ba-9a64-4efb77333fce",
-			"title":"scottqian wechat",
+			"id":"1ae8f0e9-5a11-4075-8640-ffd4845b1068",
+			"title":"小李微信",
 			"type":"wechat"
 		}
 	]

@@ -9,7 +9,12 @@ public enum SyncTypeEnum {
     /**
      * Node push its status data to MonitorX
      */
-    PUSH("push", "Push");
+    PUSH("push", "Push"),
+
+    /**
+     * MonitorX pull spring boot actuator data from exposed url
+     */
+    SPRING_BOOT("springboot", "Spring Boot");
 
 
     String code;
@@ -23,6 +28,7 @@ public enum SyncTypeEnum {
     public static SyncTypeEnum getByCode(String code) {
         if ("pull".equals(code)) return PULL;
         if ("push".equals(code)) return PUSH;
+        if ("springboot".equals(code)) return SPRING_BOOT;
 
         return null;
     }

@@ -1,6 +1,8 @@
 package monitorx.schedule;
 
 import monitorx.domain.Node;
+import monitorx.domain.syncType.PushSyncTypeConfig;
+import monitorx.domain.syncType.SyncTypeEnum;
 import monitorx.service.NodeService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,11 +26,13 @@ public class PushNodeStatusSchedule {
     @Scheduled(fixedRate = 1000 * 10)
     public void checkPushStatus() {
         for (Node node : nodeService.getNodes()) {
-            if (node.getSyncType().equals("push") && node.getStatus() != null && node.getStatus().getLastUpdateDate() != null) {
+            if (node.getSyncTypeEnum() == SyncTypeEnum.PUSH && node.getStatus() != null && node.getStatus().getLastUpdateDate() != null) {
                 long seconds = (new Date().getTime() - node.getStatus().getLastUpdateDate().getTime()) / 1000;
                 int interval = 30;
-                if (node.getCheckIntervalSeconds() != null) {
-                    interval = node.getCheckIntervalSeconds();
+
+                PushSyncTypeConfig config = ((PushSyncTypeConfig) node.getSyncTypeConfig());
+                if (config.getInterval() != null) {
+                    interval = config.getInterval();
                 }
                 if (seconds > interval) {
                     node.getStatus().setStatus("down");

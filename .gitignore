@@ -24,3 +24,7 @@ target/
 node/
 logs/
 node_modules/
+
+.classpath
+.project
+.settings/
