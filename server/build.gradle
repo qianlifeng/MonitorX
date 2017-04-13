@@ -3,6 +3,7 @@ project(':server') {
 
     jar {
         baseName = 'MonitorX'
+        destinationDir = file("../build")
     }
 
     dependencies {
