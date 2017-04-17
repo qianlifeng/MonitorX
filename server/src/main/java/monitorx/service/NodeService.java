@@ -254,7 +254,7 @@ public class NodeService {
 
                     String context = "var value = " + metricValue + ";";
                     if (StringUtils.isNotEmpty(metric.getContext())) {
-                        context += "var contextJSON=" + metric.getContext() + ";";
+                        context = "var value=" + metric.getContext() + ";";
                     }
 
                     return context;

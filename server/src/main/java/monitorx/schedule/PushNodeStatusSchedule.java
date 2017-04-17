@@ -31,7 +31,7 @@ public class PushNodeStatusSchedule {
                 int interval = 30;
 
                 PushSyncTypeConfig config = ((PushSyncTypeConfig) node.getSyncTypeConfig());
-                if (config.getInterval() != null) {
+                if (config != null && config.getInterval() != null) {
                     interval = config.getInterval();
                 }
                 if (seconds > interval) {

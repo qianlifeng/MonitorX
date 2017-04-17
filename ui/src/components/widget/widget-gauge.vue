@@ -1,20 +1,17 @@
 <template>
-    <chart :options="chartOptions" />
+    <div ref="chart" class="echarts" />
 </template>
 
 <script>
     import widgetMixin from "./widget-mixin.js"
-    import ECharts from 'vue-echarts/components/ECharts.vue'
-    import 'echarts/lib/chart/gauge'
+    import echarts from "echarts"
 
     export default {
         name: 'widget-gauge',
         mixins: [widgetMixin],
-        components: {
-            "chart": ECharts
-        },
         data() {
             return {
+                chart: null,
                 chartOptions: {
                     series: [
                         {
@@ -29,9 +26,14 @@
                 }
             };
         },
+        mounted() {
+            this.chart = echarts.init(this.$refs.chart);
+            this.chart.setOption(this.chartOptions, true);
+        },
         watch: {
             value: function (val, oldVal) {
                 this.chartOptions.series[0].data[0].value = val;
+                this.chart.setOption(this.chartOptions, true);
             }
         }
     }

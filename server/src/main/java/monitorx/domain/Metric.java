@@ -66,5 +66,4 @@ public class Metric {
         return type.equals("line");
     }
 
-
 }
