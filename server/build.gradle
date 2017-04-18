@@ -1,5 +1,5 @@
 project(':server') {
-    apply plugin: 'spring-boot'
+    apply plugin: 'org.springframework.boot'
 
     jar {
         baseName = 'MonitorX'

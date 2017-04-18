@@ -117,31 +117,30 @@ public class SpringBootNodeStatusSchedule implements SchedulingConfigurer {
             healthMetric.setType("text");
             StringBuilder sb = new StringBuilder();
             JSONObject jms = healthJson.getJSONObject("jms");
-            boolean isJmsUp = "UP".equals(jms.getString("status"));
+            JSONObject context = new JSONObject();
             if (jms != null) {
+                boolean isJmsUp = "UP".equals(jms.getString("status"));
+                context.put("jsm", isJmsUp);
                 sb.append("<div class='alert alert-" + (isJmsUp ? "success" : "danger") + "'><i class='fa fa-paper-plane-o'></i> JMS - " + jms.getString("provider")
                         + "<span class='pull-right'>" + jms.getString("status") + "</span></div>");
             }
             JSONObject disk = healthJson.getJSONObject("diskSpace");
-            boolean isDiskUp = "UP".equals(disk.getString("status"));
             if (disk != null) {
+                boolean isDiskUp = "UP".equals(disk.getString("status"));
+                context.put("disk", isDiskUp);
                 long total = Math.round(disk.getLong("total") / (1024 * 1024 * 1024));
                 long free = Math.round(disk.getLong("free") / (1024 * 1024 * 1024));
                 sb.append("<div class='alert alert-" + (isDiskUp ? "success" : "danger") + "'><i class='fa fa-tasks'></i>  DISK - Total: " + total + "G, Free: " + free
-                        + "G<span class='pull-right'>" + jms.getString("status") + "</span></div>");
+                        + "G<span class='pull-right'>" + disk.getString("status") + "</span></div>");
             }
             JSONObject db = healthJson.getJSONObject("db");
-            boolean isDBUp = "UP".equals(db.getString("status"));
             if (db != null) {
+                boolean isDBUp = "UP".equals(db.getString("status"));
+                context.put("db", isDBUp);
                 sb.append("<div class='alert alert-" + (isDBUp ? "success" : "danger") + "'><i class='fa fa-database'></i> DB - " + db.getString("database")
-                        + "<span class='pull-right'>" + jms.getString("status") + "</span></div>");
+                        + "<span class='pull-right'>" + db.getString("status") + "</span></div>");
             }
             healthMetric.setValue(sb.toString());
-
-            JSONObject context = new JSONObject();
-            context.put("jsm", isJmsUp);
-            context.put("disk", isDiskUp);
-            context.put("db", isDBUp);
             healthMetric.setContext(JSON.toJSONString(context));
             return healthMetric;
         }
