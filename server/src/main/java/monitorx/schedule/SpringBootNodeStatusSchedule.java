@@ -107,6 +107,8 @@ public class SpringBootNodeStatusSchedule implements SchedulingConfigurer {
                 nodeStatus.setStatus("down");
                 nodeStatus.setLastUpdateDate(new Date());
                 node.setStatus(nodeStatus);
+
+                nodeService.addCheckPoints(node);
             }
         }
 
