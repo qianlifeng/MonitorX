@@ -88,7 +88,10 @@ public class SpringBootNodeStatusSchedule implements SchedulingConfigurer {
                 nodeStatus.getMetrics().add(getMemoryDetailData(metricsJson));
 
                 //GC metric
-                nodeStatus.getMetrics().add(getGCData(metricsJson));
+                Metric gcMetric = getGCData(metricsJson);
+                if (gcMetric != null) {
+                    nodeStatus.getMetrics().add(gcMetric);
+                }
 
                 //JVM metric
                 nodeStatus.getMetrics().add(getJVMData(metricsJson));
@@ -207,7 +210,9 @@ public class SpringBootNodeStatusSchedule implements SchedulingConfigurer {
             gcMetric.setTitle("GC");
             gcMetric.setType("text");
             StringBuilder gcBuilder = new StringBuilder();
-            long gcCount = metricsJson.getLong("gc.ps_scavenge.count");
+            Long gcCount = metricsJson.getLong("gc.ps_scavenge.count");
+            if (gcCount == null) return null;
+
             String gcTime = String.format("%.2f", (metricsJson.getLong("gc.ps_scavenge.time")) / (gcCount * 1.0f));
             gcBuilder.append("<div style='margin-bottom:5px;'><b>Average Time</b> <span class='pull-right'>" + gcTime + " ms</span></div>");
             gcBuilder.append("<hr /><div style='margin-bottom:5px;'><b>GC Count</b> <span class='pull-right'>" + gcCount + "</span></div>");
