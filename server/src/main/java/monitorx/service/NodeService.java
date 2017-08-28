@@ -149,22 +149,21 @@ public class NodeService {
 
     public void addCheckPoints(Node node) {
         for (Forewarning forewarning : node.getForewarnings()) {
-            ForewarningCheckPoint checkPoint = new ForewarningCheckPoint();
-            checkPoint.setDatetime(new Date());
             String context = getNodeMetricContext(node, forewarning.getMetric());
-            if (StringUtils.isEmpty(context)) {
-                logger.warn("预警metric" + forewarning.getMetric() + "上下文不存在");
-                continue;
-            }
+
             try {
+                ForewarningCheckPoint checkPoint = new ForewarningCheckPoint();
+                checkPoint.setDatetime(new Date());
+                if (StringUtils.isEmpty(context)) {
+                    logger.warn("预警metric" + forewarning.getMetric() + "上下文不存在");
+                    continue;
+                }
                 Boolean result = (Boolean) javascriptEngine.executeScript(context, forewarning.getSnippet());
                 checkPoint.setSnippetResult(result);
+                forewarning.getFireRuleContext().addCheckPoint(checkPoint);
             } catch (ScriptException e) {
                 logger.warn("Execute javascript failed while adding checkpoint,node=" + node.getCode() + ", metric=" + forewarning.getMetric() + ",context=" + context + ExceptionUtils.getRootCauseMessage(e));
-                return;
             }
-
-            forewarning.getFireRuleContext().addCheckPoint(checkPoint);
         }
 
         checkForewarningAndNotify(node);
