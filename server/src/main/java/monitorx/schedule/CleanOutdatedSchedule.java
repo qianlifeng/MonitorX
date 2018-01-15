@@ -23,7 +23,7 @@ public class CleanOutdatedSchedule {
     @Autowired
     NodeService nodeService;
 
-    @Scheduled(fixedRate = 1000 * 60 * 60)
+    @Scheduled(fixedRate = 1000 * 60)
     public void cleanCheckPoints() {
         for (Node node : nodeService.getNodes()) {
             for (Forewarning forewarning : node.getForewarnings()) {
@@ -33,7 +33,7 @@ public class CleanOutdatedSchedule {
 
                     Calendar calendar = Calendar.getInstance();
                     calendar.setTime(new Date());
-                    calendar.add(Calendar.DATE, -2);
+                    calendar.add(Calendar.HOUR, -1);
                     if (checkPoint.getDatetime().before(calendar.getTime())) {
                         //remove checkpoints 2 days before
                         iterator.remove();
@@ -44,7 +44,7 @@ public class CleanOutdatedSchedule {
         }
     }
 
-    @Scheduled(fixedRate = 1000 * 60 * 60)
+    @Scheduled(fixedRate = 1000 * 70)
     public void cleanStatusHistory() {
         for (Node node : nodeService.getNodes()) {
             Iterator<NodeStatus> iterator = node.getStatusHistory().iterator();
@@ -53,7 +53,7 @@ public class CleanOutdatedSchedule {
 
                 Calendar calendar = Calendar.getInstance();
                 calendar.setTime(new Date());
-                calendar.add(Calendar.DATE, -2);
+                calendar.add(Calendar.HOUR, -1);
                 if (nodeStatus.getLastUpdateDate().before(calendar.getTime())) {
                     //remove checkpoints 2 days before
                     iterator.remove();
