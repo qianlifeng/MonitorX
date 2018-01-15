@@ -2,6 +2,7 @@ package monitorx.plugins;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -51,7 +52,16 @@ public class Status {
         this.lastUpdateDate = lastUpdateDate;
     }
 
+    @Override
     public String toString() {
+        return status;
+    }
+
+    public static Status down() {
+        Status status = new Status();
+        status.setLastUpdateDate(new Date());
+        status.setStatus("down");
+        status.setMetrics(new ArrayList<>());
         return status;
     }
 }

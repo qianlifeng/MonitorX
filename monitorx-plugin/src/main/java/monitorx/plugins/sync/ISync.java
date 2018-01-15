@@ -13,18 +13,19 @@ public interface ISync extends ExtensionPoint {
     String getCode();
 
     /**
-     * sync version
-     * if plugin author make break changes to the sync plugin, version must get upgraded to disable to old one
+     * sync name
      */
-    int getVersion();
+    String getName();
 
     /**
-     * sync status every 5 seconds
-     *
-     * @param config sync config
-     * @return sync status
+     * sync description
      */
-    Status sync(ISyncConfig config);
+    String getDescription();
+
+    /**
+     * sync status every n seconds
+     */
+    Status sync(SyncContext context);
 
     ISyncConfig getSyncConfig();
 }

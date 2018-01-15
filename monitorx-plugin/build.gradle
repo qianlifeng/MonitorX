@@ -7,4 +7,5 @@ dependencies {
     compileOnly('org.slf4j:slf4j-api:1.7.24')
     compileOnly("com.alibaba:fastjson:1.2.15")
     compileOnly('org.springframework:spring-context:4.3.7.RELEASE')
+    compileOnly('javax.servlet:javax.servlet-api:4.0.0')
 }

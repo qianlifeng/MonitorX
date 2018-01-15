@@ -10,11 +10,16 @@ jar {
 dependencies {
     compileOnly project(':monitorx-plugin')
     compileOnly("org.pf4j:pf4j:2.1.0")
+    compileOnly("org.pf4j:pf4j-spring:0.4.0")
     compileOnly('org.slf4j:slf4j-api:1.7.24')
     compileOnly("com.alibaba:fastjson:1.2.15")
     compileOnly('org.apache.httpcomponents:httpclient:4.5')
     compileOnly('org.apache.httpcomponents:fluent-hc:4.5')
     compileOnly('org.springframework:spring-context:4.3.7.RELEASE')
+    compileOnly('org.springframework:spring-web:4.3.7.RELEASE')
+    compileOnly('org.springframework:spring-webmvc:4.3.7.RELEASE')
+    compileOnly('javax.servlet:javax.servlet-api:4.0.0')
+    compileOnly("commons-io:commons-io:2.4")
 }
 
 task plugin(type: Jar) {

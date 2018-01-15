@@ -1,6 +1,8 @@
 package monitorx.schedule;
 
+import monitorx.plugins.Status;
 import monitorx.plugins.sync.ISync;
+import monitorx.plugins.sync.SyncContext;
 import monitorx.service.NodeService;
 import org.pf4j.PluginManager;
 import org.slf4j.Logger;
@@ -27,7 +29,7 @@ public class SyncSchedule implements SchedulingConfigurer {
     public void configureTasks(ScheduledTaskRegistrar taskRegistrar) {
         List<ISync> syncPlugins = pluginManager.getExtensions(ISync.class);
         for (ISync syncPlugin : syncPlugins) {
-            taskRegistrar.addFixedRateTask(new SyncTask(syncPlugin), 5000);
+            taskRegistrar.addFixedDelayTask(new SyncTask(syncPlugin), 5000);
         }
     }
 
@@ -40,9 +42,20 @@ public class SyncSchedule implements SchedulingConfigurer {
 
         @Override
         public void run() {
-            nodeService.getNodes().stream().filter(o -> o.getSyncCode().equals(sync.getCode())).forEach(node -> {
+            nodeService.getNodes().stream().filter(o -> o.getSync().equals(sync.getCode())).forEach(node -> {
                 try {
-                    sync.sync(node.getSyncConfig());
+                    SyncContext syncContext = new SyncContext();
+                    syncContext.setNodeCode(node.getCode());
+                    syncContext.setSyncConfig(node.getSyncConfig());
+                    Status status = this.sync.sync(syncContext);
+                    if (status != null) {
+                        if ("down".equals(status.getStatus())) {
+                            logger.warn("node {} is down", node.getCode());
+                        }
+                        node.setStatus(status);
+                        node.getStatusHistory().add(status);
+                        nodeService.addCheckPoints(node);
+                    }
                 } catch (Exception e) {
                     logger.error("sync task ({}) failed", node.getTitle(), e);
                 }

@@ -31,7 +31,9 @@ public class ConfigService {
     PluginManager pluginManager;
 
     public Config getConfig() {
-        if (config != null) return config;
+        if (config != null) {
+            return config;
+        }
 
         File file = new File(CONFIG_NAME);
         if (file.exists()) {
@@ -73,9 +75,9 @@ public class ConfigService {
             for (Object obj : nodes) {
                 JSONObject nodeJson = ((JSONObject) obj);
                 if (nodeJson.get("code").equals(node.getCode())) {
-                    pluginManager.getExtensions(ISync.class).stream().filter(o -> o.getCode().equals(node.getSyncCode())).findFirst().ifPresent(sync -> {
+                    pluginManager.getExtensions(ISync.class).stream().filter(o -> o.getCode().equals(node.getSync())).findFirst().ifPresent(sync -> {
                         ISyncConfig syncConfig = sync.getSyncConfig();
-                        ISyncConfig notifierConfig = JSON.parseObject(JSON.toJSONString(nodeJson.get("syncTypeConfig")), syncConfig.getClass());
+                        ISyncConfig notifierConfig = JSON.parseObject(JSON.toJSONString(nodeJson.get("syncConfig")), syncConfig.getClass());
                         node.setSyncConfig(notifierConfig);
                     });
                 }

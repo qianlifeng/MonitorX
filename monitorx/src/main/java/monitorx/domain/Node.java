@@ -14,7 +14,7 @@ import java.util.List;
 public class Node {
     String code;
     String title;
-    String syncCode;
+    String sync;
     ISyncConfig syncConfig;
 
     @JSONField(serialize = false)
@@ -23,7 +23,6 @@ public class Node {
     @JSONField(serialize = false)
     List<Status> statusHistory = new ArrayList<Status>();
 
-    @JSONField(serialize = false)
     List<Forewarning> forewarnings = new ArrayList<Forewarning>();
 
     public String getCode() {
@@ -42,12 +41,12 @@ public class Node {
         this.title = title;
     }
 
-    public String getSyncCode() {
-        return syncCode;
+    public String getSync() {
+        return sync;
     }
 
-    public void setSyncCode(String syncCode) {
-        this.syncCode = syncCode;
+    public void setSync(String sync) {
+        this.sync = sync;
     }
 
     public ISyncConfig getSyncConfig() {

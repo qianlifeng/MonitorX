@@ -29,3 +29,6 @@ node_modules/
 .project
 .settings/
 .gradle/
+monitorx-ui/build-temp/
+monitorx/out/
+monitorx-ui/out/

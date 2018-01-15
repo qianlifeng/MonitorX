@@ -6,7 +6,7 @@
             </div>
             <div class="col-sm-3 add-new">
                 <a href="javascript:;" @click="showCreateNodeDialog = true" class="dropdown-toggle pull-right" role="button" data-toggle="tooltip"
-                    data-placement="top" title="Add node"><span class="fa fa-plus"></span></a>
+                   data-placement="top" title="Add node"><span class="fa fa-plus"></span></a>
             </div>
         </div>
 
@@ -55,14 +55,12 @@
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">Sync</label>
                                 <div class="col-sm-10">
-                                    <select class="form-control" v-model="node.syncType">
-                                    <option value="pull">Pull</option>
-                                    <option value="push">Push</option>
-                                    <option value="springboot">Spring Boot</option>
-                                </select>
+                                    <select class="form-control" v-model="node.sync">
+                                        <option :value="sync.code" v-for="sync in syncs">{{sync.name}}</option>
+                                    </select>
                                 </div>
                             </div>
-                            <component :is="'sync-' + node.syncType" :config="node.syncTypeConfig"></component>
+                            <component :is="'sync-' + node.sync" :config="node.syncConfig"></component>
                         </form>
                     </div>
                     <div class="modal-footer">
@@ -92,11 +90,12 @@
                 loading: true,
                 nodes: [],
                 showCreateNodeDialog: false,
+                syncs: [],
                 node: {
                     code: "",
                     title: "",
-                    syncType: "push",
-                    syncTypeConfig: {}
+                    sync: "push",
+                    syncConfig: {}
                 }
             }
         },
@@ -135,10 +134,16 @@
                     this.loading = false;
                     this.nodes = res.data;
                 });
+            },
+            loadSyncTypes() {
+                $.get("/api/sync/", res => {
+                    this.syncs = res.data;
+                });
             }
         },
         mounted() {
             this.loadNodes();
+            this.loadSyncTypes();
             $('#createNodeDialog').on('hidden.bs.modal', () => {
                 this.showCreateNodeDialog = false;
             })
@@ -152,6 +157,8 @@
             next();
         }
     }
+
+
 
 </script>
 
@@ -168,4 +175,6 @@
         margin-top: 20px;
         width: 46px;
     }
+
+
 </style>

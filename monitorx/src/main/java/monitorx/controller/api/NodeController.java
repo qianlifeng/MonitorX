@@ -2,9 +2,9 @@ package monitorx.controller.api;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import monitorx.plugins.Metric;
 import monitorx.domain.Node;
 import monitorx.domain.forewarning.Forewarning;
+import monitorx.plugins.Metric;
 import monitorx.plugins.sync.ISyncConfig;
 import monitorx.service.NodeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +38,7 @@ public class NodeController {
         Node node = JSON.parseObject(nodeJSON, Node.class);
 
         JSONObject jsonObject = JSON.parseObject(nodeJSON);
-        ISyncConfig config = ((ISyncConfig) applicationContext.getBean("syncTypeConfig-" + node.getSyncCode()));
+        ISyncConfig config = ((ISyncConfig) applicationContext.getBean("syncTypeConfig-" + node.getSync()));
 
         ISyncConfig nodeConfig = JSON.parseObject(JSON.toJSONString(jsonObject.get("syncTypeConfig")), config.getClass());
         node.setSyncConfig(nodeConfig);

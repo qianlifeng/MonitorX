@@ -8,58 +8,39 @@
 			"forewarnings":[
 				{
 					"fireRule":"firerule-immediately",
-					"id":"bbf3a077-3dfc-4fcc-a52a-610b57a3e890",
-					"metric":"CPU",
-					"msg":"adsf111",
+					"id":"64522b5c-bc40-4879-8568-67afa1e647c8",
+					"metric":"",
+					"msg":"down",
 					"notifiers":[
-						"1ae8f0e9-5a11-4075-8640-ffd4845b1068"
+						"811108c7-23e6-430e-8592-be8419dca87c"
 					],
-					"recoveredMsg":"",
-					"snippet":"return value ==  24;",
-					"title":"test"
-				},
-				{
-					"fireRule":"firerule-immediately",
-					"id":"a8f1c195-5870-49b4-a98a-dd2e2dd11268",
-					"metric":"CPU",
-					"msg":"ssss",
-					"notifiers":[
-						"e57c9963-dc2e-4514-a40f-0d8dca45013e"
-					],
-					"recoveredMsg":"",
-					"snippet":"return value > 1;",
-					"title":"fdsafas"
+					"recoveredMsg":"recover",
+					"snippet":"return isUp == false;",
+					"title":"down"
 				}
 			],
-			"syncType":"push",
-			"title":"callback"
-		},
-		{
-			"code":"sku",
-			"forewarnings":[],
-			"syncType":"springboot",
-			"syncTypeConfig":{
-				"refreshInterval":3000,
-				"url":"http://app.fcgylapp.cn/skuservice"
+			"sync":"sync-push",
+			"syncConfig":{
+				"pushInterval":10
 			},
-			"title":"Sku Service"
+			"title":"callback"
 		}
 	],
 	"notifiers":[
 		{
 			"config":{
-				"toEmail":"scott.qian@fcgyl.cn"
+				"toEmail":"qianlf2008@163.com"
 			},
 			"id":"e57c9963-dc2e-4514-a40f-0d8dca45013e",
-			"title":"小李邮箱",
+			"title":"email example",
 			"type":"email"
 		},
 		{
 			"config":{
-				"secret":"SCU176Tb31d1ebdbf2e07f7e97e7dad0ad7b27855efdb1e75ee9"
+				"secret":"SCU176T367b534928f06921ac53e05a2a781d1a5a5b039a2d3d8"
 			},
-			"id":"1ae8f0e9-5a11-4075-8640-ffd4845b1068",
-			"title":"小李微信",
+			"id":"811108c7-23e6-430e-8592-be8419dca87c",
+			"title":"qianlifeng",
 			"type":"wechat"
 		}
 	]

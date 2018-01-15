@@ -5,6 +5,9 @@ import org.pf4j.PluginWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * @author qianlifeng
+ */
 public class PushSyncPlugin extends Plugin {
     private Logger logger = LoggerFactory.getLogger(getClass());
 

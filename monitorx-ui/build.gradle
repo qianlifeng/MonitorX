@@ -1,6 +1,16 @@
 apply plugin: 'com.moowork.node'
 
-task cnpmInstall(type: NpmTask) {
+sourceSets {
+    main {
+        resources.srcDirs = ['build-temp/resources/']
+    }
+}
+
+task deleteBuildResourceFolder(type: Delete) {
+    delete 'build-temp'
+}
+
+task cnpmInstall(type: NpmTask, dependsOn: deleteBuildResourceFolder) {
     group = 'node'
     args = ['install', '--registry=http://registry.cnpmjs.org']
 }
@@ -11,8 +21,3 @@ task buildUI(type: NpmTask, dependsOn: cnpmInstall) {
 }
 
 jar.dependsOn buildUI
-
-task runDev(type: NpmTask, dependsOn: cnpmInstall) {
-    group = 'node'
-    args = ['run', 'dev']
-}

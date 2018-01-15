@@ -155,7 +155,6 @@ public class NodeService {
                 ForewarningCheckPoint checkPoint = new ForewarningCheckPoint();
                 checkPoint.setDatetime(new Date());
                 if (StringUtils.isEmpty(context)) {
-                    logger.warn("预警metric" + forewarning.getMetric() + "上下文不存在");
                     continue;
                 }
                 Boolean result = (Boolean) javascriptEngine.executeScript(context, forewarning.getSnippet());

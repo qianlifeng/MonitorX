@@ -1,0 +1,31 @@
+package monitorx.controller;
+
+import monitorx.plugins.IRequestDispatcher;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.List;
+
+/**
+ * @author qianlifeng
+ */
+@RestController
+public class PluginRequestDispatcher {
+
+    @Autowired
+    List<IRequestDispatcher> dispatcherList;
+
+    @RequestMapping("/api/**")
+    public void dispatch(HttpServletRequest request, HttpServletResponse response) {
+        String[] urlPaths = request.getRequestURL().toString().split("api");
+        if (urlPaths.length > 1) {
+            String url = urlPaths[1];
+            dispatcherList.stream().filter(o -> o.getUrl().equalsIgnoreCase(url)).findFirst().ifPresent(i -> {
+                i.handle(request, response);
+            });
+        }
+    }
+}
