@@ -1,2 +1,6 @@
-include 'server'
-include 'ui'
+include 'monitorx'
+include 'monitorx-ui'
+include 'monitorx-plugin'
+include 'plugins/sync/push'
+
+project(":plugins/sync/push").name = "push"

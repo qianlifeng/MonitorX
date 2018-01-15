@@ -1,0 +1,36 @@
+jar {
+    manifest {
+        attributes 'Plugin-Class': "monitorx.plugins.sync.push.PushSyncPlugin",
+                'Plugin-Id': "sync-push",
+                'Plugin-Version': "0.0.1",
+                'Plugin-Provider': "qianlifeng"
+    }
+}
+
+dependencies {
+    compileOnly project(':monitorx-plugin')
+    compileOnly("org.pf4j:pf4j:2.1.0")
+    compileOnly('org.slf4j:slf4j-api:1.7.24')
+    compileOnly("com.alibaba:fastjson:1.2.15")
+    compileOnly('org.apache.httpcomponents:httpclient:4.5')
+    compileOnly('org.apache.httpcomponents:fluent-hc:4.5')
+    compileOnly('org.springframework:spring-context:4.3.7.RELEASE')
+}
+
+task plugin(type: Jar) {
+    baseName = "sync-push"
+    into('classes') {
+        with jar
+    }
+    into('lib') {
+        from configurations.compile
+    }
+    extension('zip')
+}
+
+task assemblePlugin(type: Copy) {
+    from plugin
+    into rootProject.buildDir.path + '/plugins'
+}
+
+build.dependsOn assemblePlugin

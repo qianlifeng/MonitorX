@@ -1,0 +1,10 @@
+jar {
+    baseName = 'monitorx-plugin'
+}
+
+dependencies {
+    compileOnly("org.pf4j:pf4j:2.1.0")
+    compileOnly('org.slf4j:slf4j-api:1.7.24')
+    compileOnly("com.alibaba:fastjson:1.2.15")
+    compileOnly('org.springframework:spring-context:4.3.7.RELEASE')
+}
