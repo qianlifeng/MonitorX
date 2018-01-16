@@ -1,12 +1,3 @@
-jar {
-    manifest {
-        attributes 'Plugin-Class': "monitorx.plugins.sync.push.PushSyncPlugin",
-                'Plugin-Id': "sync-push",
-                'Plugin-Version': "0.0.1",
-                'Plugin-Provider': "qianlifeng"
-    }
-}
-
 dependencies {
     compileOnly project(':monitorx-plugin')
     compileOnly("org.pf4j:pf4j:2.1.0")
