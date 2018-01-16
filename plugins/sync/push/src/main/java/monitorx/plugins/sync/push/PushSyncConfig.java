@@ -1,6 +1,7 @@
 package monitorx.plugins.sync.push;
 
 
+import monitorx.plugins.annotation.SyncConfig;
 import monitorx.plugins.sync.ISyncConfig;
 import org.pf4j.Extension;
 
@@ -13,6 +14,7 @@ public class PushSyncConfig implements ISyncConfig {
     /**
      * interval (seconds) that server push status to MonitorX
      */
+    @SyncConfig(code = "pushInterval", name = "Push Interval", description = "If this node didn't push its status to MonitorX every x seconds, MonitorX will consider it as down")
     int pushInterval = 10;
 
     public int getPushInterval() {

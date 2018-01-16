@@ -22,54 +22,6 @@ public class StatusController {
     @Autowired
     NodeService nodeService;
 
-//    public static String getIpAddr(HttpServletRequest request) {
-//        String ip = request.getHeader("x-forwarded-for");
-//        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
-//            ip = request.getHeader("Proxy-Client-IP");
-//        }
-//        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
-//            ip = request.getHeader("WL-Proxy-Client-IP");
-//        }
-//        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
-//            ip = request.getRemoteAddr();
-//        }
-//        return ip;
-//    }
-//
-//    /**
-//     * App upload status to MonitorX
-//     */
-//    @RequestMapping(value = "/upload/", method = RequestMethod.POST)
-//    public APIResponse uploadStatus(HttpServletRequest request) throws IOException {
-//        InputStream inputStream = request.getInputStream();
-//        StringWriter writer = new StringWriter();
-//        IOUtils.copy(inputStream, writer, "utf-8");
-//        String requestBody = writer.toString();
-//
-//        NodeStatusUpload nodeStatusUpload;
-//        try {
-//            nodeStatusUpload = JSON.parseObject(requestBody, NodeStatusUpload.class);
-//        } catch (Exception e) {
-//            logger.error("Invalid json format:" + requestBody);
-//            return APIResponse.buildErrorResponse("Invalid json format");
-//        }
-//
-//        logger.info("Upload status from ip:" + getIpAddr(request) + ", request body:" + requestBody);
-//        Node node = nodeService.getNode(nodeStatusUpload.getNodeCode());
-//        if (node != null) {
-//            Status nodeStatus = nodeStatusUpload.getNodeStatus();
-//            nodeStatus.setLastUpdateDate(new Date());
-//            node.setStatus(nodeStatus);
-//            node.getStatusHistory().add(nodeStatus);
-//
-//            nodeService.addCheckPoints(node);
-//        } else {
-//            return APIResponse.buildErrorResponse("Could not find node");
-//        }
-//
-//        return APIResponse.buildSuccessResponse();
-//    }
-
     @RequestMapping(value = "/{node}/", method = RequestMethod.GET)
     public String queryStatus(@PathVariable("node") String nodeCode) throws IOException {
         String status = "down";

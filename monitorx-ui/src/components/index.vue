@@ -56,11 +56,23 @@
                                 <label class="col-sm-2 control-label">Sync</label>
                                 <div class="col-sm-10">
                                     <select class="form-control" v-model="node.sync">
-                                        <option :value="sync.code" v-for="sync in syncs">{{sync.name}}</option>
+                                        <option :value="sync.code" :key="sync.code" v-for="sync in syncs">{{sync.name}}</option>
                                     </select>
                                 </div>
                             </div>
-                            <component :is="'sync-' + node.sync" :config="node.syncConfig"></component>
+                            <div>
+                                <div class="form-group">
+                                    <div class="col-sm-10 col-sm-offset-2">
+                                        <span class="text-muted">{{selectedSync.description}}</span>
+                                    </div>
+                                </div>
+                                <div class="form-group" :key="index" v-for="(config,index) in selectedSync.config">
+                                    <label class="col-sm-2 control-label">{{config.name}}</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" v-model="node.syncConfig[config.code]" :placeholder="config.description">
+                                    </div>
+                                </div>
+                            </div>
                         </form>
                     </div>
                     <div class="modal-footer">
@@ -73,108 +85,105 @@
 </template>
 
 <script>
-    import SyncPull from "./sync/sync-pull.vue"
-    import SyncPush from "./sync/sync-push.vue"
-    import SyncSpringBoot from "./sync/sync-springboot.vue"
+export default {
+  name: "index",
+  data() {
+    return {
+      intervalInstance: null,
+      loading: true,
+      nodes: [],
+      showCreateNodeDialog: false,
+      syncs: [],
+      node: {
+        code: "",
+        title: "",
+        sync: "sync-push",
+        syncConfig: {}
+      }
+    };
+  },
+  computed: {
+    selectedSync() {
+      let syncs = this.syncs.filter(o => o.code === this.node.sync);
+      if (syncs.length > 0) return syncs[0];
 
-    export default {
-        name: 'index',
-        components: {
-            "sync-pull": SyncPull,
-            "sync-push": SyncPush,
-            "sync-springboot": SyncSpringBoot
-        },
-        data() {
-            return {
-                intervalInstance: null,
-                loading: true,
-                nodes: [],
-                showCreateNodeDialog: false,
-                syncs: [],
-                node: {
-                    code: "",
-                    title: "",
-                    sync: "push",
-                    syncConfig: {}
-                }
-            }
-        },
-        watch: {
-            showCreateNodeDialog: function (newVal) {
-                if (newVal) {
-                    $('#createNodeDialog').modal("show");
-                }
-                else {
-                    $('#createNodeDialog').modal("hide");
-                }
-            }
-        },
-        methods: {
-            navigate(nodeCode) {
-                this.$router.push({ path: '/node/' + nodeCode });
-            },
-            nodeStatus(node) {
-                if (node.status === null) return "status-down";
-                if (node.status.status === "up") return "status-up";
+      return {};
+    }
+  },
+  watch: {
+    showCreateNodeDialog: function(newVal) {
+      if (newVal) {
+        $("#createNodeDialog").modal("show");
+      } else {
+        $("#createNodeDialog").modal("hide");
+      }
+    }
+  },
+  methods: {
+    navigate(nodeCode) {
+      this.$router.push({ path: "/node/" + nodeCode });
+    },
+    nodeStatus(node) {
+      if (node.status === null) return "status-down";
+      if (node.status.status === "up") return "status-up";
 
-                return "status-down";
-            },
-            addNode: function () {
-                $.post("/api/node/", {
-                    "node": JSON.stringify(this.node)
-                }, res => {
-                    if (res.success) {
-                        this.loadNodes();
-                        this.showCreateNodeDialog = false;
-                    }
-                });
-            },
-            loadNodes() {
-                $.get("/api/node/", res => {
-                    this.loading = false;
-                    this.nodes = res.data;
-                });
-            },
-            loadSyncTypes() {
-                $.get("/api/sync/", res => {
-                    this.syncs = res.data;
-                });
-            }
+      return "status-down";
+    },
+    addNode: function() {
+      $.post(
+        "/api/node/",
+        {
+          node: JSON.stringify(this.node)
         },
-        mounted() {
+        res => {
+          if (res.success) {
             this.loadNodes();
-            this.loadSyncTypes();
-            $('#createNodeDialog').on('hidden.bs.modal', () => {
-                this.showCreateNodeDialog = false;
-            })
-            this.intervalInstance = setInterval(this.loadNodes, 1000);
-        },
-        beforeRouteLeave(to, from, next) {
-            if (this.intervalInstance != null) {
-                clearInterval(this.intervalInstance);
-            }
-
-            next();
+            this.showCreateNodeDialog = false;
+          }
         }
+      );
+    },
+    loadNodes() {
+      $.get("/api/node/", res => {
+        this.loading = false;
+        this.nodes = res.data;
+      });
+    },
+    loadSyncTypes() {
+      $.get("/api/sync/", res => {
+        this.syncs = res.data;
+      });
+    }
+  },
+  mounted() {
+    this.loadNodes();
+    this.loadSyncTypes();
+    $("#createNodeDialog").on("hidden.bs.modal", () => {
+      this.showCreateNodeDialog = false;
+    });
+    this.intervalInstance = setInterval(this.loadNodes, 1000);
+  },
+  beforeRouteLeave(to, from, next) {
+    if (this.intervalInstance != null) {
+      clearInterval(this.intervalInstance);
     }
 
-
-
+    next();
+  }
+};
 </script>
 
 <style scoped>
-    .modal-dialog {
-        width: 80%;
-    }
-    
-    .loading {
-        text-align: center;
-    }
-    
-    .loading img {
-        margin-top: 20px;
-        width: 46px;
-    }
+.modal-dialog {
+  width: 80%;
+}
 
+.loading {
+  text-align: center;
+}
 
+.loading img {
+  margin-top: 20px;
+  width: 46px;
+}
 </style>

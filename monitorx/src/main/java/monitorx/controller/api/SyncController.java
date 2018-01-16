@@ -1,12 +1,15 @@
 package monitorx.controller.api;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import monitorx.plugins.annotation.SyncConfig;
 import monitorx.plugins.sync.ISync;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.lang.reflect.Field;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,6 +30,17 @@ public class SyncController {
             jsonObject.put("code", o.getCode());
             jsonObject.put("name", o.getName());
             jsonObject.put("description", o.getDescription());
+            JSONArray configs = new JSONArray();
+            for (Field configField : o.getSyncConfig().getClass().getDeclaredFields()) {
+                JSONObject field = new JSONObject();
+                SyncConfig syncConfig = configField.getAnnotation(SyncConfig.class);
+                field.put("code", syncConfig.code());
+                field.put("name", syncConfig.name());
+                field.put("type", syncConfig.type());
+                field.put("description", syncConfig.description());
+                configs.add(field);
+            }
+            jsonObject.put("config", configs);
             return jsonObject;
         }).collect(Collectors.toList());
         return APIResponse.buildSuccessResponse(syncs);

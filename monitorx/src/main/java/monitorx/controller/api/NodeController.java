@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import monitorx.domain.Node;
 import monitorx.domain.forewarning.Forewarning;
 import monitorx.plugins.Metric;
+import monitorx.plugins.sync.ISync;
 import monitorx.plugins.sync.ISyncConfig;
 import monitorx.service.NodeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/node")
@@ -26,6 +29,9 @@ public class NodeController {
     @Autowired
     ApplicationContext applicationContext;
 
+    @Autowired
+    List<ISync> syncs;
+
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public APIResponse getNodeList() {
         return APIResponse.buildSuccessResponse(nodeService.getNodes());
@@ -36,11 +42,13 @@ public class NodeController {
         String nodeJSON = request.getParameter("node");
 
         Node node = JSON.parseObject(nodeJSON, Node.class);
+        Optional<ISync> sync = syncs.stream().filter(o -> o.getCode().equalsIgnoreCase(node.getSync())).findFirst();
+        if (!sync.isPresent()) {
+            return APIResponse.buildErrorResponse("Invalid Sync");
+        }
 
         JSONObject jsonObject = JSON.parseObject(nodeJSON);
-        ISyncConfig config = ((ISyncConfig) applicationContext.getBean("syncTypeConfig-" + node.getSync()));
-
-        ISyncConfig nodeConfig = JSON.parseObject(JSON.toJSONString(jsonObject.get("syncTypeConfig")), config.getClass());
+        ISyncConfig nodeConfig = JSON.parseObject(JSON.toJSONString(jsonObject.get("syncConfig")), sync.get().getSyncConfig().getClass());
         node.setSyncConfig(nodeConfig);
 
         nodeService.addNode(node);
