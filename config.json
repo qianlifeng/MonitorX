@@ -4,26 +4,13 @@
 	},
 	"nodes":[
 		{
-			"code":"callback",
-			"forewarnings":[
-				{
-					"fireRule":"firerule-immediately",
-					"id":"64522b5c-bc40-4879-8568-67afa1e647c8",
-					"metric":"",
-					"msg":"down",
-					"notifiers":[
-						"811108c7-23e6-430e-8592-be8419dca87c"
-					],
-					"recoveredMsg":"recover",
-					"snippet":"return isUp == false;",
-					"title":"down"
-				}
-			],
+			"code":"ethminer",
+			"forewarnings":[],
 			"sync":"sync-push",
 			"syncConfig":{
-				"pushInterval":10
+				"pushInterval":5
 			},
-			"title":"callback"
+			"title":"ethminer"
 		}
 	],
 	"notifiers":[
