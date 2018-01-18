@@ -1,6 +1,7 @@
 package monitorx.domain;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import monitorx.domain.forewarning.Forewarning;
 import monitorx.plugins.Status;
 import monitorx.plugins.sync.ISyncConfig;
@@ -21,6 +22,7 @@ public class Node {
     Status status;
 
     @JSONField(serialize = false)
+    @JsonIgnore
     List<Status> statusHistory = new ArrayList<Status>();
 
     List<Forewarning> forewarnings = new ArrayList<Forewarning>();
