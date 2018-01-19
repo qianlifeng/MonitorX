@@ -2,5 +2,7 @@ include 'monitorx'
 include 'monitorx-ui'
 include 'monitorx-plugin'
 include 'plugins/sync/push'
+include 'plugins/sync/springboot'
 
 project(":plugins/sync/push").name = "push"
+project(":plugins/sync/springboot").name = "springboot"

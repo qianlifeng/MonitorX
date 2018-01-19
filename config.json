@@ -7,10 +7,17 @@
 			"code":"ethminer",
 			"forewarnings":[],
 			"sync":"sync-push",
-			"syncConfig":{
-				"pushInterval":5
-			},
+			"syncConfig":{},
 			"title":"ethminer"
+		},
+		{
+			"code":"springboot",
+			"forewarnings":[],
+			"sync":"sync-springboot",
+			"syncConfig":{
+				"url":"http://app.fcgylapp.cn/skuservice"
+			},
+			"title":"springboot"
 		}
 	],
 	"notifiers":[

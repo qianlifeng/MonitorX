@@ -33,3 +33,4 @@ monitorx-ui/build-temp/
 monitorx/out/
 monitorx-ui/out/
 plugins/sync/push/out/
+plugins/sync/springboot/out/
