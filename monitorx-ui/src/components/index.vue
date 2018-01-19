@@ -10,22 +10,25 @@
             </div>
         </div>
 
-        <div class="row">
-            <div class="loading" v-if="loading">
-                <img src="../assets/loading.gif">
-            </div>
-            <div v-else>
-                <div class="col-sm-12 col-lg-6 col-md-6" v-for="node in nodes">
-                    <div class="status-widget clickable" @click="navigate(node.code)" :class="[nodeStatus(node)]">
-                        <div class="row">
-                            <div class="col-sm-6">
-                                <span class="title" v-text="node.title"></span>
+        <div class="loading" v-if="loading">
+            <img src="../assets/loading.gif">
+        </div>
+        <div v-else>
+            <div class="row" :key="i" v-for="(nodeGroup,i) in nodeGroups">
+                <div>
+                    <div v-if="nodeGroup.group" class="group-name">{{nodeGroup.group}}</div>
+                    <div class="col-sm-12 col-lg-6 col-md-6" :key="index" v-for="(node,index) in nodeGroup.nodes">
+                        <div class="status-widget clickable" @click="navigate(node.code)" :class="[nodeStatus(node)]">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <span class="title" v-text="node.title"></span>
+                                </div>
                             </div>
+                            <div class="lastupdate">
+                                <i class="fa fa-clock-o"></i> <span>{{node.status !== null ? node.status.formattedLastUpdateDate : ""}}</span>
+                            </div>
+                            <div class="clearfix"></div>
                         </div>
-                        <div class="lastupdate">
-                            <i class="fa fa-clock-o"></i> <span>{{node.status !== null ? node.status.formattedLastUpdateDate : ""}}</span>
-                        </div>
-                        <div class="clearfix"></div>
                     </div>
                 </div>
             </div>
@@ -44,6 +47,12 @@
                                 <label class="col-sm-2 control-label">Code</label>
                                 <div class="col-sm-10">
                                     <input type="text" class="form-control" v-model="node.code">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Group</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" v-model="node.group" placeholder="You can leave it eampty if you don't want group your nodes">
                                 </div>
                             </div>
                             <div class="form-group">
@@ -96,6 +105,7 @@ export default {
       syncs: [],
       node: {
         code: "",
+        group: "",
         title: "",
         sync: "sync-push",
         syncConfig: {}
@@ -108,6 +118,31 @@ export default {
       if (syncs.length > 0) return syncs[0];
 
       return {};
+    },
+    nodeGroups() {
+      let groups = [
+        {
+          group: "",
+          nodes: []
+        }
+      ];
+      this.nodes.forEach(o => {
+        if (o.group == null || typeof o.group === "undefined") {
+          o.group = "";
+        }
+
+        let matchGroups = groups.filter(j => j.group === o.group);
+        if (matchGroups.length > 0) {
+          matchGroups[0].nodes.push(o);
+        } else {
+          groups.push({
+            group: o.group,
+            nodes: [o]
+          });
+        }
+      });
+
+      return groups;
     }
   },
   watch: {
@@ -185,5 +220,11 @@ export default {
 .loading img {
   margin-top: 20px;
   width: 46px;
+}
+
+.group-name {
+  margin-left: 15px;
+  font-size: 20px;
+  margin-top: 30px;
 }
 </style>

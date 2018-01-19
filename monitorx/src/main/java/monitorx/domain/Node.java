@@ -14,6 +14,7 @@ import java.util.List;
  * Node that need to be monitored
  */
 public class Node {
+    String group;
     String code;
     String title;
     String sync;
@@ -84,6 +85,14 @@ public class Node {
 
     public void setForewarnings(List<Forewarning> forewarnings) {
         this.forewarnings = forewarnings;
+    }
+
+    public String getGroup() {
+        return group;
+    }
+
+    public void setGroup(String group) {
+        this.group = group;
     }
 
     @Override
