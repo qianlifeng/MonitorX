@@ -5,7 +5,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import monitorx.domain.Forewarning;
 import monitorx.domain.Node;
-import monitorx.domain.notifier.Notifier;
+import monitorx.domain.Notifier;
 import monitorx.plugins.annotation.UIField;
 import monitorx.plugins.forewarning.IForewarning;
 import monitorx.plugins.forewarning.IForewarningConfig;

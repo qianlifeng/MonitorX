@@ -1,15 +1,15 @@
-import Vue from 'vue'
-import Router from 'vue-router'
-import Index from '@/components/index'
-import Notifier from '@/components/notifier/notifier'
-import Node from '@/components/node'
+import Vue from "vue";
+import Router from "vue-router";
+import Index from "@/components/index";
+import Notifier from "@/components/notifier";
+import Node from "@/components/node";
 
-Vue.use(Router)
+Vue.use(Router);
 
 export default new Router({
   routes: [
     {
-      path: '/',
+      path: "/",
       component: Index
     },
     {
@@ -21,4 +21,4 @@ export default new Router({
       component: Node
     }
   ]
-})
+});

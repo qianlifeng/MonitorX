@@ -4,11 +4,12 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import monitorx.domain.Node;
+import monitorx.domain.Notifier;
 import monitorx.domain.config.Config;
-import monitorx.domain.notifier.INotifierConfig;
-import monitorx.domain.notifier.Notifier;
 import monitorx.plugins.forewarning.IForewarning;
 import monitorx.plugins.forewarning.IForewarningConfig;
+import monitorx.plugins.notifier.INotifier;
+import monitorx.plugins.notifier.INotifierConfig;
 import monitorx.plugins.sync.ISync;
 import monitorx.plugins.sync.ISyncConfig;
 import org.apache.commons.io.FileUtils;
@@ -63,9 +64,11 @@ public class ConfigService {
             for (Object obj : notifiers) {
                 JSONObject notifierJSON = ((JSONObject) obj);
                 if (notifierJSON.get("id").equals(notifier.getId())) {
-                    INotifierConfig configClass = ((INotifierConfig) applicationContext.getBean("notifierConfig-" + notifier.getType()));
-                    INotifierConfig notifierConfig = JSON.parseObject(JSON.toJSONString(notifierJSON.get("config")), configClass.getClass());
-                    notifier.setConfig(notifierConfig);
+                    pluginManager.getExtensions(INotifier.class).stream().filter(o -> o.getCode().equals(notifier.getNotifierCode())).findFirst().ifPresent(n -> {
+                        INotifierConfig configClass = n.getNotifierConfig();
+                        INotifierConfig notifierConfig = JSON.parseObject(JSON.toJSONString(notifierJSON.get("config")), configClass.getClass());
+                        notifier.setNotifierConfig(notifierConfig);
+                    });
                 }
             }
         }

@@ -1,0 +1,25 @@
+dependencies {
+    compileOnly project(':monitorx-plugin')
+    compileOnly("org.pf4j:pf4j:2.1.0")
+    compileOnly('org.slf4j:slf4j-api:1.7.24')
+    compileOnly('org.apache.httpcomponents:httpclient:4.5')
+    compileOnly('org.apache.httpcomponents:fluent-hc:4.5')
+}
+
+task plugin(type: Jar) {
+    baseName = "notifier-wechat"
+    into('classes') {
+        with jar
+    }
+    into('lib') {
+        from configurations.compile
+    }
+    extension('zip')
+}
+
+task assemblePlugin(type: Copy) {
+    from plugin
+    into rootProject.buildDir.path + '/plugins'
+}
+
+build.dependsOn assemblePlugin

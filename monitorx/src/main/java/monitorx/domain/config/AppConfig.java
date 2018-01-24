@@ -2,6 +2,8 @@ package monitorx.domain.config;
 
 /**
  * Configs for  MonitorX
+ *
+ * @author qianlifeng
  */
 public class AppConfig {
 

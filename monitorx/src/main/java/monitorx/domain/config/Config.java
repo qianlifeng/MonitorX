@@ -1,7 +1,7 @@
 package monitorx.domain.config;
 
 import monitorx.domain.Node;
-import monitorx.domain.notifier.Notifier;
+import monitorx.domain.Notifier;
 
 import java.util.ArrayList;
 import java.util.List;

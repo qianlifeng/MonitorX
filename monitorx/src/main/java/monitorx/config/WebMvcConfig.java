@@ -20,6 +20,7 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
         return new CharacterEncodingFilter("UTF-8", true);
     }
 
+    @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/**").addResourceLocations("classpath:/ui/");
     }

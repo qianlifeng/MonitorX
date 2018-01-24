@@ -60,12 +60,12 @@
                 </select>
             </div>
         </div>
-            <div class="form-group" :key="index" v-for="(config,index) in selectedForewarning.config">
-                <label class="col-sm-2 control-label">{{config.name}}</label>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control" v-model="forewarningConfig[config.code]" :placeholder="config.description">
-                </div>
+        <div class="form-group" :key="index" v-for="(config,index) in selectedForewarning.config">
+            <label class="col-sm-2 control-label">{{config.name}}</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" v-model="forewarningConfig[config.code]" :placeholder="config.description">
             </div>
+        </div>
         <div class="form-group">
             <label class="col-sm-2 control-label">Notify message</label>
 

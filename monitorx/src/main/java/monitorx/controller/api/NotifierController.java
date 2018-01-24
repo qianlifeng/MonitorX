@@ -1,10 +1,15 @@
 package monitorx.controller.api;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import monitorx.domain.notifier.INotifierConfig;
-import monitorx.domain.notifier.Notifier;
+import monitorx.domain.Notifier;
+import monitorx.plugins.annotation.UIField;
+import monitorx.plugins.notifier.INotifier;
+import monitorx.plugins.notifier.INotifierConfig;
+import monitorx.plugins.notifier.NotifierContext;
 import monitorx.service.NotifierService;
+import org.pf4j.PluginManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,7 +19,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.lang.reflect.Field;
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/notifier")
@@ -26,9 +34,36 @@ public class NotifierController {
     @Autowired
     ApplicationContext applicationContext;
 
+    @Autowired
+    PluginManager pluginManager;
+
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public APIResponse getNotifierList() {
         return APIResponse.buildSuccessResponse(notifierService.getNotifiers());
+    }
+
+    @RequestMapping(value = "/codes/", method = RequestMethod.GET)
+    public APIResponse getNotifierCodes() {
+        List<JSONObject> notifiers = pluginManager.getExtensions(INotifier.class).stream().map(o -> {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("code", o.getCode());
+            jsonObject.put("name", o.getName());
+            jsonObject.put("description", o.getDescription());
+            jsonObject.put("icon", o.getFontAwesomeIcon());
+            JSONArray configs = new JSONArray();
+            for (Field configField : o.getNotifierConfig().getClass().getDeclaredFields()) {
+                JSONObject field = new JSONObject();
+                UIField uiField = configField.getAnnotation(UIField.class);
+                field.put("code", uiField.code());
+                field.put("name", uiField.name());
+                field.put("type", uiField.type());
+                field.put("description", uiField.description());
+                configs.add(field);
+            }
+            jsonObject.put("config", configs);
+            return jsonObject;
+        }).collect(Collectors.toList());
+        return APIResponse.buildSuccessResponse(notifiers);
     }
 
     @RequestMapping(value = "/", method = RequestMethod.POST)
@@ -44,7 +79,13 @@ public class NotifierController {
         String msg = request.getParameter("body");
 
         Notifier notifier = buildNotifier(request);
-        notifier.send(title, msg);
+        pluginManager.getExtensions(INotifier.class).stream().filter(o -> o.getCode().equals(notifier.getNotifierCode())).findFirst().ifPresent(n -> {
+            NotifierContext context = new NotifierContext();
+            context.setTitle(title);
+            context.setContent(msg);
+            context.setNotifierConfig(notifier.getNotifierConfig());
+            n.send(context);
+        });
         return APIResponse.buildSuccessResponse();
     }
 
@@ -55,10 +96,12 @@ public class NotifierController {
         notifier.setId(UUID.randomUUID().toString());
 
         JSONObject jsonObject = JSON.parseObject(notifierJSON);
-        INotifierConfig config = ((INotifierConfig) applicationContext.getBean("notifierConfig-" + notifier.getType()));
+        pluginManager.getExtensions(INotifier.class).stream().filter(o -> o.getCode().equals(notifier.getNotifierCode())).findFirst().ifPresent(n -> {
+            INotifierConfig configClass = n.getNotifierConfig();
+            INotifierConfig notifierConfig = JSON.parseObject(JSON.toJSONString(jsonObject.get("config")), configClass.getClass());
+            notifier.setNotifierConfig(notifierConfig);
+        });
 
-        INotifierConfig notifierConfig = JSON.parseObject(JSON.toJSONString(jsonObject.get("config")), config.getClass());
-        notifier.setConfig(notifierConfig);
         return notifier;
     }
 

@@ -1,68 +1,52 @@
 {
-	"app":{
-		"title":"MonitorX"
-	},
-	"nodes":[
-		{
-			"code":"ethminer",
-			"forewarnings":[
-				{
-					"forewarningCode":"forewarning-immediate",
-					"forewarningConfig":{
-						"warningBySeconds":60
-					},
-					"id":"4cbbd760-ee6a-4061-a6f3-ca052e525101",
-					"metric":"",
-					"msg":"test",
-					"notifiers":[],
-					"recoveredMsg":"test",
-					"snippet":"return isUp == false;",
-					"title":"test"
-				},
-				{
-					"forewarningCode":"forewarning-immediate",
-					"forewarningConfig":{
-						"warningBySeconds":65
-					},
-					"id":"809e16c8-e472-4ccb-9ea9-ed060ea6aabd",
-					"metric":"",
-					"msg":"test",
-					"notifiers":[],
-					"recoveredMsg":"",
-					"snippet":"return isUp == false;",
-					"title":"test"
-				}
-			],
-			"sync":"sync-push",
-			"syncConfig":{
-				"pushInterval":10
-			},
-			"title":"ethminer"
-		},
-		{
-			"code":"springboot",
-			"forewarnings":[],
-			"sync":"sync-springboot",
-			"syncConfig":{},
-			"title":"springboot"
-		}
-	],
-	"notifiers":[
-		{
-			"config":{
-				"toEmail":"qianlf2008@163.com"
-			},
-			"id":"e57c9963-dc2e-4514-a40f-0d8dca45013e",
-			"title":"email example",
-			"type":"email"
-		},
-		{
-			"config":{
-				"secret":"SCU176T367b534928f06921ac53e05a2a781d1a5a5b039a2d3d8"
-			},
-			"id":"811108c7-23e6-430e-8592-be8419dca87c",
-			"title":"qianlifeng",
-			"type":"wechat"
-		}
-	]
+  "app": {
+    "title": "MonitorX"
+  },
+  "nodes": [
+    {
+      "code": "ethminer",
+      "forewarnings": [
+        {
+          "forewarningCode": "forewarning-immediate",
+          "forewarningConfig": {
+            "warningBySeconds": 60
+          },
+          "id": "4cbbd760-ee6a-4061-a6f3-ca052e525101",
+          "metric": "",
+          "msg": "test",
+          "notifiers": [],
+          "recoveredMsg": "test",
+          "snippet": "return isUp == false;",
+          "title": "test"
+        },
+        {
+          "forewarningCode": "forewarning-immediate",
+          "forewarningConfig": {
+            "warningBySeconds": 65
+          },
+          "id": "809e16c8-e472-4ccb-9ea9-ed060ea6aabd",
+          "metric": "",
+          "msg": "test",
+          "notifiers": [],
+          "recoveredMsg": "",
+          "snippet": "return isUp == false;",
+          "title": "test"
+        }
+      ],
+      "sync": "sync-push",
+      "syncConfig": {
+        "pushInterval": 10
+      },
+      "title": "ethminer"
+    },
+    {
+      "code": "springboot",
+      "forewarnings": [],
+      "sync": "sync-springboot",
+      "syncConfig": {},
+      "title": "springboot"
+    }
+  ],
+  "notifiers": [
+  ]
 }

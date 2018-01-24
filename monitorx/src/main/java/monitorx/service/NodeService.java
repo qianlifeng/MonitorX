@@ -5,9 +5,11 @@ import monitorx.domain.Node;
 import monitorx.plugins.Status;
 import monitorx.domain.Forewarning;
 import monitorx.plugins.forewarning.ForewarningCheckPoint;
-import monitorx.domain.notifier.Notifier;
+import monitorx.domain.Notifier;
 import monitorx.plugins.forewarning.ForewarningContext;
 import monitorx.plugins.forewarning.IForewarning;
+import monitorx.plugins.notifier.INotifier;
+import monitorx.plugins.notifier.NotifierContext;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.pf4j.PluginManager;
@@ -193,11 +195,18 @@ public class NodeService {
                 for (String notifierId : forewarning.getNotifiers()) {
                     Notifier notifier = notifierService.getNotifier(notifierId);
                     if (notifier != null) {
-                        notifier.send(msg, StringUtils.EMPTY);
+                        notifyMsg(notifier, msg);
                     }
                 }
             }
         }
+    }
+
+    public void notifyMsg(Notifier notifier, String msg) {
+        pluginManager.getExtensions(INotifier.class).stream().forEach(o -> {
+            NotifierContext notifierContext = new NotifierContext(notifier.getNotifierConfig(), msg, StringUtils.EMPTY);
+            o.send(notifierContext);
+        });
     }
 
     /**
@@ -310,7 +319,7 @@ public class NodeService {
                     for (String notifierId : forewarning.getNotifiers()) {
                         Notifier notifier = notifierService.getNotifier(notifierId);
                         if (notifier != null) {
-                            notifier.send(msg, StringUtils.EMPTY);
+                            notifyMsg(notifier, msg);
                             lastCheckPoint.setHasSendNotify(true);
                         }
                     }
