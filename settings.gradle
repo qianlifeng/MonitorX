@@ -1,8 +1,10 @@
 include 'monitorx'
 include 'monitorx-ui'
 include 'monitorx-plugin'
-include 'plugins/sync/push'
-include 'plugins/sync/springboot'
+include 'plugins/sync/sync-push'
+include 'plugins/sync/sync-springboot'
+include 'plugins/forewarning/forewarning-immediate'
 
-project(":plugins/sync/push").name = "push"
-project(":plugins/sync/springboot").name = "springboot"
+project(":plugins/sync/sync-push").name = "sync-push"
+project(":plugins/sync/sync-springboot").name = "sync-springboot"
+project(":plugins/forewarning/forewarning-immediate").name = "forewarning-immediate"

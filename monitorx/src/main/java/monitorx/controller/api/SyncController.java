@@ -2,8 +2,9 @@ package monitorx.controller.api;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import monitorx.plugins.annotation.SyncConfig;
+import monitorx.plugins.annotation.UIField;
 import monitorx.plugins.sync.ISync;
+import org.pf4j.PluginManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -21,11 +22,11 @@ import java.util.stream.Collectors;
 public class SyncController {
 
     @Autowired
-    List<ISync> syncList;
+    PluginManager pluginManager;
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
-    public APIResponse getNodeList() {
-        List<JSONObject> syncs = syncList.stream().map(o -> {
+    public APIResponse getSyncList() {
+        List<JSONObject> syncs = pluginManager.getExtensions(ISync.class).stream().map(o -> {
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("code", o.getCode());
             jsonObject.put("name", o.getName());
@@ -33,7 +34,7 @@ public class SyncController {
             JSONArray configs = new JSONArray();
             for (Field configField : o.getSyncConfig().getClass().getDeclaredFields()) {
                 JSONObject field = new JSONObject();
-                SyncConfig syncConfig = configField.getAnnotation(SyncConfig.class);
+                UIField syncConfig = configField.getAnnotation(UIField.class);
                 field.put("code", syncConfig.code());
                 field.put("name", syncConfig.name());
                 field.put("type", syncConfig.type());

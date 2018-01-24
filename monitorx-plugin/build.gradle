@@ -8,4 +8,5 @@ dependencies {
     compileOnly("com.alibaba:fastjson:1.2.15")
     compileOnly('org.springframework:spring-context:4.3.7.RELEASE')
     compileOnly('javax.servlet:javax.servlet-api:4.0.0')
+    compileOnly('com.fasterxml.jackson.core:jackson-annotations:2.9.3')
 }

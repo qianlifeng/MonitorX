@@ -3,7 +3,6 @@ package monitorx.domain;
 import com.alibaba.fastjson.annotation.JSONField;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import monitorx.domain.forewarning.Forewarning;
 import monitorx.plugins.Status;
 import monitorx.plugins.sync.ISyncConfig;
 

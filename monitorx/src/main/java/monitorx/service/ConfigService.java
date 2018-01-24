@@ -7,6 +7,8 @@ import monitorx.domain.Node;
 import monitorx.domain.config.Config;
 import monitorx.domain.notifier.INotifierConfig;
 import monitorx.domain.notifier.Notifier;
+import monitorx.plugins.forewarning.IForewarning;
+import monitorx.plugins.forewarning.IForewarningConfig;
 import monitorx.plugins.sync.ISync;
 import monitorx.plugins.sync.ISyncConfig;
 import org.apache.commons.io.FileUtils;
@@ -41,7 +43,8 @@ public class ConfigService {
                 String configJSON = FileUtils.readFileToString(file, "UTF-8");
                 config = JSON.parseObject(configJSON, Config.class);
                 rebuildNotifier(config, configJSON);
-                rebuildNodeSyncTypeConfig(config, configJSON);
+                rebuildSync(config, configJSON);
+                rebuildForewarning(config, configJSON);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -68,7 +71,7 @@ public class ConfigService {
         }
     }
 
-    private void rebuildNodeSyncTypeConfig(Config config, String configJSON) {
+    private void rebuildSync(Config config, String configJSON) {
         JSONArray nodes = JSON.parseObject(configJSON).getJSONArray("nodes");
 
         for (Node node : config.getNodes()) {
@@ -79,6 +82,27 @@ public class ConfigService {
                         ISyncConfig syncConfig = sync.getSyncConfig();
                         ISyncConfig notifierConfig = JSON.parseObject(JSON.toJSONString(nodeJson.get("syncConfig")), syncConfig.getClass());
                         node.setSyncConfig(notifierConfig);
+                    });
+                }
+            }
+        }
+    }
+
+    private void rebuildForewarning(Config config, String configJSON) {
+        JSONArray nodes = JSON.parseObject(configJSON).getJSONArray("nodes");
+
+        for (Node node : config.getNodes()) {
+            for (Object obj : nodes) {
+                JSONObject nodeJson = ((JSONObject) obj);
+                if (nodeJson.get("code").equals(node.getCode())) {
+                    nodeJson.getJSONArray("forewarnings").forEach(f -> {
+                        JSONObject forewarningJSONConfig = ((JSONObject) f).getJSONObject("forewarningConfig");
+                        node.getForewarnings().stream().filter(nf -> nf.getId().equals(((JSONObject) f).getString("id"))).forEach(forewarning -> {
+                            pluginManager.getExtensions(IForewarning.class).stream().filter(o -> o.getCode().equals(forewarning.getForewarningCode())).findFirst().ifPresent(f1 -> {
+                                IForewarningConfig forewarningConfig = JSON.parseObject(JSON.toJSONString(forewarningJSONConfig), f1.getForewarningConfig().getClass());
+                                forewarning.setForewarningConfig(forewarningConfig);
+                            });
+                        });
                     });
                 }
             }

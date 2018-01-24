@@ -48,21 +48,24 @@
 
             <div class="col-sm-10">
                 <select multiple class="form-control" v-model="notifiers">
-                    <option :value="notifier.id" v-for="notifier in availableNotifiers">{{notifier.title}}</option>
+                    <option :key="notifier.id" :value="notifier.id" v-for="notifier in availableNotifiers">{{notifier.title}}</option>
                 </select>
             </div>
         </div>
         <div class="form-group">
             <label class="col-sm-2 control-label">When notify</label>
-
             <div class="col-sm-10">
-                <select class="form-control" v-model="firerule">
-                    <option value="firerule-immediately">Immediately</option>
-                    <option value="firerule-continuallyDown">Continually Down</option>
-                    <option value="firerule-oncePerDay">Once per day</option>
+                <select class="form-control" v-model="forewarningCode">
+                    <option :value="rule.code" :key="rule.code" v-for="rule in forewarningRules">{{rule.name}} ({{rule.description}})</option>
                 </select>
             </div>
         </div>
+            <div class="form-group" :key="index" v-for="(config,index) in selectedForewarning.config">
+                <label class="col-sm-2 control-label">{{config.name}}</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="forewarningConfig[config.code]" :placeholder="config.description">
+                </div>
+            </div>
         <div class="form-group">
             <label class="col-sm-2 control-label">Notify message</label>
 
@@ -97,180 +100,209 @@
 </template>
 
 <script>
-    import Vue from "vue"
+import Vue from "vue";
 
-    export default {
-        props: {
-            edit: Boolean,
-            node: String,
-            metric: {
-                type: String,
-                default: function () {
-                    return "";
-                }
-            },
-            forewarningId: String
-        },
-        data() {
-            return {
-                title: "",
-                context: "",
-                snippet: "",
-                firerule: "firerule-immediately",
-                notifiers: [],
-                availableNotifiers: [],
-                msg: "",
-                realMsg: "",
-                recoveredMsg: "",
-                realRecoveredMsg: "",
-                evaluateResult: "",
-                expression: "{{expression}}"
-            }
-        },
-        mounted() {
-            $.get("/api/notifier/", res => {
-                this.availableNotifiers = res.data;
-            });
-            this.loadContext();
-        },
-        watch: {
-            forewarningId: function (val) {
-                if (val) {
-                    this.loadEditingForewarning();
-                }
-            },
-            metric: function (val) {
-                this.loadContext();
-            }
-        },
-        methods: {
-            loadContext() {
-                $.get("/api/forewarning/context/?node=" + this.node + "&metric=" + this.metric, res => {
-                    this.context = res.data;
-                });
-            },
-            loadEditingForewarning() {
-                $.get("/api/forewarning/?node=" + this.node + "&forewarning=" + this.forewarningId, res => {
-                    var existingForwarning = res.data;
-                    this.snippet = existingForwarning.snippet;
-                    this.msg = existingForwarning.msg;
-                    this.recoveredMsg = existingForwarning.recoveredMsg;
-                    this.notifiers = existingForwarning.notifiers;
-                    this.firerule = existingForwarning.fireRule;
-                    this.title = existingForwarning.title;
-                });
-            },
-            addForewarning: function () {
-                if (this.edit) {
-                    $.post("/api/forewarning/edit/",
-                        {
-                            "title": this.title,
-                            "node": this.node,
-                            "metric": this.metric,
-                            "snippet": this.snippet,
-                            "firerule": this.firerule,
-                            "notifiers": this.notifiers,
-                            "msg": this.msg,
-                            "recoveredMsg": this.recoveredMsg,
-                            "forewarningId": this.forewarningId
-                        },
-                        res => {
-                            if (res.success) {
-                                alert("Success");
-                            }
-                            else {
-                                alert(res.message);
-                            }
-                        });
-                }
-                else {
-                    $.post("/api/forewarning/",
-                        {
-                            "title": this.title,
-                            "node": this.node,
-                            "metric": this.metric,
-                            "snippet": this.snippet,
-                            "firerule": this.firerule,
-                            "notifiers": this.notifiers,
-                            "msg": this.msg,
-                            "recoveredMsg": this.recoveredMsg
-                        },
-                        res => {
-                            if (res.success) {
-                                alert("Success");
-                            }
-                            else {
-                                alert(res.message);
-                            }
-                        });
-                }
-            },
-            removeForewarning: function () {
-                if (confirm("Do you want to remove this forewarning?")) {
-                    $.post("/api/forewarning/delete/",
-                        {
-                            "title": this.title,
-                            "node": this.node,
-                            "metric": this.metric,
-                            "snippet": this.snippet,
-                            "firerule": this.firerule,
-                            "notifiers": this.notifiers,
-                            "msg": this.msg
-                        },
-                        res => {
-                            if (res.success) {
-                                alert("Success");
-                            }
-                        });
-                }
-            },
-            evaluate: function () {
-                $.post("/api/forewarning/evaluate/",
-                    {
-                        "node": this.node,
-                        "metric": this.metric,
-                        "snippet": this.snippet
-                    },
-                    res => {
-                        if (res.success) {
-                            this.evaluateResult = res.data;
-                        }
-                    });
-            },
-            previewMsg: function () {
-                $.post("/api/forewarning/previewMsg/",
-                    {
-                        "node": this.node,
-                        "metric": this.metric,
-                        "msg": this.msg
-                    },
-                    res => {
-                        if (res.success) {
-                            this.realMsg = res.data;
-                        }
-                    });
-            },
-            previewRecoveredMsg: function () {
-                $.post("/api/forewarning/previewMsg/",
-                    {
-                        "node": this.node,
-                        "metric": this.metric,
-                        "msg": this.recoveredMsg
-                    },
-                    res => {
-                        if (res.success) {
-                            this.realRecoveredMsg = res.data;
-                        }
-                    });
-            }
-        }
+export default {
+  props: {
+    edit: Boolean,
+    node: String,
+    metric: {
+      type: String,
+      default: function() {
+        return "";
+      }
+    },
+    forewarningId: String
+  },
+  data() {
+    return {
+      title: "",
+      context: "",
+      snippet: "",
+      forewarningCode: "",
+      notifiers: [],
+      forewarningRules: [],
+      forewarningConfig: {},
+      availableNotifiers: [],
+      msg: "",
+      realMsg: "",
+      recoveredMsg: "",
+      realRecoveredMsg: "",
+      evaluateResult: "",
+      expression: "{{expression}}"
+    };
+  },
+  mounted() {
+    $.get("/api/notifier/", res => {
+      this.availableNotifiers = res.data;
+    });
+    this.loadContext();
+  },
+  watch: {
+    forewarningId: function(val) {
+      if (val) {
+        this.loadEditingForewarning();
+      }
+    },
+    metric: function(val) {
+      this.loadContext();
     }
+  },
+  computed: {
+    selectedForewarning() {
+      let forewarnings = this.forewarningRules.filter(o => o.code === this.forewarningCode);
+      if (forewarnings.length > 0) return forewarnings[0];
 
+      return {};
+    }
+  },
+  methods: {
+    loadContext() {
+      $.get("/api/forewarning/context/?node=" + this.node + "&metric=" + this.metric, res => {
+        this.context = res.data;
+      });
+    },
+    loadEditingForewarning() {
+      $.get("/api/forewarning/?node=" + this.node + "&forewarning=" + this.forewarningId, res => {
+        var existingForwarning = res.data;
+        this.snippet = existingForwarning.snippet;
+        this.msg = existingForwarning.msg;
+        this.recoveredMsg = existingForwarning.recoveredMsg;
+        this.notifiers = existingForwarning.notifiers;
+        this.forewarningCode = existingForwarning.forewarningCode;
+        this.title = existingForwarning.title;
+      });
+    },
+    addForewarning: function() {
+      if (this.edit) {
+        $.post(
+          "/api/forewarning/edit/",
+          {
+            title: this.title,
+            node: this.node,
+            metric: this.metric,
+            snippet: this.snippet,
+            forewarningCode: this.forewarningCode,
+            forewarningConfig: JSON.stringify(this.forewarningConfig),
+            notifiers: this.notifiers,
+            msg: this.msg,
+            recoveredMsg: this.recoveredMsg,
+            forewarningId: this.forewarningId
+          },
+          res => {
+            if (res.success) {
+              alert("Success");
+            } else {
+              alert(res.message);
+            }
+          }
+        );
+      } else {
+        $.post(
+          "/api/forewarning/",
+          {
+            title: this.title,
+            node: this.node,
+            metric: this.metric,
+            snippet: this.snippet,
+            forewarningCode: this.forewarningCode,
+            forewarningConfig: JSON.stringify(this.forewarningConfig),
+            notifiers: this.notifiers,
+            msg: this.msg,
+            recoveredMsg: this.recoveredMsg
+          },
+          res => {
+            if (res.success) {
+              alert("Success");
+            } else {
+              alert(res.message);
+            }
+          }
+        );
+      }
+    },
+    removeForewarning: function() {
+      if (confirm("Do you want to remove this forewarning?")) {
+        $.post(
+          "/api/forewarning/delete/",
+          {
+            title: this.title,
+            node: this.node,
+            metric: this.metric,
+            snippet: this.snippet,
+            forewarningCode: this.forewarningCode,
+            forewarningConfig: JSON.stringify(this.forewarningConfig),
+            notifiers: this.notifiers,
+            msg: this.msg
+          },
+          res => {
+            if (res.success) {
+              alert("Success");
+            }
+          }
+        );
+      }
+    },
+    evaluate: function() {
+      $.post(
+        "/api/forewarning/evaluate/",
+        {
+          node: this.node,
+          metric: this.metric,
+          snippet: this.snippet
+        },
+        res => {
+          if (res.success) {
+            this.evaluateResult = res.data;
+          }
+        }
+      );
+    },
+    previewMsg: function() {
+      $.post(
+        "/api/forewarning/previewMsg/",
+        {
+          node: this.node,
+          metric: this.metric,
+          msg: this.msg
+        },
+        res => {
+          if (res.success) {
+            this.realMsg = res.data;
+          }
+        }
+      );
+    },
+    previewRecoveredMsg: function() {
+      $.post(
+        "/api/forewarning/previewMsg/",
+        {
+          node: this.node,
+          metric: this.metric,
+          msg: this.recoveredMsg
+        },
+        res => {
+          if (res.success) {
+            this.realRecoveredMsg = res.data;
+          }
+        }
+      );
+    }
+  },
+  mounted() {
+    $.get("/api/forewarning/list/", res => {
+      this.forewarningRules = res.data;
+      if (this.forewarningRules.length > 0) {
+        this.forewarningCode = this.forewarningRules[0].code;
+      }
+    });
+  }
+};
 </script>
 
 <style>
-    .forewarning {
-        max-height: 700px;
-        overflow: auto;
-    }
+.forewarning {
+  max-height: 700px;
+  overflow: auto;
+}
 </style>

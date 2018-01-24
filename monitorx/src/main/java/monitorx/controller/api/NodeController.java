@@ -3,11 +3,12 @@ package monitorx.controller.api;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import monitorx.domain.Node;
-import monitorx.domain.forewarning.Forewarning;
+import monitorx.domain.Forewarning;
 import monitorx.plugins.Metric;
 import monitorx.plugins.sync.ISync;
 import monitorx.plugins.sync.ISyncConfig;
 import monitorx.service.NodeService;
+import org.pf4j.PluginManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -30,7 +31,7 @@ public class NodeController {
     ApplicationContext applicationContext;
 
     @Autowired
-    List<ISync> syncs;
+    PluginManager pluginManager;
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public APIResponse getNodeList() {
@@ -42,6 +43,7 @@ public class NodeController {
         String nodeJSON = request.getParameter("node");
 
         Node node = JSON.parseObject(nodeJSON, Node.class);
+        List<ISync> syncs = pluginManager.getExtensions(ISync.class);
         Optional<ISync> sync = syncs.stream().filter(o -> o.getCode().equalsIgnoreCase(node.getSync())).findFirst();
         if (!sync.isPresent()) {
             return APIResponse.buildErrorResponse("Invalid Sync");
@@ -82,7 +84,7 @@ public class NodeController {
     @RequestMapping(value = "/{nodeCode}/{forewarning}/checkpoint/", method = RequestMethod.GET)
     public APIResponse getNodeCheckPoints(@PathVariable("nodeCode") String nodeCode, @PathVariable("forewarning") String forewarning) {
         Forewarning fw = nodeService.findForewarningByTitle(nodeCode, forewarning);
-        return APIResponse.buildSuccessResponse(fw.getFireRuleContext().getCheckPoints());
+        return APIResponse.buildSuccessResponse(fw.getCheckPoints());
     }
 
     @RequestMapping(value = "/{nodeCode}/", method = RequestMethod.DELETE)

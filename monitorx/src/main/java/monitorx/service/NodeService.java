@@ -3,12 +3,14 @@ package monitorx.service;
 import monitorx.plugins.Metric;
 import monitorx.domain.Node;
 import monitorx.plugins.Status;
-import monitorx.domain.forewarning.Forewarning;
-import monitorx.domain.forewarning.ForewarningCheckPoint;
-import monitorx.domain.forewarning.IFireRule;
+import monitorx.domain.Forewarning;
+import monitorx.plugins.forewarning.ForewarningCheckPoint;
 import monitorx.domain.notifier.Notifier;
+import monitorx.plugins.forewarning.ForewarningContext;
+import monitorx.plugins.forewarning.IForewarning;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.pf4j.PluginManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +38,9 @@ public class NodeService {
 
     @Autowired
     NotifierService notifierService;
+
+    @Autowired
+    PluginManager pluginManager;
 
     public List<Node> getNodes() {
         return configService.getConfig().getNodes();
@@ -112,7 +117,9 @@ public class NodeService {
                     }
                 }
 
-                if (shouldBreak) break;
+                if (shouldBreak) {
+                    break;
+                }
             }
         }
 
@@ -132,7 +139,9 @@ public class NodeService {
     public Forewarning findForewarning(String nodeCode, String forewarningId) {
         Node node = getNode(nodeCode);
         for (Forewarning forewarning : node.getForewarnings()) {
-            if (forewarning.getId().equals(forewarningId)) return forewarning;
+            if (forewarning.getId().equals(forewarningId)) {
+                return forewarning;
+            }
         }
 
         return null;
@@ -141,7 +150,9 @@ public class NodeService {
     public Forewarning findForewarningByTitle(String nodeCode, String forewarningTitle) {
         Node node = getNode(nodeCode);
         for (Forewarning forewarning : node.getForewarnings()) {
-            if (forewarning.getTitle().equals(forewarningTitle)) return forewarning;
+            if (forewarning.getTitle().equals(forewarningTitle)) {
+                return forewarning;
+            }
         }
 
         return null;
@@ -159,7 +170,7 @@ public class NodeService {
                 }
                 Boolean result = (Boolean) javascriptEngine.executeScript(context, forewarning.getSnippet());
                 checkPoint.setSnippetResult(result);
-                forewarning.getFireRuleContext().addCheckPoint(checkPoint);
+                forewarning.getCheckPoints().add(checkPoint);
             } catch (ScriptException e) {
                 logger.warn("Execute javascript failed while adding checkpoint,node=" + node.getCode() + ", metric=" + forewarning.getMetric() + ",context=" + context + ExceptionUtils.getRootCauseMessage(e));
             }
@@ -193,7 +204,7 @@ public class NodeService {
      * check if a node is recovered from offline status
      */
     private boolean isRecovered(Forewarning forewarning) {
-        List<ForewarningCheckPoint> checkPoints = forewarning.getFireRuleContext().getCheckPoints();
+        List<ForewarningCheckPoint> checkPoints = forewarning.getCheckPoints();
         if (checkPoints != null && checkPoints.size() > 1) {
             ForewarningCheckPoint lastCheckPoint = checkPoints.get(checkPoints.size() - 1);
             ForewarningCheckPoint LastTwoCheckPoint = checkPoints.get(checkPoints.size() - 2);
@@ -279,20 +290,23 @@ public class NodeService {
 
     public void checkForewarningAndNotify(Node node) {
         for (Forewarning forewarning : node.getForewarnings()) {
-            List<ForewarningCheckPoint> checkPoints = forewarning.getFireRuleContext().getCheckPoints();
-            if (checkPoints.size() == 0) continue;
+            if (forewarning.getCheckPoints().size() == 0) {
+                continue;
+            }
+            ForewarningCheckPoint lastCheckPoint = forewarning.getCheckPoints().get(forewarning.getCheckPoints().size() - 1);
 
-            ForewarningCheckPoint lastCheckPoint = checkPoints.get(checkPoints.size() - 1);
-            if (lastCheckPoint.getSnippetResult()) {
-                //only after last checkpoint return true, we need to check if we should fire the notify
-                boolean shouldNotify = ((IFireRule) applicationContext.getBean(forewarning.getFireRule())).shouldFireNotify(forewarning.getFireRuleContext());
-                if (shouldNotify) {
+            pluginManager.getExtensions(IForewarning.class).stream().filter(o -> o.getCode().equalsIgnoreCase(forewarning.getForewarningCode())).findFirst().ifPresent(warning -> {
+                ForewarningContext context = new ForewarningContext();
+                context.setCheckPoints(forewarning.getCheckPoints());
+                context.setForewarningConfig(forewarning.getForewarningConfig());
+                if (warning.shouldWarning(context)) {
                     String msg = forewarning.getMsg();
                     try {
                         msg = getTranslatedMsg(node, forewarning.getMetric(), forewarning.getMsg());
                     } catch (Exception e) {
                         //no-op
                     }
+
                     for (String notifierId : forewarning.getNotifiers()) {
                         Notifier notifier = notifierService.getNotifier(notifierId);
                         if (notifier != null) {
@@ -301,7 +315,7 @@ public class NodeService {
                         }
                     }
                 }
-            }
+            });
         }
     }
 }

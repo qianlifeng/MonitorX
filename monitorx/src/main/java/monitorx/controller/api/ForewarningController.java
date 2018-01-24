@@ -1,15 +1,21 @@
 package monitorx.controller.api;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import monitorx.domain.Forewarning;
 import monitorx.domain.Node;
-import monitorx.domain.forewarning.Forewarning;
-import monitorx.domain.forewarning.IFireRule;
 import monitorx.domain.notifier.Notifier;
+import monitorx.plugins.annotation.UIField;
+import monitorx.plugins.forewarning.IForewarning;
+import monitorx.plugins.forewarning.IForewarningConfig;
 import monitorx.service.ConfigService;
 import monitorx.service.JavascriptEngine;
 import monitorx.service.NodeService;
 import monitorx.service.NotifierService;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.pf4j.PluginManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,9 +25,11 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.script.ScriptException;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import static org.apache.commons.lang3.StringEscapeUtils.escapeHtml4;
 
@@ -43,6 +51,9 @@ public class ForewarningController {
     @Autowired
     JavascriptEngine javascriptEngine;
 
+    @Autowired
+    PluginManager pluginManager;
+
     @RequestMapping(value = "/", method = RequestMethod.POST)
     public APIResponse addForeWarning(HttpServletRequest request) throws IOException {
         String nodeCode = request.getParameter("node");
@@ -55,6 +66,12 @@ public class ForewarningController {
         forewarning.setSnippet(request.getParameter("snippet"));
         forewarning.setMsg(request.getParameter("msg"));
         forewarning.setRecoveredMsg(request.getParameter("recoveredMsg"));
+
+        pluginManager.getExtensions(IForewarning.class).stream().filter(o -> o.getCode().equalsIgnoreCase(request.getParameter("forewarningCode"))).findFirst().ifPresent(f -> {
+            forewarning.setForewarningCode(f.getCode());
+            IForewarningConfig forewarningConfig = JSON.parseObject(request.getParameter("forewarningConfig"), f.getForewarningConfig().getClass());
+            forewarning.setForewarningConfig(forewarningConfig);
+        });
 
         try {
             String context = nodeService.getNodeMetricContext(node, forewarning.getMetric());
@@ -78,11 +95,6 @@ public class ForewarningController {
             }
         }
 
-        IFireRule firerule = ((IFireRule) applicationContext.getBean(request.getParameter("firerule")));
-        if (firerule == null) {
-            APIResponse.buildErrorResponse("fire rule doesn't exist");
-        }
-        forewarning.setFireRule(request.getParameter("firerule"));
 
         node.getForewarnings().add(forewarning);
 
@@ -102,6 +114,12 @@ public class ForewarningController {
         existingForewarning.setSnippet(request.getParameter("snippet"));
         existingForewarning.setMsg(request.getParameter("msg"));
         existingForewarning.setRecoveredMsg(request.getParameter("recoveredMsg"));
+
+        pluginManager.getExtensions(IForewarning.class).stream().filter(o -> o.getCode().equalsIgnoreCase(request.getParameter("forewarningCode"))).findFirst().ifPresent(f -> {
+            existingForewarning.setForewarningCode(f.getCode());
+            IForewarningConfig forewarningConfig = JSON.parseObject(request.getParameter("forewarningConfig"), f.getForewarningConfig().getClass());
+            existingForewarning.setForewarningConfig(forewarningConfig);
+        });
 
         try {
             String context = nodeService.getNodeMetricContext(node, existingForewarning.getMetric());
@@ -125,11 +143,6 @@ public class ForewarningController {
             }
         }
 
-        IFireRule firerule = ((IFireRule) applicationContext.getBean(request.getParameter("firerule")));
-        if (firerule == null) {
-            APIResponse.buildErrorResponse("fire rule doesn't exist");
-        }
-        existingForewarning.setFireRule(request.getParameter("firerule"));
 
         configService.save();
         return APIResponse.buildSuccessResponse();
@@ -169,12 +182,16 @@ public class ForewarningController {
         Node node = nodeService.getNode(nodeCode);
         String metric = request.getParameter("metric");
         String snippet = request.getParameter("snippet");
-        if (StringUtils.isEmpty(snippet)) return APIResponse.buildSuccessResponse("Please input snippet");
+        if (StringUtils.isEmpty(snippet)) {
+            return APIResponse.buildSuccessResponse("Please input snippet");
+        }
 
         try {
             String context = nodeService.getNodeMetricContext(node, metric);
             Object returnValue = javascriptEngine.executeScript(context, snippet);
-            if (returnValue == null) return APIResponse.buildSuccessResponse("Snippet doesn't return any value");
+            if (returnValue == null) {
+                return APIResponse.buildSuccessResponse("Snippet doesn't return any value");
+            }
             return APIResponse.buildSuccessResponse(escapeHtml4(returnValue.toString()));
         } catch (Exception e) {
             return APIResponse.buildSuccessResponse(ExceptionUtils.getRootCauseMessage(e));
@@ -196,7 +213,9 @@ public class ForewarningController {
         Node node = nodeService.getNode(nodeCode);
         String metric = request.getParameter("metric");
         String msg = request.getParameter("msg");
-        if (StringUtils.isEmpty(msg)) return APIResponse.buildSuccessResponse("Please input msg");
+        if (StringUtils.isEmpty(msg)) {
+            return APIResponse.buildSuccessResponse("Please input msg");
+        }
 
         try {
             String realMsg = nodeService.getTranslatedMsg(node, metric, msg);
@@ -206,4 +225,26 @@ public class ForewarningController {
         }
     }
 
+    @RequestMapping(value = "/list/", method = RequestMethod.GET)
+    public APIResponse getForewarningRuleList() {
+        List<JSONObject> forewarnings = pluginManager.getExtensions(IForewarning.class).stream().map(o -> {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("code", o.getCode());
+            jsonObject.put("name", o.getName());
+            jsonObject.put("description", o.getDescription());
+            JSONArray configs = new JSONArray();
+            for (Field configField : o.getForewarningConfig().getClass().getDeclaredFields()) {
+                JSONObject field = new JSONObject();
+                UIField uiField = configField.getAnnotation(UIField.class);
+                field.put("code", uiField.code());
+                field.put("name", uiField.name());
+                field.put("type", uiField.type());
+                field.put("description", uiField.description());
+                configs.add(field);
+            }
+            jsonObject.put("config", configs);
+            return jsonObject;
+        }).collect(Collectors.toList());
+        return APIResponse.buildSuccessResponse(forewarnings);
+    }
 }

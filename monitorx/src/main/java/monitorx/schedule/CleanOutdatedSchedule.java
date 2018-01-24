@@ -2,8 +2,8 @@ package monitorx.schedule;
 
 import monitorx.domain.Node;
 import monitorx.plugins.Status;
-import monitorx.domain.forewarning.Forewarning;
-import monitorx.domain.forewarning.ForewarningCheckPoint;
+import monitorx.domain.Forewarning;
+import monitorx.plugins.forewarning.ForewarningCheckPoint;
 import monitorx.service.NodeService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,7 +27,7 @@ public class CleanOutdatedSchedule {
     public void cleanCheckPoints() {
         for (Node node : nodeService.getNodes()) {
             for (Forewarning forewarning : node.getForewarnings()) {
-                Iterator<ForewarningCheckPoint> iterator = forewarning.getFireRuleContext().getCheckPoints().iterator();
+                Iterator<ForewarningCheckPoint> iterator = forewarning.getCheckPoints().iterator();
                 while (iterator.hasNext()) {
                     ForewarningCheckPoint checkPoint = iterator.next();
 
