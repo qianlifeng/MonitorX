@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.concurrent.atomic.AtomicLong;
 
 @Component
 public class CleanOutdatedSchedule {
@@ -23,8 +24,12 @@ public class CleanOutdatedSchedule {
     @Autowired
     NodeService nodeService;
 
+    private static final Integer REMOVE_DATA_BEFORE_MINUTES = 10;
+
     @Scheduled(fixedRate = 1000 * 60)
     public void cleanCheckPoints() {
+        AtomicLong before = new AtomicLong();
+        nodeService.getNodes().forEach(o -> o.getForewarnings().forEach(j -> before.addAndGet(j.getCheckPoints().size())));
         for (Node node : nodeService.getNodes()) {
             for (Forewarning forewarning : node.getForewarnings()) {
                 Iterator<ForewarningCheckPoint> iterator = forewarning.getCheckPoints().iterator();
@@ -33,19 +38,24 @@ public class CleanOutdatedSchedule {
 
                     Calendar calendar = Calendar.getInstance();
                     calendar.setTime(new Date());
-                    calendar.add(Calendar.HOUR, -1);
+                    calendar.add(Calendar.MINUTE, -REMOVE_DATA_BEFORE_MINUTES);
                     if (checkPoint.getDatetime().before(calendar.getTime())) {
-                        //remove checkpoints 2 days before
                         iterator.remove();
-                        logger.info("Deleting outdated check-point: " + checkPoint.getDatetime());
                     }
                 }
             }
+        }
+        AtomicLong now = new AtomicLong();
+        nodeService.getNodes().forEach(o -> o.getForewarnings().forEach(j -> now.addAndGet(j.getCheckPoints().size())));
+        if (before.get() != now.get()) {
+            logger.info("Deleting outdated checkpoint {} => {}", before.get(), now.get());
         }
     }
 
     @Scheduled(fixedRate = 1000 * 70)
     public void cleanStatusHistory() {
+        AtomicLong before = new AtomicLong();
+        nodeService.getNodes().forEach(o -> before.addAndGet(o.getStatusHistory().size()));
         for (Node node : nodeService.getNodes()) {
             Iterator<Status> iterator = node.getStatusHistory().iterator();
             while (iterator.hasNext()) {
@@ -53,13 +63,16 @@ public class CleanOutdatedSchedule {
 
                 Calendar calendar = Calendar.getInstance();
                 calendar.setTime(new Date());
-                calendar.add(Calendar.HOUR, -1);
+                calendar.add(Calendar.MINUTE, -REMOVE_DATA_BEFORE_MINUTES);
                 if (nodeStatus.getLastUpdateDate().before(calendar.getTime())) {
-                    //remove checkpoints 2 days before
                     iterator.remove();
-                    logger.info("Deleting outdated status: " + nodeStatus.getLastUpdateDate());
                 }
             }
+        }
+        AtomicLong now = new AtomicLong();
+        nodeService.getNodes().forEach(o -> now.addAndGet(o.getStatusHistory().size()));
+        if (before.get() != now.get()) {
+            logger.info("Deleting outdated status {} => {}", before.get(), now.get());
         }
     }
 }

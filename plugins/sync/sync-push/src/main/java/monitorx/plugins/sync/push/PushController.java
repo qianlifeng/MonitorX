@@ -54,7 +54,7 @@ public class PushController implements IRequestDispatcher {
             String nodeCode = nodeStatusJSON.getString("nodeCode");
             Status status = JSON.parseObject(JSON.toJSONString(nodeStatusJSON.getJSONObject("nodeStatus")), Status.class);
             status.setLastUpdateDate(new Date());
-            logger.info("Upload status from ip:" + getIpAddr(request) + ", request body:" + requestBody);
+            logger.debug("Upload status from ip:" + getIpAddr(request) + ", request body:" + requestBody);
 
             NodeStatus.update(nodeCode, status);
 

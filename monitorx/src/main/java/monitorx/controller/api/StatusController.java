@@ -11,8 +11,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.io.IOException;
-
 @RestController
 @RequestMapping("/api/status")
 public class StatusController {
@@ -23,11 +21,13 @@ public class StatusController {
     NodeService nodeService;
 
     @RequestMapping(value = "/{node}/", method = RequestMethod.GET)
-    public String queryStatus(@PathVariable("node") String nodeCode) throws IOException {
+    public String queryStatus(@PathVariable("node") String nodeCode) {
         String status = "down";
 
         Node node = nodeService.getNode(nodeCode);
-        if (node == null) return "Invalid node";
+        if (node == null) {
+            return "Invalid node";
+        }
 
         Status nodeStatus = node.getStatus();
         if (nodeStatus != null) {

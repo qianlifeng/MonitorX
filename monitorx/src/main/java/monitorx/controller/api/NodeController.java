@@ -60,7 +60,7 @@ public class NodeController {
     @RequestMapping(value = "/{nodeCode}/", method = RequestMethod.GET)
     public APIResponse getNode(@PathVariable("nodeCode") String nodeCode) {
         Node node = nodeService.getNode(nodeCode);
-        if (node.getStatus() != null && node.getStatus().getMetrics() != null) {
+        if (node != null && node.getStatus() != null && node.getStatus() != null && node.getStatus().getMetrics() != null) {
             for (Metric metric : node.getStatus().getMetrics()) {
                 if (metric.isLineMetric()) {
                     JSONObject lineValue = JSON.parseObject(metric.getValue());

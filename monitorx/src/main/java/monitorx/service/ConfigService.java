@@ -66,7 +66,7 @@ public class ConfigService {
                 if (notifierJSON.get("id").equals(notifier.getId())) {
                     pluginManager.getExtensions(INotifier.class).stream().filter(o -> o.getCode().equals(notifier.getNotifierCode())).findFirst().ifPresent(n -> {
                         INotifierConfig configClass = n.getNotifierConfig();
-                        INotifierConfig notifierConfig = JSON.parseObject(JSON.toJSONString(notifierJSON.get("config")), configClass.getClass());
+                        INotifierConfig notifierConfig = notifierJSON.getObject("notifierConfig", configClass.getClass());
                         notifier.setNotifierConfig(notifierConfig);
                     });
                 }

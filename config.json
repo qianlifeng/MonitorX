@@ -31,8 +31,11 @@
 		{
 			"code":"springboot",
 			"forewarnings":[],
+			"group":"",
 			"sync":"sync-springboot",
-			"syncConfig":{},
+			"syncConfig":{
+				"url":"http://app.fcgylapp.cn/skuservice/"
+			},
 			"title":"springboot"
 		}
 	],
