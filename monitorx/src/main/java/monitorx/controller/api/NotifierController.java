@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.List;
 import java.util.UUID;
@@ -67,14 +66,14 @@ public class NotifierController {
     }
 
     @RequestMapping(value = "/", method = RequestMethod.POST)
-    public APIResponse addNotifier(HttpServletRequest request) throws IOException {
+    public APIResponse addNotifier(HttpServletRequest request) {
         Notifier notifier = buildNotifier(request);
         notifierService.addNotifier(notifier);
         return APIResponse.buildSuccessResponse();
     }
 
     @RequestMapping(value = "/testsend/", method = RequestMethod.POST)
-    public APIResponse testSend(HttpServletRequest request) throws IOException {
+    public APIResponse testSend(HttpServletRequest request) {
         String title = request.getParameter("title");
         String msg = request.getParameter("body");
 
@@ -98,8 +97,9 @@ public class NotifierController {
         JSONObject jsonObject = JSON.parseObject(notifierJSON);
         pluginManager.getExtensions(INotifier.class).stream().filter(o -> o.getCode().equals(notifier.getNotifierCode())).findFirst().ifPresent(n -> {
             INotifierConfig configClass = n.getNotifierConfig();
-            INotifierConfig notifierConfig = JSON.parseObject(JSON.toJSONString(jsonObject.get("config")), configClass.getClass());
+            INotifierConfig notifierConfig = jsonObject.getObject("notifierConfig", configClass.getClass());
             notifier.setNotifierConfig(notifierConfig);
+            notifier.setFontawesomeIcon(n.getFontAwesomeIcon());
         });
 
         return notifier;

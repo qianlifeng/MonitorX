@@ -132,12 +132,6 @@ export default {
       expression: "{{expression}}"
     };
   },
-  mounted() {
-    $.get("/api/notifier/", res => {
-      this.availableNotifiers = res.data;
-    });
-    this.loadContext();
-  },
   watch: {
     forewarningId: function(val) {
       if (val) {
@@ -296,6 +290,10 @@ export default {
         this.forewarningCode = this.forewarningRules[0].code;
       }
     });
+    $.get("/api/notifier/", res => {
+      this.availableNotifiers = res.data;
+    });
+    this.loadContext();
   }
 };
 </script>

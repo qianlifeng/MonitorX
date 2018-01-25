@@ -13,7 +13,16 @@
 
         <div class="row">
             <div class="col-sm-12 col-lg-12 col-md-12" v-for="notifier in notifiers" :key="notifier.title">
-                <component :is="'notifier-' + notifier.type" :notifier="notifier"></component>
+                <div class="status-widget status-blue">
+                    <div class="row">
+                        <div class="col-sm-9">
+                            <i class="fa fa-3x" :class="[notifier.fontawesomeIcon]"></i><span class="notifier-title">{{notifier.title}}</span>
+                        </div>
+                        <div class="col-sm-3 operations">
+                            <i class="fa fa-trash-o clickable pull-right" @click="removeNotifier(notifier)" data-toggle="tooltip" data-placement="top" title="Remove notifier"></i>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -37,14 +46,22 @@
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">Type</label>
                                 <div class="col-sm-10">
-                                    <select class="form-control" v-model="notifier.type">
-                                        <option value="wechat">Wechat</option>
-                                        <option value="email">Email</option>
-                                        <option value="callback">Callback</option>
+                                    <select class="form-control" v-model="notifier.notifierCode">
+                                        <option :value="notifier.code" :key="notifier.code" v-for="notifier in notifierDefinitions">{{notifier.name}}</option>
                                     </select>
                                 </div>
                             </div>
-                            <component :is="'notifier-' + notifier.type+ '-config'" :config="notifier.config"></component>
+                            <div class="form-group">
+                                <div class="col-sm-10 col-sm-offset-2">
+                                    <span class="text-muted" v-html="selectedNotifier.description"></span>
+                                </div>
+                            </div>
+                              <div class="form-group" :key="index" v-for="(config,index) in selectedNotifier.config">
+                                <label class="col-sm-2 control-label">{{config.name}}</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" v-model="notifier.notifierConfig[config.code]" :placeholder="config.description">
+                                </div>
+                            </div>
                         </form>
                     </div>
                     <div class="modal-footer">
@@ -58,31 +75,17 @@
 </template>
 
 <script>
-import NotifierEmail from "./email/notifier-email.vue";
-import NotifierEmailConfig from "./email/notifier-email-config.vue";
-import NotifierWechat from "./wechat/notifier-wechat.vue";
-import NotifierWechatConfig from "./wechat/notifier-wechat-config.vue";
-import NotifierCallback from "./callback/notifier-callback.vue";
-import NotifierCallbackConfig from "./callback/notifier-callback-config.vue";
-
 export default {
   name: "notifier",
-  components: {
-    "notifier-email": NotifierEmail,
-    "notifier-email-config": NotifierEmailConfig,
-    "notifier-wechat": NotifierWechat,
-    "notifier-wechat-config": NotifierWechatConfig,
-    "notifier-callback": NotifierCallback,
-    "notifier-callback-config": NotifierCallbackConfig
-  },
   data() {
     return {
       notifiers: [],
+      notifierDefinitions: [],
       showCreateNotifierDialog: false,
       notifier: {
         title: "",
-        type: "wechat",
-        config: {}
+        notifierCode: "",
+        notifierConfig: {}
       }
     };
   },
@@ -93,6 +96,14 @@ export default {
       } else {
         $("#createNotifierDialog").modal("hide");
       }
+    }
+  },
+  computed: {
+    selectedNotifier() {
+      let notifiers = this.notifierDefinitions.filter(o => o.code === this.notifier.notifierCode);
+      if (notifiers.length > 0) return notifiers[0];
+
+      return {};
     }
   },
   methods: {
@@ -139,10 +150,19 @@ export default {
       $.get("/api/notifier/", res => {
         this.notifiers = res.data;
       });
+    },
+    loadNotifierDefinitions() {
+      $.get("/api/notifier/codes/", res => {
+        this.notifierDefinitions = res.data;
+        if (this.notifierDefinitions.length > 0) {
+          this.notifier.notifierCode = this.notifierDefinitions[0].code;
+        }
+      });
     }
   },
   mounted() {
     this.loadNotifiers();
+    this.loadNotifierDefinitions();
     $("#createNotifierDialog").on("hidden.bs.modal", () => {
       this.showCreateNotifierDialog = false;
     });

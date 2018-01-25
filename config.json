@@ -1,52 +1,50 @@
 {
-  "app": {
-    "title": "MonitorX"
-  },
-  "nodes": [
-    {
-      "code": "ethminer",
-      "forewarnings": [
-        {
-          "forewarningCode": "forewarning-immediate",
-          "forewarningConfig": {
-            "warningBySeconds": 60
-          },
-          "id": "4cbbd760-ee6a-4061-a6f3-ca052e525101",
-          "metric": "",
-          "msg": "test",
-          "notifiers": [],
-          "recoveredMsg": "test",
-          "snippet": "return isUp == false;",
-          "title": "test"
-        },
-        {
-          "forewarningCode": "forewarning-immediate",
-          "forewarningConfig": {
-            "warningBySeconds": 65
-          },
-          "id": "809e16c8-e472-4ccb-9ea9-ed060ea6aabd",
-          "metric": "",
-          "msg": "test",
-          "notifiers": [],
-          "recoveredMsg": "",
-          "snippet": "return isUp == false;",
-          "title": "test"
-        }
-      ],
-      "sync": "sync-push",
-      "syncConfig": {
-        "pushInterval": 10
-      },
-      "title": "ethminer"
-    },
-    {
-      "code": "springboot",
-      "forewarnings": [],
-      "sync": "sync-springboot",
-      "syncConfig": {},
-      "title": "springboot"
-    }
-  ],
-  "notifiers": [
-  ]
+	"app":{
+		"title":"MonitorX"
+	},
+	"nodes":[
+		{
+			"code":"ethminer",
+			"forewarnings":[
+				{
+					"forewarningCode":"forewarning-immediate",
+					"forewarningConfig":{
+						"warningBySeconds":30
+					},
+					"id":"253684ef-5f98-424b-86e0-b0b3fff59cbb",
+					"metric":"",
+					"msg":"down",
+					"notifiers":[
+						"6bc55ce1-122e-4479-b2e0-bda2494688e5"
+					],
+					"recoveredMsg":"recovery",
+					"snippet":"return isUp == false;",
+					"title":"test"
+				}
+			],
+			"sync":"sync-push",
+			"syncConfig":{
+				"pushInterval":10
+			},
+			"title":"ethminer"
+		},
+		{
+			"code":"springboot",
+			"forewarnings":[],
+			"sync":"sync-springboot",
+			"syncConfig":{},
+			"title":"springboot"
+		}
+	],
+	"notifiers":[
+		{
+			"fontawesomeIcon":"fa-weixin",
+			"id":"6bc55ce1-122e-4479-b2e0-bda2494688e5",
+			"notifierCode":"notifier-wechat",
+			"notifierConfig":{
+				"secret":"SCU176T367b534928f06921ac53e05a2a781d1a5a5b039a2d3d8"
+			},
+			"title":"test"
+		}
+	]
 }

@@ -11,12 +11,10 @@
                     </div>
                     <div class="col-sm-6 operations">
                         <i class="fa fa-trash-o clickable pull-right" v-on:click="removeNode()" data-toggle="tooltip" data-placement="top" title="Remove node"></i>
-                        <i class="fa fa-plus clickable pull-right forewarning-icon" data-toggle="tooltip" data-placement="top" title="Add forewarning"
-                            @click="addNodeForewarning()"></i>
+                        <i class="fa fa-plus clickable pull-right forewarning-icon" data-toggle="tooltip" data-placement="top" title="Add forewarning" @click="addNodeForewarning()"></i>
                             <i class="fa forewarning-icon clickable pull-right" @click="editNodeForewarning(nodeNotifier.forewarningId)" data-toggle="tooltip"
-                                data-placement="top" :title="'When ' + nodeNotifier.forewarningTitle + ', notify ' + nodeNotifier.title"
-                                :class="{'fa-link':nodeNotifier.type == 'callback','fa-wechat':nodeNotifier.type == 'wechat','fa-envelope-o':nodeNotifier.type=='email'}"
-                                v-for="nodeNotifier in getNodeNotifers()"></i>
+                                data-placement="top" :title="'When ' + nodeNotifier.forewarningTitle + ', notify ' + nodeNotifier.title" :class="[nodeNotifier.fontawesomeIcon]"
+                             :key="index" v-for="(nodeNotifier,index) in getNodeNotifers()"></i>
                     </div>
                 </div>
                 <div class="lastupdate" v-show="status.formattedLastUpdateDate != ''">
@@ -25,7 +23,7 @@
                 <div class="clearfix"></div>
             </div>
             <div class="row">
-                <div class="col-sm-12 " :class="getMetricWidthClass(metric)" v-for="metric in status.metrics">
+                <div class="col-sm-12 " :class="getMetricWidthClass(metric)" :key="index" v-for="(metric,index) in status.metrics">
                     <div class="panel panel-default">
                         <div class="panel-heading">
                             <div class="row">
@@ -36,8 +34,7 @@
                                     <div class="pull-right">
                                         <i class="fa forewarning-icon clickable" @click="editMetricForewarning(metric,notifier.forewarningId)" data-toggle="tooltip"
                                             data-placement="top" :title="'When ' + notifier.forewarningTitle + ', notify ' + notifier.title"
-                                            :class="{'fa-link':notifier.type == 'callback','fa-wechat':notifier.type == 'wechat','fa-envelope-o':notifier.type=='email'}"
-                                            v-for="notifier in getMetricNotifers(metric)"></i>
+                                            :class="[notifier.fontawesomeIcon]" :key="index"  v-for="(notifier,index) in getMetricNotifers(metric)"></i>
                                             <i class="fa fa-plus clickable" title="Add metric forewarning" data-toggle="tooltip" data-placement="top" @click="addForewarning(metric)"></i>
                                     </div>
                                 </div>
@@ -73,250 +70,246 @@
 </template>
 
 <script>
-    import forewarning from "./forewarning.vue"
-    import widgetNumber from "./widget/widget-number.vue"
-    import widgetGauge from "./widget/widget-gauge.vue"
-    import widgetText from "./widget/widget-text.vue"
-    import widgetLine from "./widget/widget-line.vue"
-    import widgetPie from "./widget/widget-pie.vue"
+import forewarning from "./forewarning.vue";
+import widgetNumber from "./widget/widget-number.vue";
+import widgetGauge from "./widget/widget-gauge.vue";
+import widgetText from "./widget/widget-text.vue";
+import widgetLine from "./widget/widget-line.vue";
+import widgetPie from "./widget/widget-pie.vue";
 
-    export default {
-        components: {
-            "forewarning": forewarning,
-            "widget-number": widgetNumber,
-            "widget-gauge": widgetGauge,
-            "widget-text": widgetText,
-            "widget-line": widgetLine,
-            "widget-pie": widgetPie
-        },
-        data() {
-            return {
-                intervalInstance: null,
-                loading: true,
-                title: " ",
-                code: this.$route.params.code,
-                status: {
-                    metrics: []
-                },
-                allNotifiers: [],
-                showForewarning: false,
-                forewarning: {
-                    edit: false,
-                    metric: "",
-                    forewarningId: ""
-                },
-                forewarnings: []
+export default {
+  components: {
+    forewarning: forewarning,
+    "widget-number": widgetNumber,
+    "widget-gauge": widgetGauge,
+    "widget-text": widgetText,
+    "widget-line": widgetLine,
+    "widget-pie": widgetPie
+  },
+  data() {
+    return {
+      intervalInstance: null,
+      loading: true,
+      title: " ",
+      code: this.$route.params.code,
+      status: {
+        metrics: []
+      },
+      allNotifiers: [],
+      showForewarning: false,
+      forewarning: {
+        edit: false,
+        metric: "",
+        forewarningId: ""
+      },
+      forewarnings: []
+    };
+  },
+  watch: {
+    showForewarning: function(newVal) {
+      if (newVal) {
+        $("#forewarningDialog").modal("show");
+      } else {
+        $("#forewarningDialog").modal("hide");
+      }
+    }
+  },
+  methods: {
+    saveForewarning() {
+      this.$refs.forewarningRef.addForewarning();
+    },
+    removeForewarning() {
+      this.$refs.forewarningRef.removeForewarning();
+    },
+    getMetricWidthClass: function(metric) {
+      var ratio = metric.width || 0.5;
+      return "col-md-" + ratio * 12 + " col-lg-" + ratio * 12;
+    },
+    getMetricNotifers: function(metric) {
+      var notifiers = [];
+      for (var forewarningIndex in this.forewarnings) {
+        var forewarning = this.forewarnings[forewarningIndex];
+        if (forewarning.metric === metric.title) {
+          for (var notifierIndex in forewarning.notifiers) {
+            var notifierId = forewarning.notifiers[notifierIndex];
+            var notifier = this.getNotifier(notifierId);
+            if (notifier != null) {
+              notifier.forewarningTitle = forewarning.title;
+              notifier.forewarningId = forewarning.id;
+              notifiers.push(notifier);
             }
-        },
-        watch: {
-            showForewarning: function (newVal) {
-                if (newVal) {
-                    $('#forewarningDialog').modal("show");
-                }
-                else {
-                    $('#forewarningDialog').modal("hide");
-                }
-            }
-        },
-        methods: {
-            saveForewarning() {
-                this.$refs.forewarningRef.addForewarning();
-            },
-            removeForewarning() {
-                this.$refs.forewarningRef.removeForewarning();
-            },
-            getMetricWidthClass: function (metric) {
-                var ratio = metric.width || 0.5;
-                return "col-md-" + ratio * 12 + " col-lg-" + ratio * 12;
-            },
-            getMetricNotifers: function (metric) {
-                var notifiers = [];
-                for (var forewarningIndex in this.forewarnings) {
-                    var forewarning = this.forewarnings[forewarningIndex];
-                    if (forewarning.metric === metric.title) {
-                        for (var notifierIndex in forewarning.notifiers) {
-                            var notifierId = forewarning.notifiers[notifierIndex];
-                            var notifier = this.getNotifier(notifierId);
-                            if (notifier != null) {
-                                notifier.forewarningTitle = forewarning.title;
-                                notifier.forewarningId = forewarning.id;
-                                notifiers.push(notifier);
-                            }
-                        }
-                    }
-                }
-
-                return notifiers;
-            },
-            getNodeNotifers: function () {
-                var notifiers = [];
-                for (var forewarningIndex in this.forewarnings) {
-                    var forewarning = this.forewarnings[forewarningIndex];
-                    if (forewarning.metric === "") {
-                        for (var notifierIndex in forewarning.notifiers) {
-                            var notifierId = forewarning.notifiers[notifierIndex];
-                            var notifier = this.getNotifier(notifierId);
-                            if (notifier != null) {
-                                notifier.forewarningTitle = forewarning.title;
-                                notifier.forewarningId = forewarning.id;
-                                notifiers.push(notifier);
-                            }
-                        }
-                    }
-                }
-
-                return notifiers;
-            },
-            getNodeMetrics: function () {
-                var metrics = [];
-                if (this.status != null && this.status.metrics != null) {
-                    metrics = this.status.metrics;
-                }
-
-                return metrics;
-            },
-            addForewarning: function (metric) {
-                this.forewarning.edit = false;
-                this.forewarning.metric = metric;
-                this.showForewarning = true;
-            },
-            editMetricForewarning: function (metric, forewarningId) {
-                this.forewarning.metric = metric;
-                this.forewarning.forewarningId = forewarningId;
-                this.forewarning.edit = true;
-                this.showForewarning = true;
-            },
-            addNodeForewarning: function () {
-                this.forewarning.edit = false;
-                this.forewarning.metric = "";
-                this.showForewarning = true;
-            },
-            editNodeForewarning: function (forewarningId) {
-                this.forewarning.metric = "";
-                this.forewarning.forewarningId = forewarningId;
-                this.forewarning.edit = true;
-                this.showForewarning = true;
-            },
-            removeNode: function () {
-                if (confirm(" Do you want to remove this node?")) {
-                    $.ajax({
-                        url: "/api/node/" + this.code + "/",
-                        type: 'DELETE',
-                        success: res => {
-                            this.$router.push("/");
-                        }
-                    });
-                }
-            },
-            getNotifier(id) {
-                for (var index in this.allNotifiers) {
-                    var notifier = this.allNotifiers[index];
-                    if (notifier.id == id) return $.extend(true, {}, notifier);
-                }
-
-                return null;
-            },
-            sync(partial) {
-                $.get("/api/node/" + this.code + "/", res => {
-                    var node = res.data;
-                    if (partial) {
-                        if (node.status != null) {
-                            //only update metric values
-                            this.status.status = node.status.status;
-                            this.status.formattedLastUpdateDate = node.status.formattedLastUpdateDate;
-                            this.status.lastUpdateDate = node.status.lastUpdateDate;
-
-                            if (this.status.metrics.length == 0 && node.status.metrics.length != 0) {
-                                this.status.metrics = node.status.metrics;
-                            }
-                            else {
-                                for (var index in this.status.metrics) {
-                                    var metricTitle = this.status.metrics[index].title;
-
-                                    for (var j in node.status.metrics) {
-                                        var waitingUpdateMetric = node.status.metrics[j];
-                                        if (waitingUpdateMetric.title == metricTitle) {
-                                            this.status.metrics[index].value = waitingUpdateMetric.value;
-                                            this.status.metrics[index].historyValue = waitingUpdateMetric.historyValue;
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    else {
-                        this.status = node.status;
-                        this.title = node.title;
-                        this.forewarnings = node.forewarnings;
-                        this.loading = false;
-                    }
-
-                    if (this.status == null) {
-                        this.status = {
-                            status: "down",
-                            formattedLastUpdateDate: "",
-                            metrics: []
-                        };
-                    }
-                });
-            }
-        },
-        mounted() {
-            $.get("/api/notifier/", res => {
-                this.allNotifiers = res.data;
-                this.sync(false);
-            });
-            this.intervalInstance = setInterval(() => {
-                this.sync(true)
-            }, 1000);
-            $('#forewarningDialog').on('hidden.bs.modal', () => {
-                this.showForewarning = false;
-            })
-        },
-        beforeRouteLeave(to, from, next) {
-            if (this.intervalInstance != null) {
-                clearInterval(this.intervalInstance);
-            }
-
-            next();
+          }
         }
+      }
+
+      return notifiers;
+    },
+    getNodeNotifers: function() {
+      var notifiers = [];
+      for (var forewarningIndex in this.forewarnings) {
+        var forewarning = this.forewarnings[forewarningIndex];
+        if (forewarning.metric === "") {
+          for (var notifierIndex in forewarning.notifiers) {
+            var notifierId = forewarning.notifiers[notifierIndex];
+            var notifier = this.getNotifier(notifierId);
+            if (notifier != null) {
+              notifier.forewarningTitle = forewarning.title;
+              notifier.forewarningId = forewarning.id;
+              notifiers.push(notifier);
+            }
+          }
+        }
+      }
+
+      return notifiers;
+    },
+    getNodeMetrics: function() {
+      var metrics = [];
+      if (this.status != null && this.status.metrics != null) {
+        metrics = this.status.metrics;
+      }
+
+      return metrics;
+    },
+    addForewarning: function(metric) {
+      this.forewarning.edit = false;
+      this.forewarning.metric = metric;
+      this.showForewarning = true;
+    },
+    editMetricForewarning: function(metric, forewarningId) {
+      this.forewarning.metric = metric;
+      this.forewarning.forewarningId = forewarningId;
+      this.forewarning.edit = true;
+      this.showForewarning = true;
+    },
+    addNodeForewarning: function() {
+      this.forewarning.edit = false;
+      this.forewarning.metric = "";
+      this.showForewarning = true;
+    },
+    editNodeForewarning: function(forewarningId) {
+      this.forewarning.metric = "";
+      this.forewarning.forewarningId = forewarningId;
+      this.forewarning.edit = true;
+      this.showForewarning = true;
+    },
+    removeNode: function() {
+      if (confirm(" Do you want to remove this node?")) {
+        $.ajax({
+          url: "/api/node/" + this.code + "/",
+          type: "DELETE",
+          success: res => {
+            this.$router.push("/");
+          }
+        });
+      }
+    },
+    getNotifier(id) {
+      for (var index in this.allNotifiers) {
+        var notifier = this.allNotifiers[index];
+        if (notifier.id == id) return $.extend(true, {}, notifier);
+      }
+
+      return null;
+    },
+    sync(partial) {
+      $.get("/api/node/" + this.code + "/", res => {
+        var node = res.data;
+        if (partial) {
+          if (node.status != null) {
+            //only update metric values
+            this.status.status = node.status.status;
+            this.status.formattedLastUpdateDate = node.status.formattedLastUpdateDate;
+            this.status.lastUpdateDate = node.status.lastUpdateDate;
+
+            if (this.status.metrics.length == 0 && node.status.metrics.length != 0) {
+              this.status.metrics = node.status.metrics;
+            } else {
+              for (var index in this.status.metrics) {
+                var metricTitle = this.status.metrics[index].title;
+
+                for (var j in node.status.metrics) {
+                  var waitingUpdateMetric = node.status.metrics[j];
+                  if (waitingUpdateMetric.title == metricTitle) {
+                    this.status.metrics[index].value = waitingUpdateMetric.value;
+                    this.status.metrics[index].historyValue = waitingUpdateMetric.historyValue;
+                  }
+                }
+              }
+            }
+          }
+        } else {
+          this.status = node.status;
+          this.title = node.title;
+          this.forewarnings = node.forewarnings;
+          this.loading = false;
+        }
+
+        if (this.status == null) {
+          this.status = {
+            status: "down",
+            formattedLastUpdateDate: "",
+            metrics: []
+          };
+        }
+      });
+    }
+  },
+  mounted() {
+    $.get("/api/notifier/", res => {
+      this.allNotifiers = res.data;
+      this.sync(false);
+    });
+    this.intervalInstance = setInterval(() => {
+      this.sync(true);
+    }, 1000);
+    $("#forewarningDialog").on("hidden.bs.modal", () => {
+      this.showForewarning = false;
+    });
+  },
+  beforeRouteLeave(to, from, next) {
+    if (this.intervalInstance != null) {
+      clearInterval(this.intervalInstance);
     }
 
+    next();
+  }
+};
 </script>
 
 <style scoped>
-    .modal-dialog {
-        width: 80%;
-    }
-    
-    .detail .status-widget {
-        margin-bottom: 20px;
-    }
-    
-    .loading {
-        width: 40px;
-        margin: auto;
-    }
-    
-    .loading img {
-        margin-top: 50px;
-    }
-    
-    .number {
-        font-weight: bold;
-        font-size: 90px;
-        font-family: 黑体 !important;
-        text-align: center;
-        padding-top: 60px;
-    }
-    
-    .forewarning-icon {
-        margin-right: 10px;
-    }
-    
-    @media (max-width: 767px) {
-        .operations {
-            display: none !important;
-        }
-    }
+.modal-dialog {
+  width: 80%;
+}
+
+.detail .status-widget {
+  margin-bottom: 20px;
+}
+
+.loading {
+  width: 40px;
+  margin: auto;
+}
+
+.loading img {
+  margin-top: 50px;
+}
+
+.number {
+  font-weight: bold;
+  font-size: 90px;
+  font-family: 黑体 !important;
+  text-align: center;
+  padding-top: 60px;
+}
+
+.forewarning-icon {
+  margin-right: 10px;
+}
+
+@media (max-width: 767px) {
+  .operations {
+    display: none !important;
+  }
+}
 </style>
