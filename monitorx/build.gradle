@@ -5,6 +5,10 @@ jar {
     destinationDir = file("../build")
 }
 
+springBoot {
+    executable = true
+}
+
 dependencies {
     compile project(':monitorx-ui')
     compile project(':monitorx-plugin')

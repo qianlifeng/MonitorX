@@ -13,8 +13,12 @@ import monitorx.plugins.notifier.INotifierConfig;
 import monitorx.plugins.sync.ISync;
 import monitorx.plugins.sync.ISyncConfig;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.pf4j.PluginManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
@@ -24,7 +28,8 @@ import java.io.IOException;
 @Component
 public class ConfigService {
 
-    static String CONFIG_NAME = "config.json";
+    Logger logger = LoggerFactory.getLogger(getClass());
+
     static Config config;
 
     @Autowired
@@ -33,12 +38,24 @@ public class ConfigService {
     @Autowired
     PluginManager pluginManager;
 
+    @Value("${config.path:}")
+    String configPath;
+
+    private String getConfigFullPath() {
+        if (StringUtils.isEmpty(configPath)) {
+            return "config.json";
+        }
+
+        return configPath;
+    }
+
     public Config getConfig() {
         if (config != null) {
             return config;
         }
 
-        File file = new File(CONFIG_NAME);
+        File file = new File(getConfigFullPath());
+        logger.info("Read config file from: {}", getConfigFullPath());
         if (file.exists()) {
             try {
                 String configJSON = FileUtils.readFileToString(file, "UTF-8");
@@ -116,7 +133,7 @@ public class ConfigService {
         if (config != null) {
             String configString = JSON.toJSONString(config, true);
             try {
-                FileUtils.writeStringToFile(new File(CONFIG_NAME), configString, "UTF-8");
+                FileUtils.writeStringToFile(new File(getConfigFullPath()), configString, "UTF-8");
             } catch (IOException e) {
                 e.printStackTrace();
             }
