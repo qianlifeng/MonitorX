@@ -49,7 +49,7 @@ public class SpringBootSync implements ISync {
             SpringBootSyncConfig config = (SpringBootSyncConfig) syncContext.getSyncConfig();
 
             Status nodeStatus = new Status();
-            nodeStatus.setMetrics(new ArrayList<Metric>());
+            nodeStatus.setMetrics(new ArrayList<>());
             nodeStatus.setLastUpdateDate(new Date());
 
             //health status
@@ -89,7 +89,7 @@ public class SpringBootSync implements ISync {
             //link
             nodeStatus.getMetrics().add(getLinkData(config.getUrl()));
             return nodeStatus;
-        } catch (Exception e) {
+        } catch (IOException e) {
             logger.error(e.getMessage(), e);
         }
 

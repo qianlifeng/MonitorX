@@ -76,6 +76,8 @@ import widgetGauge from "./widget/widget-gauge.vue";
 import widgetText from "./widget/widget-text.vue";
 import widgetLine from "./widget/widget-line.vue";
 import widgetPie from "./widget/widget-pie.vue";
+import Stomp from "stompjs";
+import SockJS from "sockjs-client";
 
 export default {
   components: {
@@ -88,6 +90,8 @@ export default {
   },
   data() {
     return {
+      stompClient: null,
+      partialUpdate: false,
       intervalInstance: null,
       loading: true,
       title: " ",
@@ -212,66 +216,74 @@ export default {
 
       return null;
     },
-    sync(partial) {
-      $.get("/api/node/" + this.code + "/", res => {
-        var node = res.data;
-        if (partial) {
-          if (node.status != null) {
-            //only update metric values
-            this.status.status = node.status.status;
-            this.status.formattedLastUpdateDate = node.status.formattedLastUpdateDate;
-            this.status.lastUpdateDate = node.status.lastUpdateDate;
+    sync(node) {
+      if (this.partialUpdate) {
+        if (node.status != null) {
+          //only update metric values
+          this.status.status = node.status.status;
+          this.status.formattedLastUpdateDate = node.status.formattedLastUpdateDate;
+          this.status.lastUpdateDate = node.status.lastUpdateDate;
 
-            if (this.status.metrics.length == 0 && node.status.metrics.length != 0) {
-              this.status.metrics = node.status.metrics;
-            } else {
-              for (var index in this.status.metrics) {
-                var metricTitle = this.status.metrics[index].title;
+          if (this.status.metrics.length == 0 && node.status.metrics.length != 0) {
+            this.status.metrics = node.status.metrics;
+          } else {
+            for (var index in this.status.metrics) {
+              var metricTitle = this.status.metrics[index].title;
 
-                for (var j in node.status.metrics) {
-                  var waitingUpdateMetric = node.status.metrics[j];
-                  if (waitingUpdateMetric.title == metricTitle) {
-                    this.status.metrics[index].value = waitingUpdateMetric.value;
-                    this.status.metrics[index].historyValue = waitingUpdateMetric.historyValue;
-                  }
+              for (var j in node.status.metrics) {
+                var waitingUpdateMetric = node.status.metrics[j];
+                if (waitingUpdateMetric.title == metricTitle) {
+                  this.status.metrics[index].value = waitingUpdateMetric.value;
+                  this.status.metrics[index].historyValue = waitingUpdateMetric.historyValue;
                 }
               }
             }
           }
-        } else {
-          this.status = node.status;
-          this.title = node.title;
-          this.forewarnings = node.forewarnings;
-          this.loading = false;
         }
+      } else {
+        this.partialUpdate = true;
+        this.status = node.status;
+        this.title = node.title;
+        this.forewarnings = node.forewarnings;
+        this.loading = false;
+      }
 
-        if (this.status == null) {
-          this.status = {
-            status: "down",
-            formattedLastUpdateDate: "",
-            metrics: []
-          };
-        }
+      if (this.status == null) {
+        this.status = {
+          status: "down",
+          formattedLastUpdateDate: "",
+          metrics: []
+        };
+      }
+    },
+    initWebsocket() {
+      let url = window.location.origin;
+      if (process.env.NODE_ENV !== "production") {
+        url = "http://localhost:8080";
+      }
+      this.stompClient = Stomp.over(new SockJS(url + "/ws"));
+      this.stompClient.debug = false;
+      this.stompClient.connect({}, frame => {
+        this.stompClient.subscribe("/topic/sync/node/" + this.code, resp => {
+          let node = JSON.parse(resp.body);
+          this.loading = false;
+          this.sync(node);
+        });
+        this.stompClient.send("/app/sync/node/" + this.code, {}, "");
       });
     }
   },
   mounted() {
+    this.initWebsocket();
     $.get("/api/notifier/", res => {
       this.allNotifiers = res.data;
-      this.sync(false);
     });
-    this.intervalInstance = setInterval(() => {
-      this.sync(true);
-    }, 1000);
     $("#forewarningDialog").on("hidden.bs.modal", () => {
       this.showForewarning = false;
     });
   },
   beforeRouteLeave(to, from, next) {
-    if (this.intervalInstance != null) {
-      clearInterval(this.intervalInstance);
-    }
-
+    this.stompClient.disconnect();
     next();
   }
 };

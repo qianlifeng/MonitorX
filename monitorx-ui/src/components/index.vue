@@ -94,10 +94,14 @@
 </template>
 
 <script>
+import Stomp from "stompjs";
+import SockJS from "sockjs-client";
+
 export default {
   name: "index",
   data() {
     return {
+      stompClient: null,
       intervalInstance: null,
       loading: true,
       nodes: [],
@@ -172,37 +176,42 @@ export default {
         },
         res => {
           if (res.success) {
-            this.loadNodes();
+            this.stompClient.send("/app/sync/nodes", {}, "");
             this.showCreateNodeDialog = false;
           }
         }
       );
     },
-    loadNodes() {
-      $.get("/api/node/", res => {
-        this.loading = false;
-        this.nodes = res.data;
-      });
-    },
     loadSyncTypes() {
       $.get("/api/sync/", res => {
         this.syncs = res.data;
       });
+    },
+    initWebsocket() {
+      let url = window.location.origin;
+      if (process.env.NODE_ENV !== "production") {
+        url = "http://localhost:8080";
+      }
+      this.stompClient = Stomp.over(new SockJS(url + "/ws"));
+      this.stompClient.debug = false;
+      this.stompClient.connect({}, frame => {
+        this.stompClient.subscribe("/topic/sync/nodes", resp => {
+          this.nodes = JSON.parse(resp.body);
+          this.loading = false;
+        });
+        this.stompClient.send("/app/sync/nodes", {}, "");
+      });
     }
   },
   mounted() {
-    this.loadNodes();
     this.loadSyncTypes();
+    this.initWebsocket();
     $("#createNodeDialog").on("hidden.bs.modal", () => {
       this.showCreateNodeDialog = false;
     });
-    this.intervalInstance = setInterval(this.loadNodes, 1000);
   },
   beforeRouteLeave(to, from, next) {
-    if (this.intervalInstance != null) {
-      clearInterval(this.intervalInstance);
-    }
-
+    this.stompClient.disconnect();
     next();
   }
 };

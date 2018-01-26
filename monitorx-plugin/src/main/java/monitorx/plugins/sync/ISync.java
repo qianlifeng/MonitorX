@@ -25,7 +25,7 @@ public interface ISync extends ExtensionPoint {
     /**
      * sync status every n seconds
      */
-    Status sync(SyncContext context);
+    Status sync(SyncContext context) throws InterruptedException;
 
     ISyncConfig getSyncConfig();
 }

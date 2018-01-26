@@ -18,10 +18,10 @@ public class Node {
     String title;
     String sync;
 
+    @JSONField(serialize = false)
     @JsonSerialize
     ISyncConfig syncConfig;
 
-    @JSONField(serialize = false)
     Status status;
 
     @JSONField(serialize = false)
