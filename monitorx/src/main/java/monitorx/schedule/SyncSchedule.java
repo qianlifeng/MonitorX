@@ -39,15 +39,9 @@ public class SyncSchedule {
         List<ISync> availableSyncs = pluginManager.getExtensions(ISync.class);
         nodeService.getNodes().forEach(node -> {
             availableSyncs.stream().filter(i -> node.getSync().equals(i.getCode())).findFirst().ifPresent(isync -> {
-                try {
-                    logger.info("submit task {}", node.getTitle());
-                    new TimeoutThread(node, new SyncTask(node, isync), 4000).execute();
-                } catch (Exception e) {
-                    logger.error("sync task ({}) failed", node.getTitle(), e);
-                }
+                new TimeoutThread(node, new SyncTask(node, isync), 4000).execute();
             });
         });
-        logger.info("all tasks done");
         monitorXWebsocket.pushAllNodesToClient();
     }
 
@@ -75,11 +69,11 @@ public class SyncSchedule {
                 //execution timeout
                 logger.error("node {} executes timeout", node.getTitle(), e.getMessage());
                 updateStatus(Status.down());
+            } catch (Exception e) {
+                updateStatus(Status.down());
             } finally {
                 monitorXWebsocket.pushNodeStatusToClient(node.getCode());
             }
-
-            logger.info("task {} executed", node.getTitle());
         }
 
         private void updateStatus(Status status) {

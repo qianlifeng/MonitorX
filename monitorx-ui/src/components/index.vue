@@ -14,10 +14,10 @@
             <img src="../assets/loading.gif">
         </div>
         <div v-else>
-            <div class="row" :key="i" v-for="(nodeGroup,i) in nodeGroups">
+            <div class="row" :key="i" v-for="(nodeGroup,i) in sortedGroups()">
                 <div>
                     <div v-if="nodeGroup.group" class="group-name">{{nodeGroup.group}}</div>
-                    <div class="col-sm-12 col-lg-6 col-md-6" :key="index" v-for="(node,index) in nodeGroup.nodes">
+                    <div class="col-sm-12 col-lg-6 col-md-6" :key="index" v-for="(node,index) in sortNodesByTitle(nodeGroup.nodes)">
                         <div class="status-widget clickable" @click="navigate(node.code)" :class="[nodeStatus(node)]">
                             <div class="row">
                                 <div class="col-sm-6">
@@ -145,7 +145,6 @@ export default {
           });
         }
       });
-
       return groups;
     }
   },
@@ -159,6 +158,16 @@ export default {
     }
   },
   methods: {
+    sortedGroups() {
+      return this.nodeGroups.sort((a, b) => {
+        return a.group - b.group;
+      });
+    },
+    sortNodesByTitle(nodes) {
+      return nodes.sort((a, b) => {
+        return a.title - b.title;
+      });
+    },
     navigate(nodeCode) {
       this.$router.push({ path: "/node/" + nodeCode });
     },

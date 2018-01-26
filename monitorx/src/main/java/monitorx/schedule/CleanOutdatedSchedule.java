@@ -1,8 +1,8 @@
 package monitorx.schedule;
 
+import monitorx.domain.Forewarning;
 import monitorx.domain.Node;
 import monitorx.plugins.Status;
-import monitorx.domain.Forewarning;
 import monitorx.plugins.forewarning.ForewarningCheckPoint;
 import monitorx.service.NodeService;
 import org.slf4j.Logger;
@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import java.lang.management.ManagementFactory;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
@@ -50,6 +51,7 @@ public class CleanOutdatedSchedule {
         if (before.get() != now.get()) {
             logger.info("Deleting outdated checkpoint {} => {}", before.get(), now.get());
         }
+        logger.info("Total thread count: {}", ManagementFactory.getThreadMXBean().getThreadCount());
     }
 
     @Scheduled(fixedRate = 1000 * 70)
