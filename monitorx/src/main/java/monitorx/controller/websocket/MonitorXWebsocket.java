@@ -11,6 +11,9 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 /**
  * @author qianlifeng
  */
@@ -24,7 +27,22 @@ public class MonitorXWebsocket {
     private SimpMessagingTemplate simpMessagingTemplate;
 
     public void pushAllNodesToClient() {
-        this.simpMessagingTemplate.convertAndSend("/topic/sync/nodes", JSON.toJSONString(nodeService.getNodes()));
+        List<JSONObject> nodes = nodeService.getNodes().stream().map(o -> {
+            JSONObject node = new JSONObject();
+            node.put("group", o.getGroup());
+            node.put("title", o.getTitle());
+            node.put("code", o.getCode());
+
+            if (o.getStatus() != null) {
+                JSONObject status = new JSONObject();
+                status.put("status", o.getStatus().getStatus());
+                status.put("formattedLastUpdateDate", o.getStatus().getFormattedLastUpdateDate());
+                node.put("status", status);
+            }
+
+            return node;
+        }).collect(Collectors.toList());
+        this.simpMessagingTemplate.convertAndSend("/topic/sync/nodes", JSON.toJSONString(nodes));
     }
 
     public void pushNodeStatusToClient(String nodeCode) {

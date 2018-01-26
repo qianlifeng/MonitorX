@@ -25,7 +25,7 @@
                                 </div>
                             </div>
                             <div class="lastupdate">
-                                <i class="fa fa-clock-o"></i> <span>{{node.status !== null ? node.status.formattedLastUpdateDate : ""}}</span>
+                                <i class="fa fa-clock-o"></i> <span>{{node.status ? node.status.formattedLastUpdateDate : ""}}</span>
                             </div>
                             <div class="clearfix"></div>
                         </div>
@@ -172,7 +172,7 @@ export default {
       this.$router.push({ path: "/node/" + nodeCode });
     },
     nodeStatus(node) {
-      if (node.status === null) return "status-down";
+      if (!node.status) return "status-down";
       if (node.status.status === "up") return "status-up";
 
       return "status-down";

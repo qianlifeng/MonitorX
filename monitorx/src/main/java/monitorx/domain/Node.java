@@ -11,24 +11,21 @@ import java.util.List;
 
 /**
  * Node that need to be monitored
+ *
+ * @author qianlifeng
  */
 public class Node {
     String group;
     String code;
     String title;
     String sync;
-
-    @JSONField(serialize = false)
-    @JsonSerialize
     ISyncConfig syncConfig;
-
     Status status;
+    List<Forewarning> forewarnings = new ArrayList<Forewarning>();
 
     @JSONField(serialize = false)
     @JsonIgnore
     List<Status> statusHistory = new ArrayList<Status>();
-
-    List<Forewarning> forewarnings = new ArrayList<Forewarning>();
 
     public String getCode() {
         return code;

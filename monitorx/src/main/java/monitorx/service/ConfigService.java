@@ -3,6 +3,8 @@ package monitorx.service;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.serializer.SerializerFeature;
+import com.alibaba.fastjson.serializer.SimplePropertyPreFilter;
 import monitorx.domain.Node;
 import monitorx.domain.Notifier;
 import monitorx.domain.config.Config;
@@ -131,7 +133,8 @@ public class ConfigService {
 
     public void save() {
         if (config != null) {
-            String configString = JSON.toJSONString(config, true);
+            SimplePropertyPreFilter filter = new SimplePropertyPreFilter(Node.class, "group", "code", "title", "sync", "syncConfig", "forewarnings");
+            String configString = JSON.toJSONString(config, filter, SerializerFeature.PrettyFormat);
             try {
                 FileUtils.writeStringToFile(new File(getConfigFullPath()), configString, "UTF-8");
             } catch (IOException e) {
