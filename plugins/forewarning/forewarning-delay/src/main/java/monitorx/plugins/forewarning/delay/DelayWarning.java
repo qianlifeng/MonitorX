@@ -1,4 +1,4 @@
-package monitorx.plugins.forewarning.immediate;
+package monitorx.plugins.forewarning.delay;
 
 import monitorx.plugins.forewarning.ForewarningCheckPoint;
 import monitorx.plugins.forewarning.ForewarningContext;
@@ -10,26 +10,26 @@ import org.pf4j.Extension;
  * @author qianlifeng
  */
 @Extension
-public class ImmediateWarning implements IForewarning {
+public class DelayWarning implements IForewarning {
 
     @Override
     public String getCode() {
-        return "forewarning-immediate";
+        return "forewarning-delay";
     }
 
     @Override
     public String getName() {
-        return "Immediate";
+        return "Delay";
     }
 
     @Override
     public String getDescription() {
-        return "send notification immediately";
+        return "send notification after n seconds delay if this forewarning is still true";
     }
 
     @Override
     public boolean shouldWarning(ForewarningContext context) {
-        ImmediateForewarningConfig forewarningConfig = (ImmediateForewarningConfig) context.getForewarningConfig();
+        DelayForewarningConfig forewarningConfig = (DelayForewarningConfig) context.getForewarningConfig();
 
         if (context.hasCheckPoint()) {
             ForewarningCheckPoint lastCheckPoint = context.findLastCheckPoint();
@@ -49,6 +49,6 @@ public class ImmediateWarning implements IForewarning {
 
     @Override
     public IForewarningConfig getForewarningConfig() {
-        return new ImmediateForewarningConfig();
+        return new DelayForewarningConfig();
     }
 }

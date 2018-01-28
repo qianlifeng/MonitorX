@@ -4,9 +4,11 @@ include 'monitorx-plugin'
 include 'plugins/sync/sync-push'
 include 'plugins/sync/sync-springboot'
 include 'plugins/forewarning/forewarning-immediate'
+include 'plugins/forewarning/forewarning-delay'
 include 'plugins/notifier/notifier-wechat'
 
 project(":plugins/sync/sync-push").name = "sync-push"
 project(":plugins/sync/sync-springboot").name = "sync-springboot"
 project(":plugins/forewarning/forewarning-immediate").name = "forewarning-immediate"
+project(":plugins/forewarning/forewarning-delay").name = "forewarning-delay"
 project(":plugins/notifier/notifier-wechat").name = "notifier-wechat"

@@ -53,11 +53,17 @@
             </div>
         </div>
         <div class="form-group">
-            <label class="col-sm-2 control-label">When notify</label>
+            <label class="col-sm-2 control-label">Notify type</label>
             <div class="col-sm-10">
                 <select class="form-control" v-model="forewarningCode">
-                    <option :value="rule.code" :key="rule.code" v-for="rule in forewarningRules">{{rule.name}} ({{rule.description}})</option>
+                    <option :value="rule.code" :key="rule.code" v-for="rule in forewarningRules">{{rule.name}}</option>
                 </select>
+            </div>
+        </div>
+        <div class="form-group" v-if="selectedForewarning.description">
+            <label class="col-sm-2 control-label"></label>
+            <div class="col-sm-10">
+                {{selectedForewarning.description}}
             </div>
         </div>
         <div class="form-group" :key="index" v-for="(config,index) in selectedForewarning.config">
@@ -68,7 +74,6 @@
         </div>
         <div class="form-group">
             <label class="col-sm-2 control-label">Notify message</label>
-
             <div class="col-sm-10">
                 <textarea class="form-control" rows="5" v-model="msg" :placeholder="'Notify message support snippet context, please use ' + expression + 'to eval the real value'"></textarea>
             </div>
