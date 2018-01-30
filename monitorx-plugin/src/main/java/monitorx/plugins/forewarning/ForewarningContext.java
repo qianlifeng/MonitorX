@@ -55,4 +55,17 @@ public class ForewarningContext {
 
         return null;
     }
+
+    public ForewarningCheckPoint findLastUpCheckPoint() {
+        if (hasCheckPoint()) {
+            for (int i = getCheckPoints().size() - 1; i >= 0; i--) {
+                ForewarningCheckPoint point = getCheckPoints().get(i);
+                if (!point.getSnippetResult()) {
+                    return point;
+                }
+            }
+        }
+
+        return null;
+    }
 }

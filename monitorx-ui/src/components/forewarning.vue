@@ -62,9 +62,7 @@
         </div>
         <div class="form-group" v-if="selectedForewarning.description">
             <label class="col-sm-2 control-label"></label>
-            <div class="col-sm-10">
-                {{selectedForewarning.description}}
-            </div>
+            <div class="col-sm-10" v-html="selectedForewarning.description"></div>
         </div>
         <div class="form-group" :key="index" v-for="(config,index) in selectedForewarning.config">
             <label class="col-sm-2 control-label">{{config.name}}</label>
@@ -169,6 +167,7 @@ export default {
         this.recoveredMsg = existingForwarning.recoveredMsg;
         this.notifiers = existingForwarning.notifiers;
         this.forewarningCode = existingForwarning.forewarningCode;
+        this.forewarningConfig = existingForwarning.forewarningConfig;
         this.title = existingForwarning.title;
       });
     },
@@ -190,6 +189,7 @@ export default {
           },
           res => {
             if (res.success) {
+              this.$emit("done");
               alert("Success");
             } else {
               alert(res.message);
@@ -212,6 +212,7 @@ export default {
           },
           res => {
             if (res.success) {
+              this.$emit("done");
               alert("Success");
             } else {
               alert(res.message);
@@ -236,7 +237,10 @@ export default {
           },
           res => {
             if (res.success) {
+              this.$emit("done");
               alert("Success");
+            } else {
+              alert(res.message);
             }
           }
         );

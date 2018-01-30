@@ -24,7 +24,7 @@ public class DelayWarning implements IForewarning {
 
     @Override
     public String getDescription() {
-        return "send notification after n seconds delay if this forewarning is still true";
+        return "<img src='http://ww1.sinaimg.cn/large/5d7c1fa4ly1fnyhe4ylirj20kv0613yl.jpg'/>";
     }
 
     @Override
@@ -34,18 +34,26 @@ public class DelayWarning implements IForewarning {
         if (context.hasCheckPoint()) {
             ForewarningCheckPoint lastCheckPoint = context.findLastCheckPoint();
             if (lastCheckPoint.getSnippetResult()) {
-                ForewarningCheckPoint lastNotifiedCheckPoint = context.findLastNotifiedCheckPoint();
-                if (lastNotifiedCheckPoint != null) {
-                    long intervalBetweenLastAndLastNotifiedPoint = (lastCheckPoint.getDatetime().getTime() - lastNotifiedCheckPoint.getDatetime().getTime()) / 1000;
-                    return intervalBetweenLastAndLastNotifiedPoint > forewarningConfig.getWarningBySeconds();
-                } else {
-                    return true;
+                ForewarningCheckPoint lastUpCheckPoint = context.findLastUpCheckPoint();
+                if (lastUpCheckPoint == null) {
+                    lastUpCheckPoint = context.getCheckPoints().get(0);
+                }
+                long intervalBetweenLastUpAndCurrentDownPoint = (lastCheckPoint.getDatetime().getTime() - lastUpCheckPoint.getDatetime().getTime()) / 1000;
+                if (intervalBetweenLastUpAndCurrentDownPoint > forewarningConfig.getDelaySeconds()) {
+                    ForewarningCheckPoint lastNotifiedCheckPoint = context.findLastNotifiedCheckPoint();
+                    if (lastNotifiedCheckPoint != null) {
+                        long intervalBetweenLastAndLastNotifiedPoint = (lastCheckPoint.getDatetime().getTime() - lastNotifiedCheckPoint.getDatetime().getTime()) / 1000;
+                        return intervalBetweenLastAndLastNotifiedPoint > forewarningConfig.getWarningBySeconds();
+                    } else {
+                        return true;
+                    }
                 }
             }
         }
 
         return false;
     }
+
 
     @Override
     public IForewarningConfig getForewarningConfig() {

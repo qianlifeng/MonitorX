@@ -24,7 +24,7 @@ public class ImmediateWarning implements IForewarning {
 
     @Override
     public String getDescription() {
-        return "send notification immediately";
+        return "<img src='http://ww1.sinaimg.cn/large/5d7c1fa4ly1fnyguw3uodj20fw04rgll.jpg'/>";
     }
 
     @Override

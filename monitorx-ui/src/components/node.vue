@@ -56,7 +56,7 @@
                         <h4 class="modal-title">Forewarning</h4>
                     </div>
                     <div class="modal-body">
-                        <forewarning ref="forewarningRef" :edit="forewarning.edit" :forewarningId="forewarning.forewarningId" :metric="forewarning.metric.title"
+                        <forewarning ref="forewarningRef" @done="closeModal" :edit="forewarning.edit" :forewarningId="forewarning.forewarningId" :metric="forewarning.metric.title"
                             :node="code" />
                     </div>
                     <div class="modal-footer">
@@ -119,6 +119,11 @@ export default {
     }
   },
   methods: {
+    closeModal() {
+      this.partialUpdate = false;
+      this.showForewarning = false;
+      this.stompClient.send("/app/sync/node/" + this.code, {}, "");
+    },
     saveForewarning() {
       this.$refs.forewarningRef.addForewarning();
     },
