@@ -59,7 +59,7 @@ public class Status {
 
     public static Status down() {
         Status status = new Status();
-        status.setLastUpdateDate(new Date());
+//        status.setLastUpdateDate(new Date());
         status.setStatus("down");
         status.setMetrics(new ArrayList<>());
         return status;
