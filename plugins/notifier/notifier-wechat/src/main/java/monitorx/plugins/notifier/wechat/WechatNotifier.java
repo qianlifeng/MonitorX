@@ -44,7 +44,7 @@ public class WechatNotifier implements INotifier {
     public void send(NotifierContext context) {
         WechatNotifierConfig config = (WechatNotifierConfig) context.getNotifierConfig();
         logger.info("sending wechat msg:" + context.getTitle());
-        String url = "http://sc.ftqq.com/" + config.getSecret() + ".send";
+        String url = "https://sc.ftqq.com/" + config.getSecret() + ".send";
         try {
             Form form = Form.form().add("text", context.getTitle());
             if (StringUtils.isNotNullOrEmpty(context.getContent())) {
