@@ -51,7 +51,7 @@ public class WechatNotifier implements INotifier {
                 //add timestamp to avoid wechat prevent same msg in a short time
                 form.add("desp", context.getContent() + "\n\n");
             }
-            Request.Post(url).bodyForm(form.build(), Consts.UTF_8).execute();
+            Request.Post(url).bodyForm(form.build(), Consts.UTF_8).execute().discardContent();
         } catch (IOException e) {
             logger.error("Send wechat msg failed", e);
         }
